@@ -27,29 +27,35 @@ import raytracer.Raytracer;
 import ui.Window;
 import scene.Scene;
 
+import java.util.ArrayList;
+
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
+    static int RECURSIONS = 1;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
+        long tStart = System.currentTimeMillis();
 
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        Scene renderScene = new Scene();
-
-        long tStart = System.currentTimeMillis();
-
-        Raytracer raytracer = new Raytracer(renderScene.getShapeList(), renderWindow.getBufferedImage());
-
-        renderWindow.renderFrame(raytracer.getBufferedImage());
+        raytraceScene(renderWindow);
 
         long tEnd = System.currentTimeMillis();
         long tDelta = tEnd - tStart;
         double elapsedSeconds = tDelta / 1000.0;
 
         renderWindow.setTimeToLabel(String.valueOf(elapsedSeconds));
+    }
+
+    public static void raytraceScene(Window renderWindow){
+        Scene renderScene = new Scene();
+
+        Raytracer raytracer = new Raytracer(renderScene, new ArrayList(), renderWindow.getBufferedImage(), RECURSIONS);
+
+        renderWindow.renderFrame(raytracer.getBufferedImage());
     }
 }

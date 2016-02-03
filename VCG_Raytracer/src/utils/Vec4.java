@@ -12,4 +12,8 @@ public class Vec4 {
         this.z = z;
         this.w = w;
     }
+
+    public boolean equals(Vec4 inputVec){
+        return (this.x == inputVec.x) && (this.y == inputVec.y) && (this.z == inputVec.z) && (this.w == inputVec.w);
+    }
 }

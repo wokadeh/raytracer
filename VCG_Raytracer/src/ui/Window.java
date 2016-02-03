@@ -51,19 +51,21 @@ public class Window {
         mFrame.add(mTimeLabel);
         mTimeLabel.setHorizontalTextPosition(JLabel.LEFT);
         mTimeLabel.setVerticalTextPosition(JLabel.BOTTOM);
-        mTimeLabel.setBackground(Color.red);
-        mTimeLabel.setOpaque(true);
+        //mTimeLabel.setBackground(Color.red);
+        //mTimeLabel.setOpaque(true);
     }
 
     public void renderFrame(BufferedImage bufferedImage){
 
         RgbColor pixelColor = new RgbColor(0f, 0f, 1f);
 
+        // Columns
         for (int y = 0; y < mHeight; y++) {
+            // Rows
             for (int x = 0; x < mWidth; x++) {
 
                 Vec2 screenPosition = new Vec2(x, y);
-                //setPixel(bufferedImage, pixelColor, screenPosition);
+                setPixel(bufferedImage, pixelColor, screenPosition);
             }
         }
 
