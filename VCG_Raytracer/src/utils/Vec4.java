@@ -33,4 +33,13 @@ public class Vec4 {
     public Vec4 multScalar(float value){
         return new Vec4(this.x * value, this.y * value, this.z * value, this.w * value);
     }
+
+    public Vec4 cross(Vec4 inputVec){
+        return new Vec4(
+                this.y * inputVec.z - inputVec.y * this.z,
+                this.z * inputVec.w - inputVec.z * this.w,
+                this.w * inputVec.x - inputVec.w * this.x,
+                this.x * inputVec.y - inputVec.y * this.x
+        );
+    }
 }

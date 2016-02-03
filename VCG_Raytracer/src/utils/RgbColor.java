@@ -42,8 +42,8 @@ public class RgbColor {
     }
 
     private void clamp(){
-        if( this.red > 1 ) this.red = 1;
-        if( this.green > 1 ) this.green = 1;
-        if( this.blue > 1 ) this.blue = 1;
+        if( this.red > 1 ) this.red = 1f;
+        if( this.green > 1 ) this.green = 1f;
+        if( this.blue > 1 ) this.blue = 1f;
     }
 }
