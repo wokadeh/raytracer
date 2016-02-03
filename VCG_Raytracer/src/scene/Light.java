@@ -1,9 +1,20 @@
 package scene;
 
+import utils.RgbColor;
 import utils.Vec4;
 
 public class Light extends SceneObject {
-    public Light(Vec4 pos) {
-        super(pos);
+
+    public RgbColor getColor() {
+        return mColor;
     }
+
+    private RgbColor mColor;
+
+    public Light(Vec4 pos, RgbColor color) {
+        super(pos);
+        mColor = color;
+    }
+
+
 }
