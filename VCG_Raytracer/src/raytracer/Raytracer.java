@@ -16,9 +16,9 @@
 
 package raytracer;
 
-import scene.ILight;
-import scene.IShape;
+import scene.Light;
 import scene.Scene;
+import scene.Shape;
 import utils.RgbColor;
 import utils.Vec3;
 import utils.Vec4;
@@ -30,8 +30,8 @@ import java.util.List;
 public class Raytracer {
 
     BufferedImage mBufferedImage;
-    ArrayList mShapeList;
-    ArrayList mLightList;
+    ArrayList<Shape> mShapeList;
+    ArrayList<Light> mLightList;
 
     int mMaxRecursions;
 
@@ -54,14 +54,6 @@ public class Raytracer {
         return mBufferedImage;
     }
 
-    private Vec4 calculateOutRay(Ray inputRay, IShape shape){
-
-        // ...
-        Vec4 endPoint = new Vec4(0,0,0,0);
-        return endPoint;
-    }
-
-
     private RgbColor traceRay(int recursionCounter, Ray inRay){
         RgbColor outColor = mAmbientColor;
         while(recursionCounter > 0){
@@ -73,18 +65,18 @@ public class Raytracer {
         return outColor;
     }
 
-    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, ILight inLight, boolean isLastRay){
+    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, boolean isLastRay){
         RgbColor outColor = localColor;
         // 2: Intersection test with all shapes
         for(Object shape : mShapeList){
-            Intersection intersection = ((IShape)shape).intersect(inRay);
+            Intersection intersection = ((Shape)shape).intersect(inRay);
 
             // Was hit
             if(!intersection.getOutRay().equals(inRay)){
                 // 3a: send secondary ray to the light source
                 if(recursionCounter == 0){
                     for(Object light : mLightList) {
-                        ILight outLight = (ILight) light;
+                        Light outLight = (Light) light;
                         Vec4 endPoint = outLight.getPosition();
                         Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
 
@@ -102,7 +94,7 @@ public class Raytracer {
             else{
                 // If the last ray from an object to the light is not intersected calculate the color on that point
                 if(isLastRay){
-                    return calculateLocalIllumination(inLight, (IShape) shape);
+                    return calculateLocalIllumination(inLight, (Shape) shape);
                 }
             }
         }
@@ -127,7 +119,7 @@ public class Raytracer {
         return finalColor;
     }
 
-    private RgbColor calculateLocalIllumination(ILight light, IShape shape){
+    private RgbColor calculateLocalIllumination(Light light, Shape shape){
         return mAmbientColor;
     }
 

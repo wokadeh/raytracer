@@ -4,10 +4,10 @@ import raytracer.Intersection;
 import raytracer.Ray;
 import utils.Vec4;
 
-public class Sphere implements IShape{
+public class Sphere extends Shape{
 
-    public Sphere(){
-
+    public Sphere(Vec4 pos) {
+        super(pos);
     }
 
     @Override

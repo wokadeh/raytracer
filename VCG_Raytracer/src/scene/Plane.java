@@ -4,14 +4,9 @@ import raytracer.Intersection;
 import raytracer.Ray;
 import utils.Vec4;
 
-public class Plane implements IShape
+public class Plane extends SceneObject
 {
-    public Plane(){
-
-    }
-
-    @Override
-    public Intersection intersect(Ray ray) {
-        return new Intersection();
+    public Plane(Vec4 pos) {
+        super(pos);
     }
 }
