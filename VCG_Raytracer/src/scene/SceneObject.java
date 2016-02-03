@@ -1,16 +1,16 @@
 package scene;
 
-import utils.Vec4;
+import utils.Vec3;
 
 public class SceneObject {
 
-    private Vec4 mPosition;
+    private Vec3 mPosition;
 
-    public SceneObject(Vec4 pos){
+    public SceneObject(Vec3 pos){
         mPosition = pos;
     }
 
-    public Vec4 getPosition(){
+    public Vec3 getPosition(){
         return mPosition;
     }
 

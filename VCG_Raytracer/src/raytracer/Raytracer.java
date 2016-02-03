@@ -21,7 +21,6 @@ import scene.Scene;
 import scene.Shape;
 import utils.RgbColor;
 import utils.Vec3;
-import utils.Vec4;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class Raytracer {
                 if(recursionCounter == 0){
                     for(Object light : mLightList) {
                         Light outLight = (Light) light;
-                        Vec4 endPoint = outLight.getPosition();
+                        Vec3 endPoint = outLight.getPosition();
                         Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
 
                         localColor.add(findIntersection(recursionCounter, lightRay, localColor, outLight, true));
@@ -109,8 +108,8 @@ public class Raytracer {
 
     private RgbColor sendPrimaryRay(Vec3 screenPoint){
         RgbColor finalColor = new RgbColor(0f,0f,0f);
-        Vec4 startPoint = new Vec4(screenPoint.x, screenPoint.y, screenPoint.z, 1);
-        Vec4 endPoint = calculateDestinationPoint();
+        Vec3 startPoint = new Vec3(screenPoint.x, screenPoint.y, screenPoint.z);
+        Vec3 endPoint = calculateDestinationPoint();
         Ray primaryRay = new Ray(startPoint, endPoint);
 
         traceRay(mMaxRecursions, primaryRay);
@@ -123,7 +122,7 @@ public class Raytracer {
         return mAmbientColor;
     }
 
-    private Vec4 calculateDestinationPoint(){
-        return new Vec4(0,0,0,0);
+    private Vec3 calculateDestinationPoint(){
+        return new Vec3(0,0,0);
     }
 }

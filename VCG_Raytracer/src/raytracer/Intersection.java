@@ -1,23 +1,23 @@
 package raytracer;
 
-import utils.Vec4;
+import utils.Vec3;
 
 public class Intersection {
 
-    private Vec4 mIntersectionPoint;
+    private Vec3 mIntersectionPoint;
     private Ray mInRay;
     private Ray mOutRay;
 
-    public Intersection(Ray inRay, Ray outRay, Vec4 intersectionPoint){
+    public Intersection(Ray inRay, Ray outRay, Vec3 intersectionPoint){
         mInRay = inRay;
         mOutRay = outRay;
         mIntersectionPoint = intersectionPoint;
     }
 
     public Intersection(){
-        mInRay = new Ray(new Vec4(0,0,0,0), new Vec4(0,0,0,0));
-        mOutRay = new Ray(new Vec4(0,0,0,0), new Vec4(0,0,0,0));
-        mIntersectionPoint = new Vec4(0,0,0,0);
+        mInRay = new Ray(new Vec3(0,0,0), new Vec3(0,0,0));
+        mOutRay = new Ray(new Vec3(0,0,0), new Vec3(0,0,0));
+        mIntersectionPoint = new Vec3(0,0,0);
     }
 
     public Ray getInRay(){
@@ -28,7 +28,7 @@ public class Intersection {
         return mOutRay;
     }
 
-    public Vec4 getIntersectionPoint(){
+    public Vec3 getIntersectionPoint(){
         return mIntersectionPoint;
     }
 }

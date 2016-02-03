@@ -9,7 +9,7 @@ public class Shape extends SceneObject{
 
     private Intersection mIntersection;
 
-    public Shape(Vec4 pos) {
+    public Shape(Vec3 pos) {
         super(pos);
     }
 

@@ -1,11 +1,11 @@
 package scene;
 
 import utils.RgbColor;
-import utils.Vec4;
+import utils.Vec3;
 
 public class PointLight extends Light {
 
-    public PointLight(Vec4 pos, RgbColor color) {
+    public PointLight(Vec3 pos, RgbColor color) {
         super(pos, color);
     }
 }

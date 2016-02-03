@@ -22,6 +22,10 @@ public class Vec4 {
         return new Vec4( (float) (((double) this.x) / length), (float) (((double) this.y) / length), (float) (((double) this.z) / length), (float) (((double) this.w) / length));
     }
 
+    public Vec4 add(Vec4 inputVec){
+        return new Vec4(this.x + inputVec.x, this.y + inputVec.y, this.z + inputVec.z, this.w + inputVec.w);
+    }
+
     public Vec4 sub(Vec4 inputVec){
         return new Vec4(this.x - inputVec.x, this.y - inputVec.y, this.z - inputVec.z, this.w - inputVec.w);
     }

@@ -1,7 +1,7 @@
 package scene;
 
 import utils.RgbColor;
-import utils.Vec4;
+import utils.Vec3;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class Material {
         mSpecCoeff = specularCoefficient;
     }
 
-    public RgbColor getColor(ArrayList<Light> lightList, Vec4 normal, Vec4 position, Camera camera, int type) {
+    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, Camera camera, int type) {
 
         if(type == PHONG){
             return getPhongColor(lightList, normal, camera, position);
@@ -37,17 +37,17 @@ public class Material {
         return new RgbColor(0,0,0);
     }
 
-    private RgbColor getBlinnColor(ArrayList<Light> lightList, Vec4 normal, Camera camera, Vec4 position) {
+    private RgbColor getBlinnColor(ArrayList<Light> lightList, Vec3 normal, Camera camera, Vec3 position) {
         return mAmbient;
     }
 
-    private RgbColor getPhongColor(ArrayList<Light> lightList, Vec4 normal, Camera camera, Vec4 position){
+    private RgbColor getPhongColor(ArrayList<Light> lightList, Vec3 normal, Camera camera, Vec3 position){
         RgbColor outColor = mAmbient;
 
-        Vec4 normalN = normal.normalize();
+        Vec3 normalN = normal.normalize();
 
         for(Light light : lightList){
-            Vec4 lightVecN = (position.sub(light.getPosition())).normalize();
+            Vec3 lightVecN = (position.sub(light.getPosition())).normalize();
             float angle = normalN.scalar(lightVecN);
 
             mDiffuse = calculateDiffuseColor(light.getColor(), angle);
@@ -60,12 +60,12 @@ public class Material {
         return outColor;
     }
 
-    private RgbColor calculateSpecularColor(Vec4 normalN, Vec4 lightVecN, RgbColor lightColor, Vec4 position, Vec4 camPosition, float angle) {
+    private RgbColor calculateSpecularColor(Vec3 normalN, Vec3 lightVecN, RgbColor lightColor, Vec3 position, Vec3 camPosition, float angle) {
         RgbColor outColor = mSpecCoeff;
 
-        Vec4 viewVecN = position.sub(camPosition).normalize();
+        Vec3 viewVecN = position.sub(camPosition).normalize();
 
-        Vec4 reflectN = normalN.multScalar(2 * angle);
+        Vec3 reflectN = normalN.multScalar(2 * angle);
         reflectN = reflectN.sub(lightVecN);
 
         float specAngle = reflectN.scalar(viewVecN);

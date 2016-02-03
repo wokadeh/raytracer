@@ -27,6 +27,7 @@ import raytracer.Raytracer;
 import ui.Window;
 import scene.Scene;
 import utils.RgbColor;
+import utils.Vec3;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,10 @@ public class Main {
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
+    static Vec3 CAM_POS = new Vec3(0, 5, -5);
+    static Vec3 VIEW_POINT = new Vec3(0, 5, 5);
+    static float VIEW_ANGLE = 45f;
+    static float FOCAL_LENGTH = 1.3f;
     static int RECURSIONS = 1;
     static RgbColor AMBIENT_COLOR = new RgbColor(0,1,0);
 
@@ -55,6 +60,8 @@ public class Main {
 
     public static void raytraceScene(Window renderWindow){
         Scene renderScene = new Scene();
+
+        renderScene.setCamera(CAM_POS, VIEW_POINT, new Vec3(0,1,0), VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
         Raytracer raytracer = new Raytracer(renderScene, new ArrayList(), renderWindow.getBufferedImage(), RECURSIONS, AMBIENT_COLOR);
 
