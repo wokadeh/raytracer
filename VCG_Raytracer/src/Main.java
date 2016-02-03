@@ -26,6 +26,7 @@
 import raytracer.Raytracer;
 import ui.Window;
 import scene.Scene;
+import utils.RgbColor;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
     static int RECURSIONS = 1;
+    static RgbColor AMBIENT_COLOR = new RgbColor(0,1,0);
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -54,7 +56,7 @@ public class Main {
     public static void raytraceScene(Window renderWindow){
         Scene renderScene = new Scene();
 
-        Raytracer raytracer = new Raytracer(renderScene, new ArrayList(), renderWindow.getBufferedImage(), RECURSIONS);
+        Raytracer raytracer = new Raytracer(renderScene, new ArrayList(), renderWindow.getBufferedImage(), RECURSIONS, AMBIENT_COLOR);
 
         renderWindow.renderFrame(raytracer.getBufferedImage());
     }

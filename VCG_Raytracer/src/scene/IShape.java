@@ -1,9 +1,10 @@
 package scene;
 
+import raytracer.Intersection;
 import raytracer.Ray;
 import utils.Vec3;
 import utils.Vec4;
 
 public interface IShape {
-    public Vec4 intersect(Ray ray);
+    public Intersection intersect(Ray ray);
 }

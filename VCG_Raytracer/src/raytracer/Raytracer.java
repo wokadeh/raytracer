@@ -33,19 +33,20 @@ public class Raytracer {
     ArrayList mShapeList;
     ArrayList mLightList;
 
-    int mRecursions;
+    int mMaxRecursions;
 
-    public Raytracer(Scene scene, List<Vec3> screenPointList, BufferedImage bufferedImage, int recursions){
-        mRecursions = recursions;
+    RgbColor mAmbientColor;
+
+    public Raytracer(Scene scene, List<Vec3> screenPointList, BufferedImage bufferedImage, int recursions, RgbColor ambientColor){
+        mMaxRecursions = recursions;
         mBufferedImage = bufferedImage;
+        mAmbientColor = ambientColor;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
 
         // 1: send primary rays for every screen point
         for(Vec3 screenPoint : screenPointList) {
-
             sendPrimaryRay(screenPoint);
-
         }
     }
 
@@ -53,7 +54,7 @@ public class Raytracer {
         return mBufferedImage;
     }
 
-    private Vec4 calculateDestinationPoint(Vec3 startPoint){
+    private Vec4 calculateOutRay(Ray inputRay, IShape shape){
 
         // ...
         Vec4 endPoint = new Vec4(0,0,0,0);
@@ -61,37 +62,76 @@ public class Raytracer {
     }
 
 
-    private RgbColor sendPrimaryRay(Vec3 screenPoint){
-        RgbColor finalColor = new RgbColor(0,0,0);
-        Vec4 startPoint = new Vec4(screenPoint.x, screenPoint.y, screenPoint.z, 1);
-        Vec4 endPoint = calculateDestinationPoint(screenPoint);
-        Ray ray = new Ray(startPoint, endPoint);
+    private RgbColor traceRay(int recursionCounter, Ray inRay){
+        RgbColor outColor = mAmbientColor;
+        while(recursionCounter > 0){
+            recursionCounter--;
 
-        Vec4 deadPoint = new Vec4(-1, -1, -1, -1);
+            outColor = findIntersection(recursionCounter, inRay, new RgbColor(0,0,0), null, false);
+        }
 
+        return outColor;
+    }
+
+    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, ILight inLight, boolean isLastRay){
+        RgbColor outColor = localColor;
         // 2: Intersection test with all shapes
         for(Object shape : mShapeList){
-            Vec4 intersectionPoint = ((IShape)shape).intersect(ray);
+            Intersection intersection = ((IShape)shape).intersect(inRay);
 
             // Was hit
-            if(intersectionPoint.equals(deadPoint)){
+            if(!intersection.getOutRay().equals(inRay)){
                 // 3a: send secondary ray to the light source
-                return sendSecondaryRay(intersectionPoint);
+                if(recursionCounter == 0){
+                    for(Object light : mLightList) {
+                        ILight outLight = (ILight) light;
+                        Vec4 endPoint = outLight.getPosition();
+                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
 
+                        localColor.add(findIntersection(recursionCounter, lightRay, localColor, outLight, true));
+                    }
+                }
+                else {
+                    traceRay(recursionCounter, intersection.getOutRay());
+                }
+                // If the last ray from an object is still intersected with an object the plan shadow color is drawn
+                if(isLastRay){
+                    return calculateShadowColor();
+                }
+            }
+            else{
+                // If the last ray from an object to the light is not intersected calculate the color on that point
+                if(isLastRay){
+                    return calculateLocalIllumination(inLight, (IShape) shape);
+                }
             }
         }
+        return outColor;
+    }
+
+    private RgbColor calculateShadowColor(){
+        RgbColor outColor = new RgbColor(0,0,0);
+
+        return outColor;
+    }
+
+    private RgbColor sendPrimaryRay(Vec3 screenPoint){
+        RgbColor finalColor = new RgbColor(0f,0f,0f);
+        Vec4 startPoint = new Vec4(screenPoint.x, screenPoint.y, screenPoint.z, 1);
+        Vec4 endPoint = calculateDestinationPoint();
+        Ray primaryRay = new Ray(startPoint, endPoint);
+
+        traceRay(mMaxRecursions, primaryRay);
 
         // 4: set background color
         return finalColor;
     }
 
-    private RgbColor sendSecondaryRay(Vec4 intersectionPoint){
-        for(Object light : mLightList) {
-            Vec4 endPoint = ((ILight) light).getPosition();
-            Ray ray = new Ray(intersectionPoint, endPoint);
+    private RgbColor calculateLocalIllumination(ILight light, IShape shape){
+        return mAmbientColor;
+    }
 
-        }
-
-        return new RgbColor(0,0,0);
+    private Vec4 calculateDestinationPoint(){
+        return new Vec4(0,0,0,0);
     }
 }

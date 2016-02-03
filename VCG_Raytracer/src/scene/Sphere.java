@@ -1,5 +1,6 @@
 package scene;
 
+import raytracer.Intersection;
 import raytracer.Ray;
 import utils.Vec4;
 
@@ -10,7 +11,7 @@ public class Sphere implements IShape{
     }
 
     @Override
-    public Vec4 intersect(Ray ray) {
-        return new Vec4(0,0,0,0);
+    public Intersection intersect(Ray ray) {
+        return new Intersection();
     }
 }
