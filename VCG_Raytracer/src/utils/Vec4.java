@@ -46,4 +46,9 @@ public class Vec4 {
                 this.x * inputVec.y - inputVec.y * this.x
         );
     }
+
+    @Override
+    public String toString(){
+        return "( " + this.x + ", " + this.y + ", " + this.z + ")";
+    }
 }
