@@ -29,19 +29,18 @@ import scene.Scene;
 import utils.RgbColor;
 import utils.Vec3;
 
-import java.util.ArrayList;
-
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
-    static Vec3 CAM_POS = new Vec3(0, 5, -5);
+    static Vec3 CAM_POS = new Vec3(0, 5, -50);
     static Vec3 VIEW_POINT = new Vec3(0, 5, 5);
-    static float VIEW_ANGLE = 45f;
+    static float VIEW_ANGLE = 40f;
     static float FOCAL_LENGTH = 1.3f;
     static int RECURSIONS = 1;
-    static RgbColor AMBIENT_COLOR = new RgbColor(0,1,0);
+    static RgbColor AMBIENT_COLOR = new RgbColor(0, 1, 0);
+    static RgbColor BACKGROUND_COLOR = new RgbColor(0.5f, 0.5f, 0f);
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -63,7 +62,7 @@ public class Main {
 
         renderScene.setCamera(CAM_POS, VIEW_POINT, new Vec3(0,1,0), VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR, BACKGROUND_COLOR);
 
         raytracer.renderScene();
     }

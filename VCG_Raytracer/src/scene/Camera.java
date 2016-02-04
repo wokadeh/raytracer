@@ -12,8 +12,8 @@ public class Camera extends SceneObject {
 
     private float ratio;
 
-    private int viewPlaneWidth;
-    private int viewPlaneHeight;
+    private float viewPlaneWidth;
+    private float viewPlaneHeight;
 
     private Vec3 center;
     private Vec3 viewVector;
@@ -27,19 +27,21 @@ public class Camera extends SceneObject {
         this.u = s.cross(v);
 
         this.ratio = (float) screenWidth / (float) screenHeight;
-
-        this.viewPlaneHeight = (int) (2 * Math.tan(angleOfView / 2d));
-        this.viewPlaneWidth = (int) this.ratio * this.viewPlaneHeight;
+        Log.warn(this, "Test: \t" + this.ratio * Math.tan(angleOfView / 2d) * 2);
+        this.viewPlaneHeight = (float) (2f * Math.tan(angleOfView / 2d));
+        this.viewPlaneWidth = this.ratio * this.viewPlaneHeight;
         this.viewVector = v.normalize();
         this.center = pos.add(this.viewVector);
+
+        logParameters(centerOfInterest, upVec, angleOfView, screenWidth, screenHeight);
     }
 
     public Vec3 calculateCoords(Vec2 pixelPos){
         Vec2 screenVec = new Vec2( (int) (2 * ( ((float) pixelPos.x + 0.5)/ (float) this.viewPlaneWidth ) - 1),
-                         (int) (2 * ( ((float) pixelPos.y + 0.5)/ (float) this.viewPlaneHeight ) - 1));
+                                    (int) (2 * ( ((float) pixelPos.y + 0.5)/ (float) this.viewPlaneHeight ) - 1));
 
-        screenVec.x *= this.viewPlaneWidth / 2;
-        screenVec.y *= this.viewPlaneHeight / 2;
+        //screenVec.x *= (float) this.viewPlaneWidth / 2f;
+        //screenVec.y *= (float) this.viewPlaneHeight / 2f;
 
         Vec3 screenSpaceVec = new Vec3(screenVec.x, screenVec.y, this.center.z);
         screenSpaceVec = screenSpaceVec.add(this.u);
@@ -48,17 +50,17 @@ public class Camera extends SceneObject {
         return screenSpaceVec;
     }
 
-    // Auflösung des Bildes ist Center in v,u,s + normalisiertes x bzw y
-
-    public int getViewWidth(){
-        return this.viewPlaneWidth;
-    }
-
-    public int getViewPlaneHeight(){
-        return this.viewPlaneHeight;
-    }
-
-    public Vec3 getCenter(){
-        return this.center;
+    private void logParameters(Vec3 centerOfInterest, Vec3 upVec, float angleOfView, int screenWidth, int screenHeight) {
+        Log.print(this, "Center of Interest: \t" + centerOfInterest);
+        Log.print(this, "Up-Vector: \t\t\t" + upVec);
+        Log.print(this, "Angle of View: \t\t" + angleOfView);
+        Log.print(this, "Screen Dimensions: \tWidth " + screenWidth + ", Height: " + screenHeight);
+        Log.print(this, "Camera Dimensions: \tWidth " + this.viewPlaneWidth + ", Height: " + this.viewPlaneHeight);
+        Log.print(this, "Aspect Ratio: \t\t" + this.ratio);
+        Log.print(this, "View Vector: \t\t" + this.viewVector);
+        Log.print(this, "Center: \t\t\t\t" + this.center);
+        Log.print(this, "U: \t\t\t\t\t" + this.u);
+        Log.print(this, "V: \t\t\t\t\t" + this.v);
+        Log.print(this, "S: \t\t\t\t\t" + this.s);
     }
 }

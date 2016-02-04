@@ -46,6 +46,6 @@ public class Vec3 {
 
     @Override
     public String toString(){
-        return "( " + this.x + ", " + this.y + ", " + this.z + ")";
+        return "( " + this.x + ", " + this.y + ", " + this.z + " )";
     }
 }

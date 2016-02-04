@@ -41,9 +41,17 @@ public class RgbColor {
         this.blue *= value;
     }
 
+    public int getRGB(){
+        return ((int) (this.red * 255f) << 16) + ((int) (this.green * 255f) << 8) + ((int) (this.blue * 255f));
+    }
+
     private void clamp(){
         if( this.red > 1 ) this.red = 1f;
         if( this.green > 1 ) this.green = 1f;
         if( this.blue > 1 ) this.blue = 1f;
+
+        if( this.red < 0 ) this.red = 0f;
+        if( this.green < 0 ) this.green = 0f;
+        if( this.blue < 0 ) this.blue = 0f;
     }
 }

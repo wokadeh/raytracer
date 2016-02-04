@@ -36,13 +36,15 @@ public class Raytracer {
     private int mMaxRecursions;
 
     private RgbColor mAmbientColor;
+    private RgbColor mBackgroundColor;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor ambientColor){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor ambientColor, RgbColor backColor){
         Log.print(this, "Init");
 
         mMaxRecursions = recursions;
         mBufferedImage = renderWindow.getBufferedImage();
         mAmbientColor = ambientColor;
+        mBackgroundColor = backColor;
         mScene = scene;
         mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
@@ -52,7 +54,7 @@ public class Raytracer {
     public void renderScene(){
         Log.print(this, "Start rendering");
 
-        RgbColor pixelColor = new RgbColor(0f, 0f, 1f);
+        RgbColor pixelColor = mBackgroundColor;
         // Columns
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Rows
@@ -68,7 +70,7 @@ public class Raytracer {
     }
 
     private RgbColor traceRay(int recursionCounter, Ray inRay){
-        RgbColor outColor = mAmbientColor;
+        RgbColor outColor = mBackgroundColor;
 //        while(recursionCounter > 0){
 //            recursionCounter--;
 //
@@ -115,7 +117,7 @@ public class Raytracer {
     }
 
     private RgbColor calculateShadowColor(){
-        RgbColor outColor = new RgbColor(0,0,0);
+        RgbColor outColor = mAmbientColor;
 
         return outColor;
     }
@@ -126,7 +128,9 @@ public class Raytracer {
         Vec3 destinationPoint = mScene.getCamCoords(screenPoint);
         Ray primaryRay = new Ray(startPoint, destinationPoint);
 
-        traceRay(mMaxRecursions, primaryRay);
+        //Log.warn(this, destinationPoint.toString());
+
+        finalColor = traceRay(mMaxRecursions, primaryRay);
 
         // 4: set background color
         return finalColor;
