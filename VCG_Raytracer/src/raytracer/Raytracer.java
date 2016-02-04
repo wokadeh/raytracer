@@ -19,47 +19,61 @@ package raytracer;
 import scene.Light;
 import scene.Scene;
 import scene.Shape;
-import utils.RgbColor;
-import utils.Vec3;
+import ui.Window;
+import utils.*;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Raytracer {
 
-    BufferedImage mBufferedImage;
-    ArrayList<Shape> mShapeList;
-    ArrayList<Light> mLightList;
+    private BufferedImage mBufferedImage;
+    private ArrayList<Shape> mShapeList;
+    private ArrayList<Light> mLightList;
+    private Scene mScene;
+    private Window mRenderWindow;
 
-    int mMaxRecursions;
+    private int mMaxRecursions;
 
-    RgbColor mAmbientColor;
+    private RgbColor mAmbientColor;
 
-    public Raytracer(Scene scene, List<Vec3> screenPointList, BufferedImage bufferedImage, int recursions, RgbColor ambientColor){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor ambientColor){
+        Log.print(this, "Init");
+
         mMaxRecursions = recursions;
-        mBufferedImage = bufferedImage;
+        mBufferedImage = renderWindow.getBufferedImage();
         mAmbientColor = ambientColor;
+        mScene = scene;
+        mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
-
-        // 1: send primary rays for every screen point
-        for(Vec3 screenPoint : screenPointList) {
-            sendPrimaryRay(screenPoint);
-        }
     }
 
-    public BufferedImage getBufferedImage(){
-        return mBufferedImage;
+    public void renderScene(){
+        Log.print(this, "Start rendering");
+
+        RgbColor pixelColor = new RgbColor(0f, 0f, 1f);
+        // Columns
+        for (int y = 0; y < mBufferedImage.getHeight(); y++) {
+            // Rows
+            for (int x = 0; x < mBufferedImage.getWidth(); x++) {
+
+                Vec2 screenPosition = new Vec2(x, y);
+                pixelColor = sendPrimaryRay(screenPosition);
+                mRenderWindow.setPixel(mBufferedImage, pixelColor, screenPosition);
+            }
+        }
+
+        IO.saveImageToPng(mBufferedImage, "raytracing.png");
     }
 
     private RgbColor traceRay(int recursionCounter, Ray inRay){
         RgbColor outColor = mAmbientColor;
-        while(recursionCounter > 0){
-            recursionCounter--;
-
-            outColor = findIntersection(recursionCounter, inRay, new RgbColor(0,0,0), null, false);
-        }
+//        while(recursionCounter > 0){
+//            recursionCounter--;
+//
+//            outColor = findIntersection(recursionCounter, inRay, new RgbColor(0,0,0), null, false);
+//        }
 
         return outColor;
     }
@@ -106,11 +120,11 @@ public class Raytracer {
         return outColor;
     }
 
-    private RgbColor sendPrimaryRay(Vec3 screenPoint){
+    private RgbColor sendPrimaryRay(Vec2 screenPoint){
         RgbColor finalColor = new RgbColor(0f,0f,0f);
-        Vec3 startPoint = new Vec3(screenPoint.x, screenPoint.y, screenPoint.z);
-        Vec3 endPoint = calculateDestinationPoint();
-        Ray primaryRay = new Ray(startPoint, endPoint);
+        Vec3 startPoint = mScene.getCamPos();
+        Vec3 destinationPoint = mScene.getCamCoords(screenPoint);
+        Ray primaryRay = new Ray(startPoint, destinationPoint);
 
         traceRay(mMaxRecursions, primaryRay);
 

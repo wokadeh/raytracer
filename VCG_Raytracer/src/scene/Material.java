@@ -1,5 +1,6 @@
 package scene;
 
+import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
 
@@ -18,20 +19,26 @@ public class Material {
     public int PHONG = 0;
     public int BLINN = 1;
 
-    public Material(RgbColor ambientColor, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess){
+    private int mType;
+
+    public Material(RgbColor ambientColor, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, int type){
+        Log.print(this, "Init " + type);
+
         mAmbient = ambientColor;
         mShininess = shininess;
 
         mDiffCoeff = diffuseCoefficient;
         mSpecCoeff = specularCoefficient;
+
+        mType = type;
     }
 
-    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, Camera camera, int type) {
+    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, Camera camera) {
 
-        if(type == PHONG){
+        if(mType == PHONG){
             return getPhongColor(lightList, normal, camera, position);
         }
-        if(type == BLINN){
+        if(mType == BLINN){
             return getBlinnColor(lightList, normal, camera, position);
         }
         return new RgbColor(0,0,0);

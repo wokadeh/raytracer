@@ -55,24 +55,7 @@ public class Window {
         //mTimeLabel.setOpaque(true);
     }
 
-    public void renderFrame(BufferedImage bufferedImage){
-
-        RgbColor pixelColor = new RgbColor(0f, 0f, 1f);
-
-        // Columns
-        for (int y = 0; y < mHeight; y++) {
-            // Rows
-            for (int x = 0; x < mWidth; x++) {
-
-                Vec2 screenPosition = new Vec2(x, y);
-                setPixel(bufferedImage, pixelColor, screenPosition);
-            }
-        }
-
-        IO.saveImageToPng(bufferedImage, "raytracing.png");
-    }
-
-    private void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
+    public void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
         bufferedImage.setRGB(screenPosition.x, screenPosition.y, ((int) color.red * 255 << 16) + ((int) color.green * 255 << 8) + ((int) color.blue * 255));
         mFrame.repaint();
     }

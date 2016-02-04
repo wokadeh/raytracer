@@ -63,8 +63,8 @@ public class Main {
 
         renderScene.setCamera(CAM_POS, VIEW_POINT, new Vec3(0,1,0), VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        Raytracer raytracer = new Raytracer(renderScene, new ArrayList(), renderWindow.getBufferedImage(), RECURSIONS, AMBIENT_COLOR);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR);
 
-        renderWindow.renderFrame(raytracer.getBufferedImage());
+        raytracer.renderScene();
     }
 }

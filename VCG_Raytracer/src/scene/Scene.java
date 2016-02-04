@@ -1,8 +1,9 @@
 package scene;
 
 
+import utils.Log;
+import utils.Vec2;
 import utils.Vec3;
-import utils.Vec4;
 
 import java.util.*;
 
@@ -21,11 +22,20 @@ public class Scene {
     }
 
     public Scene(){
+        Log.print(this, "Init");
         mShapeList = new ArrayList<Shape>();
-
+        mLightList = new ArrayList<Light>();
     }
 
     public void setCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
         mSceneCam = new Camera(camPos, viewPoint, upVec, viewAngle, focalLength, screenWidth, screenHeight);
+    }
+
+    public Vec3 getCamPos(){
+        return mSceneCam.getPosition();
+    }
+
+    public Vec3 getCamCoords(Vec2 screenVec){
+        return mSceneCam.calculateCoords(screenVec);
     }
 }
