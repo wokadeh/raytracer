@@ -17,14 +17,14 @@ public class Sphere extends Shape{
 
     @Override
     public Intersection intersect(Ray ray){
-        Intersection intersectionTest = new Intersection(ray);
+        Intersection intersectionTest = new Intersection(ray, this);
 
         float compB = 2 * ray.getStartPoint().scalar(ray.getDirection());
         float compC = ray.getStartPoint().scalar(ray.getStartPoint()) - mSqrRadius;
 
         float discriminant = compB * compB - 4 * compC;
 
-        //Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
+        Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
 
         if( discriminant < 0 ){
             return intersectionTest;
@@ -34,16 +34,18 @@ public class Sphere extends Shape{
         float t1 = (float) ((- compB + Math.sqrt(discriminant) ) * 0.5f);
 
         //Log.warn(this, "choosing the correct t not made, yet");
-        Log.warn(this, "Something was hit");
-        intersectionTest.setHit(true);
+        Log.warn(this, "Something could be hit");
+
         Vec3 intersectionPoint = new Vec3(-1,-1,-1);
 
         if( t0 > 0 ){
+            intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t0));
             intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()));
             intersectionTest.setIncoming(false);
         }
         else if(t1 > 0){
+            intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t1));
             intersectionTest.setNormal(this.getPosition().sub(intersectionPoint));
             intersectionTest.setIncoming(true);

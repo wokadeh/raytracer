@@ -24,6 +24,7 @@ public class Ray {
 
     public Ray(Vec3 startPoint, Vec3 direction, float param){
         mStartPoint = startPoint;
-        mEndPoint = direction.multScalar(param);
+        mDirection = direction;
+        mEndPoint = mDirection.multScalar(param);
     }
 }

@@ -1,5 +1,6 @@
 package raytracer;
 
+import scene.Shape;
 import utils.Log;
 import utils.Vec3;
 
@@ -7,26 +8,19 @@ public class Intersection {
 
 
     private Vec3 mIntersectionPoint;
-    private Vec3 mObjectPosition;
     private Vec3 mNormal;
     private Ray mInRay;
     private Ray mOutRay;
+    private Shape mShape;
 
     private boolean mIncoming;
 
     private boolean mHit;
 
-    public Intersection(Ray inRay){
+    public Intersection(Ray inRay, Shape shape){
         mInRay = inRay;
         mHit = false;
-    }
-
-    public Intersection(Ray inRay, Vec3 intersectionPoint, Vec3 normal){
-        mInRay = inRay;
-        mOutRay = createOutRay();
-        mIntersectionPoint = intersectionPoint;
-        mNormal = normal;
-        mHit = false;
+        mShape = shape;
     }
 
     private Ray createOutRay() {
@@ -37,24 +31,6 @@ public class Intersection {
         reflVec = reflVec.sub(directN);
         mOutRay = new Ray(mIntersectionPoint, reflVec, 50);
         return mOutRay;
-    }
-
-    public Intersection(){
-        mInRay = new Ray(new Vec3(0,0,0), new Vec3(0,0,0));
-        mOutRay = new Ray(new Vec3(0,0,0), new Vec3(0,0,0));
-        mIntersectionPoint = new Vec3(0,0,0);
-    }
-
-    public Ray getInRay(){
-        return mInRay;
-    }
-
-    public Ray getOutRay(){
-        return mOutRay;
-    }
-
-    public Vec3 getIntersectionPoint(){
-        return mIntersectionPoint;
     }
 
     public boolean isHit() {

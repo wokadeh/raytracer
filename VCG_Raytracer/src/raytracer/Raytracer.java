@@ -88,7 +88,7 @@ public class Raytracer {
 
             //Log.error(this, "findintersect");
             // Was hit
-            if(intersection.isHit() == false){
+            if(!intersection.isHit()){
                 return new RgbColor(0,0,1);
 //                // 3a: send secondary ray to the light source
 //                if(recursionCounter == 0){
@@ -109,13 +109,10 @@ public class Raytracer {
 //                }
             }
             else{
-                Log.error(this, "lalala");
-
                 // If the last ray from an object to the light is not intersected calculate the color on that point
                 if(isLastRay){
                     return calculateLocalIllumination(inLight, (Shape) shape);
                 }
-                return new RgbColor(1,0,0);
             }
         }
         return outColor;
@@ -130,10 +127,10 @@ public class Raytracer {
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){
         RgbColor finalColor;
         Vec3 startPoint = mScene.getCamPos();
-        Vec3 destinationPoint = mScene.getCamCoords(pixelPoint);
-        Ray primaryRay = new Ray(startPoint, destinationPoint);
+        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
+        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
 
-       Log.warn(this, startPoint.toString() + ", " + destinationPoint.toString());
+       //Log.warn(this, startPoint.toString() + ", " + destinationPoint.toString());
 
         finalColor = traceRay(mMaxRecursions, primaryRay);
         //if (!finalColor.equals(new RgbColor(0,0,1)))

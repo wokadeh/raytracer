@@ -11,13 +11,19 @@ public class Vec3 {
         this.z = z;
     }
 
+    public Vec3(){
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+    }
+
     public boolean equals(Vec3 inputVec){
         return (this.x == inputVec.x) && (this.y == inputVec.y) && (this.z == inputVec.z);
     }
 
     public Vec3 normalize(){
         double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        return new Vec3( (float) (((double) this.x) / length), (float) (((double) this.y) / length), (float) (((double) this.z) / length));
+        return new Vec3( (float) (this.x / length), (float) (this.y/ length), (float) (this.z / length));
     }
 
     public Vec3 add(Vec3 inputVec){

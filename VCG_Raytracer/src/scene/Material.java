@@ -33,22 +33,22 @@ public class Material {
         mType = type;
     }
 
-    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, Camera camera) {
+    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, PerspectiveCamera perspectiveCamera) {
 
         if(mType == PHONG){
-            return getPhongColor(lightList, normal, camera, position);
+            return getPhongColor(lightList, normal, perspectiveCamera, position);
         }
         if(mType == BLINN){
-            return getBlinnColor(lightList, normal, camera, position);
+            return getBlinnColor(lightList, normal, perspectiveCamera, position);
         }
         return new RgbColor(0,0,0);
     }
 
-    private RgbColor getBlinnColor(ArrayList<Light> lightList, Vec3 normal, Camera camera, Vec3 position) {
+    private RgbColor getBlinnColor(ArrayList<Light> lightList, Vec3 normal, PerspectiveCamera perspectiveCamera, Vec3 position) {
         return mAmbient;
     }
 
-    private RgbColor getPhongColor(ArrayList<Light> lightList, Vec3 normal, Camera camera, Vec3 position){
+    private RgbColor getPhongColor(ArrayList<Light> lightList, Vec3 normal, PerspectiveCamera perspectiveCamera, Vec3 position){
         RgbColor outColor = mAmbient;
 
         Vec3 normalN = normal.normalize();
@@ -58,7 +58,7 @@ public class Material {
             float angle = normalN.scalar(lightVecN);
 
             mDiffuse = calculateDiffuseColor(light.getColor(), angle);
-            mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), position, camera.getPosition(), angle);
+            mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), position, perspectiveCamera.getPosition(), angle);
 
             outColor.add(mDiffuse);
             outColor.add(mSpecular);
