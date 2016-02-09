@@ -26,6 +26,4 @@ public class Ray {
         mStartPoint = startPoint;
         mEndPoint = direction.multScalar(param);
     }
-
-
 }

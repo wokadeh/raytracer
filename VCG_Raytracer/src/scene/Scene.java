@@ -27,7 +27,11 @@ public class Scene {
         mLightList = new ArrayList<Light>();
     }
 
-    public void setCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
+    public void createSphere(Vec3 pos, float radius){
+        mShapeList.add(new Sphere(pos, radius));
+    }
+
+    public void createCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
         mSceneCam = new Camera(camPos, viewPoint, upVec, viewAngle, focalLength, screenWidth, screenHeight);
     }
 
@@ -36,6 +40,11 @@ public class Scene {
     }
 
     public Vec3 getCamCoords(Vec2 screenVec){
-        return mSceneCam.calculateCoords(screenVec);
+        return mSceneCam.calculateDestPoint(screenVec);
     }
+
+    public float getCamFocalLength(){
+        return mSceneCam.getFocalLength();
+    }
+
 }

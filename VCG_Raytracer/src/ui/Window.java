@@ -56,7 +56,7 @@ public class Window {
     }
 
     public void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
-        bufferedImage.setRGB(screenPosition.x, screenPosition.y, color.getRGB());
+        bufferedImage.setRGB((int)screenPosition.x, (int)screenPosition.y, color.getRGB());
         mFrame.repaint();
     }
 

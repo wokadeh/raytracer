@@ -8,16 +8,14 @@
 
     1. Documentation:    Did you comment your code shortly but clearly?
     2. Structure:        Did you clean up your code and put everything into the right bucket?
-    3. Simplicity:       Can you shorten your code and gave all variables and methods comprehandable names?
-    4. Performance:      Are all loops and everything inside really necessary?
-    5. Theory:           Are you going the right way?
+    3. Performance:      Are all loops and everything inside really necessary?
+    4. Theory:           Are you going the right way?
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  <<< The Masters of Raytracing >>>
 
      Master of Documentation:
      Master of Structure:
-     Master of Simplicity:
      Master of Performance:
      Master of Theory:
 
@@ -32,13 +30,18 @@ import utils.Vec3;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
-    static int IMAGE_WIDTH = 800;
-    static int IMAGE_HEIGHT = 600;
-    static Vec3 CAM_POS = new Vec3(0, 5, -50);
-    static Vec3 VIEW_POINT = new Vec3(0, 5, 5);
-    static float VIEW_ANGLE = 40f;
-    static float FOCAL_LENGTH = 1.3f;
+    static int IMAGE_WIDTH = 1000;
+    static int IMAGE_HEIGHT = 1000;
+
+    static Vec3 CAM_POS = new Vec3(0, 0, 5);
+    static Vec3 LOOK_AT = new Vec3(0, 0, 0);
+    static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
+
+    static float VIEW_ANGLE = 54.43f;
+    static float FOCAL_LENGTH = 35f;
+
     static int RECURSIONS = 1;
+
     static RgbColor AMBIENT_COLOR = new RgbColor(0, 1, 0);
     static RgbColor BACKGROUND_COLOR = new RgbColor(0.5f, 0.5f, 0f);
 
@@ -48,7 +51,11 @@ public class Main {
 
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        raytraceScene(renderWindow);
+        Scene renderScene = new Scene();
+
+        setupScene(renderScene);
+
+        raytraceScene(renderWindow, renderScene);
 
         long tEnd = System.currentTimeMillis();
         long tDelta = tEnd - tStart;
@@ -57,11 +64,13 @@ public class Main {
         renderWindow.setTimeToLabel(String.valueOf(elapsedSeconds));
     }
 
-    public static void raytraceScene(Window renderWindow){
-        Scene renderScene = new Scene();
+    public static void setupScene(Scene renderScene){
+        renderScene.createCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        renderScene.setCamera(CAM_POS, VIEW_POINT, new Vec3(0,1,0), VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
+        renderScene.createSphere(new Vec3(0, -1, 0), 1f);
+    }
 
+    public static void raytraceScene(Window renderWindow, Scene renderScene){
         Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR, BACKGROUND_COLOR);
 
         raytracer.renderScene();

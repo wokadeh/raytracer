@@ -2,35 +2,55 @@ package scene;
 
 import raytracer.Intersection;
 import raytracer.Ray;
+import utils.Log;
 import utils.Vec3;
 
 public class Sphere extends Shape{
 
-    float mRadius;
+    private float mSqrRadius;
 
     public Sphere(Vec3 pos, float radius) {
         super(pos);
 
-        mRadius = radius;
+        mSqrRadius = radius * radius;
     }
 
     @Override
     public Intersection intersect(Ray ray){
-        float compB = ray.getStartPoint().scalar(ray.getDirection());
-        float compC = ray.getDirection().x * ray.getDirection().x
-                    + ray.getDirection().y * ray.getDirection().y
-                    + ray.getDirection().z * ray.getDirection().z
-                    - mRadius * mRadius;
+        Intersection intersectionTest = new Intersection(ray);
 
-        float discrimant = compB * compB - 4 * compC;
+        float compB = 2 * ray.getStartPoint().scalar(ray.getDirection());
+        float compC = ray.getStartPoint().scalar(ray.getStartPoint()) - mSqrRadius;
 
-        if(discrimant < 0){
-            return null;
+        float discriminant = compB * compB - 4 * compC;
+
+        //Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
+
+        if( discriminant < 0 ){
+            return intersectionTest;
         }
 
-        float t0 = (float) ((- compB - Math.sqrt(discrimant) )/ 2f);
-        float t1 = (float) ((- compB + Math.sqrt(discrimant) )/ 2f);
+        float t0 = (float) ((- compB - Math.sqrt(discriminant) ) * 0.5f);
+        float t1 = (float) ((- compB + Math.sqrt(discriminant) ) * 0.5f);
 
-        return null;
+        //Log.warn(this, "choosing the correct t not made, yet");
+        Log.warn(this, "Something was hit");
+        intersectionTest.setHit(true);
+        Vec3 intersectionPoint = new Vec3(-1,-1,-1);
+
+        if( t0 > 0 ){
+            intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t0));
+            intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()));
+            intersectionTest.setIncoming(false);
+        }
+        else if(t1 > 0){
+            intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t1));
+            intersectionTest.setNormal(this.getPosition().sub(intersectionPoint));
+            intersectionTest.setIncoming(true);
+        }
+
+        intersectionTest.setIntersectionPoint(intersectionPoint);
+
+        return intersectionTest;
     }
 }

@@ -54,4 +54,13 @@ public class RgbColor {
         if( this.green < 0 ) this.green = 0f;
         if( this.blue < 0 ) this.blue = 0f;
     }
+
+    @Override
+    public String toString(){
+        return "( " + this.red + ", " + this.green + ", " + this.blue + " )";
+    }
+
+    public boolean equals(RgbColor inColor){
+        return inColor.red == this.red && inColor.green == this.green && inColor.blue == this.blue;
+    }
 }

@@ -1,17 +1,42 @@
 package raytracer;
 
+import utils.Log;
 import utils.Vec3;
 
 public class Intersection {
 
+
     private Vec3 mIntersectionPoint;
+    private Vec3 mObjectPosition;
+    private Vec3 mNormal;
     private Ray mInRay;
     private Ray mOutRay;
 
-    public Intersection(Ray inRay, Ray outRay, Vec3 intersectionPoint){
+    private boolean mIncoming;
+
+    private boolean mHit;
+
+    public Intersection(Ray inRay){
         mInRay = inRay;
-        mOutRay = outRay;
+        mHit = false;
+    }
+
+    public Intersection(Ray inRay, Vec3 intersectionPoint, Vec3 normal){
+        mInRay = inRay;
+        mOutRay = createOutRay();
         mIntersectionPoint = intersectionPoint;
+        mNormal = normal;
+        mHit = false;
+    }
+
+    private Ray createOutRay() {
+        Vec3 normalN = mNormal.normalize();
+        Vec3 directN = mInRay.getDirection().normalize();
+        float angle = normalN.scalar(directN);
+        Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
+        reflVec = reflVec.sub(directN);
+        mOutRay = new Ray(mIntersectionPoint, reflVec, 50);
+        return mOutRay;
     }
 
     public Intersection(){
@@ -31,4 +56,30 @@ public class Intersection {
     public Vec3 getIntersectionPoint(){
         return mIntersectionPoint;
     }
+
+    public boolean isHit() {
+        return mHit;
+    }
+
+    public void setHit(boolean mHit) {
+        this.mHit = mHit;
+    }
+
+    public void setIntersectionPoint(Vec3 mIntersectionPoint) {
+        this.mIntersectionPoint = mIntersectionPoint;
+    }
+
+    public void setNormal(Vec3 mNormal) {
+        this.mNormal = mNormal;
+        this.createOutRay();
+    }
+
+    public boolean isIncoming() {
+        return mIncoming;
+    }
+
+    public void setIncoming(boolean mIncoming) {
+        this.mIncoming = mIncoming;
+    }
+
 }
