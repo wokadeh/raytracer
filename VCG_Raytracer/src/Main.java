@@ -32,8 +32,8 @@ import utils.Vec3;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
-    static int IMAGE_WIDTH = 1000;
-    static int IMAGE_HEIGHT = 1000;
+    static int IMAGE_WIDTH = 800;
+    static int IMAGE_HEIGHT = 600;
 
     static Vec3 CAM_POS = new Vec3(0, 0, 5);
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
@@ -45,7 +45,7 @@ public class Main {
     static int RECURSIONS = 1;
 
     static RgbColor AMBIENT_COLOR = new RgbColor(0, 1, 0);
-    static RgbColor BACKGROUND_COLOR = new RgbColor(0.5f, 0.5f, 0f);
+    static RgbColor BACKGROUND_COLOR = new RgbColor(0.2f, 0.2f, 0.3f);
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
