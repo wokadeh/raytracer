@@ -27,4 +27,9 @@ public class Ray {
         mDirection = direction;
         mEndPoint = mDirection.multScalar(param);
     }
+
+    @Override
+    public String toString(){
+        return "Start: " + mStartPoint.toString() + ", End: " + mEndPoint.toString() + ", Direction: " + mDirection.toString();
+    }
 }

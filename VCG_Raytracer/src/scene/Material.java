@@ -16,8 +16,8 @@ public class Material {
 
     private float mShininess;
 
-    public int PHONG = 0;
-    public int BLINN = 1;
+    public static int PHONG = 0;
+    public static int BLINN = 1;
 
     private int mType;
 
@@ -33,36 +33,34 @@ public class Material {
         mType = type;
     }
 
-    public RgbColor getColor(ArrayList<Light> lightList, Vec3 normal, Vec3 position, PerspectiveCamera perspectiveCamera) {
+    public RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos) {
 
         if(mType == PHONG){
-            return getPhongColor(lightList, normal, perspectiveCamera, position);
+            return getPhongColor(light, normal, camPos, vertexPos);
         }
         if(mType == BLINN){
-            return getBlinnColor(lightList, normal, perspectiveCamera, position);
+            return getBlinnColor(light, normal, camPos, vertexPos);
         }
         return new RgbColor(0,0,0);
     }
 
-    private RgbColor getBlinnColor(ArrayList<Light> lightList, Vec3 normal, PerspectiveCamera perspectiveCamera, Vec3 position) {
+    private RgbColor getBlinnColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos) {
         return mAmbient;
     }
 
-    private RgbColor getPhongColor(ArrayList<Light> lightList, Vec3 normal, PerspectiveCamera perspectiveCamera, Vec3 position){
+    private RgbColor getPhongColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos){
         RgbColor outColor = mAmbient;
 
         Vec3 normalN = normal.normalize();
 
-        for(Light light : lightList){
-            Vec3 lightVecN = (position.sub(light.getPosition())).normalize();
-            float angle = normalN.scalar(lightVecN);
+        Vec3 lightVecN = (vertexPos.sub(light.getPosition())).normalize();
+        float angle = normalN.scalar(lightVecN);
 
-            mDiffuse = calculateDiffuseColor(light.getColor(), angle);
-            mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), position, perspectiveCamera.getPosition(), angle);
+        mDiffuse = calculateDiffuseColor(light.getColor(), angle);
+        mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
 
-            outColor.add(mDiffuse);
-            outColor.add(mSpecular);
-        }
+        outColor.add(mDiffuse);
+        outColor.add(mSpecular);
 
         return outColor;
     }

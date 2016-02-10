@@ -28,8 +28,8 @@ public class Scene {
         mLightList = new ArrayList<Light>();
     }
 
-    public void createSphere(Vec3 pos, float radius){
-        mShapeList.add(new Sphere(pos, radius));
+    public void createSphere(Vec3 pos, Material mat, float radius){
+        mShapeList.add(new Sphere(pos, mat, radius));
     }
 
     public void createPointLight(Vec3 pos, RgbColor color){

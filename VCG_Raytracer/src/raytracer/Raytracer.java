@@ -83,27 +83,26 @@ public class Raytracer {
     private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, boolean isLastRay){
         RgbColor outColor = localColor;
         // 2: Intersection test with all shapes
-        for(Object shape : mShapeList){
-            Intersection intersection = ((Shape)shape).intersect(inRay);
+        for(Shape shape : mShapeList){
+            Intersection intersection = shape.intersect(inRay);
 
             //Log.error(this, "findintersect");
             // Was hit
             if(intersection.isHit()){
                // return new RgbColor(0,0,1);
                 // 3a: send secondary ray to the light source
-                if(recursionCounter == 0){
-                    for(Object light : mLightList) {
-                        return mAmbientColor;
-//                        Light outLight = (Light) light;
-//                        Vec3 endPoint = outLight.getPosition();
-//                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
-//
-//                        localColor.add(findIntersection(recursionCounter, lightRay, localColor, outLight, true));
+                if(recursionCounter == 0 && !isLastRay){
+                    for(Light light : mLightList) {
+                        //return mAmbientColor;
+                        Vec3 endPoint = light.getPosition();
+                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
+
+                        outColor = outColor.add(findIntersection(recursionCounter, lightRay, localColor, light, true));
                     }
                 }
                 else {
-                    return mBackgroundColor;
-                    //traceRay(recursionCounter, intersection.getOutRay());
+                    //return mBackgroundColor;
+                    traceRay(recursionCounter, intersection.getOutRay());
                 }
                 // If the last ray from an object is still intersected with an object the plan shadow color is drawn
                 if(isLastRay){
@@ -142,8 +141,8 @@ public class Raytracer {
     }
 
     private RgbColor calculateLocalIllumination(Light light, Shape shape){
-        Log.error(this, "calc Illu");
-        return shape.getColor();
+        //Log.error(this, "calc Illu");
+        return shape.getColor(light, mScene.getCamPos());
     }
 
     private Vec3 calculateDestinationPoint(){

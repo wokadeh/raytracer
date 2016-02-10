@@ -1,66 +1,66 @@
 package utils;
 
 public class RgbColor {
-    public float red;
-    public float green;
-    public float blue;
+
+    public Vec3 colors;
+    public float red(){ return colors.x; }
+    public float green(){ return colors.y; }
+    public float blue(){ return colors.z; }
 
     public RgbColor(float r, float g, float b){
-        this.red = r;
-        this.green = g;
-        this.blue = b;
+        colors = new Vec3(r, g, b);
+
+        clamp();
+    }
+
+    public RgbColor(Vec3 color){
+        colors = color;
 
         clamp();
     }
 
     public void add(float r, float g, float b){
-        this.red += r;
-        this.green += g;
-        this.blue += g;
+        colors.x += r;
+        colors.y += g;
+        colors.z += g;
 
         clamp();
     }
 
-    public void add(RgbColor color){
-        this.red += color.red;
-        this.green += color.green;
-        this.blue += color.blue;
-
-        clamp();
+    public RgbColor add(RgbColor color){
+        return new RgbColor( colors.add(color.colors) );
     }
 
-    public void mult(RgbColor color){
-        this.red *= color.red;
-        this.green *= color.green;
-        this.blue *= color.blue;
+    public RgbColor mult(RgbColor color){
+        return new RgbColor( colors.x * color.red(),
+                             colors.y * color.green(),
+                             colors.z * color.blue() );
     }
 
-    public void mult(float value){
-        this.red *= value;
-        this.green *= value;
-        this.blue *= value;
+    public RgbColor mult(float value){
+        return new RgbColor( colors.multScalar(value) );
     }
 
     public int getRGB(){
-        return ((int) (this.red * 255f) << 16) + ((int) (this.green * 255f) << 8) + ((int) (this.blue * 255f));
+        return ((int) (this.red() * 255f) << 16) + ((int) (this.green() * 255f) << 8) + ((int) (this.blue() * 255f));
     }
 
     private void clamp(){
-        if( this.red > 1 ) this.red = 1f;
-        if( this.green > 1 ) this.green = 1f;
-        if( this.blue > 1 ) this.blue = 1f;
+        if( this.red() > 1 ) colors.x = 1f;
+        if( this.green() > 1 ) colors.y = 1f;
+        if( this.blue() > 1 ) colors.z = 1f;
 
-        if( this.red < 0 ) this.red = 0f;
-        if( this.green < 0 ) this.green = 0f;
-        if( this.blue < 0 ) this.blue = 0f;
+        if( this.red() < 0 ) colors.x = 0f;
+        if( this.green() < 0 ) colors.y = 0f;
+        if( this.blue() < 0 ) colors.z = 0f;
     }
 
     @Override
     public String toString(){
-        return "( " + this.red + ", " + this.green + ", " + this.blue + " )";
+        return "( " + this.red() + ", " + this.green() + ", " + this.blue() + " )";
     }
 
     public boolean equals(RgbColor inColor){
-        return inColor.red == this.red && inColor.green == this.green && inColor.blue == this.blue;
+        return inColor.red() == this.red() && inColor.green() == this.green() && inColor.blue() == this.blue();
     }
 }

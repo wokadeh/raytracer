@@ -7,6 +7,7 @@ import utils.Vec3;
 public class Intersection {
 
     private Vec3 mIntersectionPoint;
+
     private Vec3 mNormal;
     private Ray mInRay;
     private Ray mOutRay;
@@ -63,5 +64,9 @@ public class Intersection {
 
     public Ray getOutRay() {
         return mOutRay;
+    }
+
+    public Vec3 getNormal() {
+        return mNormal;
     }
 }
