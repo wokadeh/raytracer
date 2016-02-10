@@ -42,10 +42,6 @@ public class PerspectiveCamera extends SceneObject {
         logParameters(centerOfInterest, pos, upVec, angleOfView);
     }
 
-    public float getFocalLength() {
-        return focalLength;
-    }
-
     public Vec3 calculateDestPoint(Vec2 pixelPos){
 
         float x = (2f * (pixelPos.x + 0.5f) / ((float) this.screenWidth - 1f) - 1f ) * this.viewPlaneWidth;

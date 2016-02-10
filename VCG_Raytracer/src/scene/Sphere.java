@@ -24,7 +24,7 @@ public class Sphere extends Shape{
 
         float discriminant = compB * compB - 4 * compC;
 
-        Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
+        //Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
 
         if( discriminant < 0 ){
             return intersectionTest;
@@ -34,7 +34,7 @@ public class Sphere extends Shape{
         float t1 = (float) ((- compB + Math.sqrt(discriminant) ) * 0.5f);
 
         //Log.warn(this, "choosing the correct t not made, yet");
-        Log.warn(this, "Something could be hit");
+        //Log.warn(this, "Something could be hit");
 
         Vec3 intersectionPoint = new Vec3(-1,-1,-1);
 

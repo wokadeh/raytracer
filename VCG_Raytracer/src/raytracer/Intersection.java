@@ -6,7 +6,6 @@ import utils.Vec3;
 
 public class Intersection {
 
-
     private Vec3 mIntersectionPoint;
     private Vec3 mNormal;
     private Ray mInRay;
@@ -33,10 +32,6 @@ public class Intersection {
         return mOutRay;
     }
 
-    public boolean isHit() {
-        return mHit;
-    }
-
     public void setHit(boolean mHit) {
         this.mHit = mHit;
     }
@@ -50,12 +45,23 @@ public class Intersection {
         this.createOutRay();
     }
 
-    public boolean isIncoming() {
-        return mIncoming;
-    }
-
     public void setIncoming(boolean mIncoming) {
         this.mIncoming = mIncoming;
     }
 
+    public boolean isHit() {
+        return mHit;
+    }
+
+    public boolean isIncoming() {
+        return mIncoming;
+    }
+
+    public Vec3 getIntersectionPoint() {
+        return mIntersectionPoint;
+    }
+
+    public Ray getOutRay() {
+        return mOutRay;
+    }
 }
