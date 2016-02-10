@@ -88,25 +88,27 @@ public class Raytracer {
 
             //Log.error(this, "findintersect");
             // Was hit
-            if(!intersection.isHit()){
-                return new RgbColor(0,0,1);
-//                // 3a: send secondary ray to the light source
-//                if(recursionCounter == 0){
-//                    for(Object light : mLightList) {
+            if(intersection.isHit()){
+               // return new RgbColor(0,0,1);
+                // 3a: send secondary ray to the light source
+                if(recursionCounter == 0){
+                    for(Object light : mLightList) {
+                        return mAmbientColor;
 //                        Light outLight = (Light) light;
 //                        Vec3 endPoint = outLight.getPosition();
 //                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
 //
 //                        localColor.add(findIntersection(recursionCounter, lightRay, localColor, outLight, true));
-//                    }
-//                }
-//                else {
-//                    traceRay(recursionCounter, intersection.getOutRay());
-//                }
-//                // If the last ray from an object is still intersected with an object the plan shadow color is drawn
-//                if(isLastRay){
-//                    return calculateShadowColor();
-//                }
+                    }
+                }
+                else {
+                    return mBackgroundColor;
+                    //traceRay(recursionCounter, intersection.getOutRay());
+                }
+                // If the last ray from an object is still intersected with an object the plan shadow color is drawn
+                if(isLastRay){
+                    return calculateShadowColor();
+                }
             }
             else{
                 // If the last ray from an object to the light is not intersected calculate the color on that point
@@ -140,6 +142,7 @@ public class Raytracer {
     }
 
     private RgbColor calculateLocalIllumination(Light light, Shape shape){
+        Log.error(this, "calc Illu");
         return shape.getColor();
     }
 
