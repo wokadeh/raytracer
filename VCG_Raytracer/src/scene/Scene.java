@@ -2,6 +2,7 @@ package scene;
 
 
 import utils.Log;
+import utils.RgbColor;
 import utils.Vec2;
 import utils.Vec3;
 
@@ -31,7 +32,11 @@ public class Scene {
         mShapeList.add(new Sphere(pos, radius));
     }
 
-    public void createCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
+    public void createPointLight(Vec3 pos, RgbColor color){
+        mLightList.add(new PointLight(pos, color));
+    }
+
+    public void createPerspCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
         mSceneCam = new PerspectiveCamera(camPos, viewPoint, upVec, viewAngle, focalLength, screenWidth, screenHeight);
     }
 

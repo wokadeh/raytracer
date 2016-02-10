@@ -4,6 +4,7 @@
 //                     Vertiefung Computergrafik                //
 // ************************************************************ //
 
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     1. Documentation:    Did you comment your code shortly but clearly?
@@ -12,7 +13,8 @@
     4. Theory:           Are you going the right way?
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- <<< The Masters of Raytracing >>>
+
+ <<< YOUR TEAM NAME >>>
 
      Master of Documentation:
      Master of Structure:
@@ -65,9 +67,10 @@ public class Main {
     }
 
     public static void setupScene(Scene renderScene){
-        renderScene.createCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
+        renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
         renderScene.createSphere(new Vec3(0, -1, 0), 1f);
+        renderScene.createPointLight(new Vec3( 0, 20, 0 ), new RgbColor(0.8f, 0.8f, 0.6f));
     }
 
     public static void raytraceScene(Window renderWindow, Scene renderScene){
