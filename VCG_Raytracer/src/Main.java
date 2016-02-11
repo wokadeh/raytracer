@@ -45,7 +45,7 @@ public class Main {
 
     static int RECURSIONS = 1;
 
-    static RgbColor AMBIENT_COLOR = new RgbColor(0, 1, 0);
+    static RgbColor AMBIENT_COLOR = new RgbColor(0, 0.2f, 0);
     static RgbColor BACKGROUND_COLOR = new RgbColor(0.2f, 0.2f, 0.3f);
 
     // Initial method. This is where the show begins.

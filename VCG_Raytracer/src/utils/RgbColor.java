@@ -19,25 +19,17 @@ public class RgbColor {
         clamp();
     }
 
-    public void add(float r, float g, float b){
-        colors.x += r;
-        colors.y += g;
-        colors.z += g;
-
-        clamp();
-    }
-
     public RgbColor add(RgbColor color){
         return new RgbColor( colors.add(color.colors) );
     }
 
-    public RgbColor mult(RgbColor color){
+    public RgbColor multScalar(RgbColor color){
         return new RgbColor( colors.x * color.red(),
                              colors.y * color.green(),
                              colors.z * color.blue() );
     }
 
-    public RgbColor mult(float value){
+    public RgbColor multScalar(float value){
         return new RgbColor( colors.multScalar(value) );
     }
 

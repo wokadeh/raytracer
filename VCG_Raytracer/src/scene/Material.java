@@ -4,11 +4,9 @@ import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
 
-import java.util.ArrayList;
-
 public class Material {
 
-    private RgbColor mAmbient;
+    public RgbColor ambient;
     private RgbColor mDiffuse;
     private RgbColor mSpecular;
     private RgbColor mDiffCoeff;
@@ -24,11 +22,14 @@ public class Material {
     public Material(RgbColor ambientColor, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, int type){
         Log.print(this, "Init " + type);
 
-        mAmbient = ambientColor;
+        this.ambient = ambientColor;
         mShininess = shininess;
 
         mDiffCoeff = diffuseCoefficient;
         mSpecCoeff = specularCoefficient;
+
+        mDiffuse = new RgbColor(0,0,0);
+        mSpecular = new RgbColor(0,0,0);
 
         mType = type;
     }
@@ -45,30 +46,39 @@ public class Material {
     }
 
     private RgbColor getBlinnColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos) {
-        return mAmbient;
+        return this.ambient;
+    }
+
+    private float clampAngle(float angle){
+        if(angle > 1f){
+            return 1f;
+        }
+        if(angle < 0){
+            return 0;
+        }
+        return angle;
     }
 
     private RgbColor getPhongColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos){
-        RgbColor outColor = mAmbient;
-
         Vec3 normalN = normal.normalize();
 
-        Vec3 lightVecN = (vertexPos.sub(light.getPosition())).normalize();
-        float angle = normalN.scalar(lightVecN);
+        Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
+        float angle = clampAngle(normalN.scalar(lightVecN));
 
-        mDiffuse = calculateDiffuseColor(light.getColor(), angle);
-        mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
+        //if(angle >= 0) {
+            mDiffuse = calculateDiffuseColor(light.getColor(), angle);
+            mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
 
-        outColor.add(mDiffuse);
-        outColor.add(mSpecular);
+            return mDiffuse.add(mSpecular);
+        //}
 
-        return outColor;
+//        Log.warn(this, mDiffuse + ", " + mSpecular);
+
+        //return mDiffuse;
     }
 
     private RgbColor calculateSpecularColor(Vec3 normalN, Vec3 lightVecN, RgbColor lightColor, Vec3 position, Vec3 camPosition, float angle) {
-        RgbColor outColor = mSpecCoeff;
-
-        Vec3 viewVecN = position.sub(camPosition).normalize();
+        Vec3 viewVecN = camPosition.sub(position).normalize();
 
         Vec3 reflectN = normalN.multScalar(2 * angle);
         reflectN = reflectN.sub(lightVecN);
@@ -76,18 +86,14 @@ public class Material {
         float specAngle = reflectN.scalar(viewVecN);
         float specFactor = (float) Math.pow(specAngle, mShininess);
 
-        outColor.mult(lightColor);
-        outColor.mult(specFactor);
-
-        return outColor;
+        return mSpecCoeff
+                .multScalar(lightColor)
+                .multScalar(specFactor);
     }
 
     private RgbColor calculateDiffuseColor(RgbColor lightColor, float angle){
-
-        RgbColor outColor = mDiffCoeff;
-        outColor.mult(lightColor);
-        outColor.mult(angle);
-
-        return outColor;
+        return mDiffCoeff
+                .multScalar(lightColor)
+                .multScalar(angle);
     }
 }

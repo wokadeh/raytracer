@@ -11,21 +11,22 @@ import java.util.ArrayList;
 
 public abstract class Shape extends SceneObject{
 
-    private Intersection mIntersection;
-    private Material mMaterial;
+    private Material material;
 
     public Shape(Vec3 pos, Material mat) {
         super(pos);
-        mMaterial = mat;
+        this.material = mat;
         Log.print(this, "Init");
     }
 
     public abstract Intersection intersect(Ray ray);
 
-    public RgbColor getColor(Light light, Vec3 camPos){
-        if(mIntersection != null) {
-            return mMaterial.getColor(light, mIntersection.getNormal(), mIntersection.getIntersectionPoint(), camPos);
+    public RgbColor getColor(Light light, Vec3 camPos, Intersection intersection){
+        if(intersection != null) {
+            if(intersection.getNormal() != null) {
+                return this.material.getColor(light, intersection.getNormal(), intersection.getIntersectionPoint(), camPos);
+            }
         }
-        return new RgbColor(0,0,0);
+        return this.material.ambient;
     }
 }

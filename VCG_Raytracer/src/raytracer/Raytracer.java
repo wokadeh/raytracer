@@ -59,7 +59,6 @@ public class Raytracer {
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Rows
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
-
                 Vec2 screenPosition = new Vec2(x, y);
                 pixelColor = sendPrimaryRay(screenPosition);
                 mRenderWindow.setPixel(mBufferedImage, pixelColor, screenPosition);
@@ -70,49 +69,48 @@ public class Raytracer {
     }
 
     private RgbColor traceRay(int recursionCounter, Ray inRay){
-        RgbColor outColor = mBackgroundColor;
+        RgbColor outColor = new RgbColor(0,0,0);
         while(recursionCounter > 0){
             recursionCounter--;
 
-            outColor = findIntersection(recursionCounter, inRay, mBackgroundColor, null, false);
+            outColor = findIntersection(recursionCounter, inRay, outColor, null, null, null, false);
         }
 
         return outColor;
     }
 
-    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, boolean isLastRay){
+    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, Shape lastInterShape, Intersection lastIntersection, boolean isLastRay){
         RgbColor outColor = localColor;
         // 2: Intersection test with all shapes
-        for(Shape shape : mShapeList){
+        for( Shape shape : mShapeList ){
             Intersection intersection = shape.intersect(inRay);
-
-            //Log.error(this, "findintersect");
-            // Was hit
-            if(intersection.isHit()){
-               // return new RgbColor(0,0,1);
+            // Shape was hit
+            if( intersection.isHit() ){
                 // 3a: send secondary ray to the light source
-                if(recursionCounter == 0 && !isLastRay){
-                    for(Light light : mLightList) {
-                        //return mAmbientColor;
-                        Vec3 endPoint = light.getPosition();
-                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), endPoint);
+                if( recursionCounter == 0 && !isLastRay ){
+                    for( Light light : mLightList ) {
+                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
 
-                        outColor = outColor.add(findIntersection(recursionCounter, lightRay, localColor, light, true));
+                        outColor = outColor.add(findIntersection(recursionCounter, lightRay, localColor, light, shape, intersection, true));
                     }
                 }
-                else {
-                    //return mBackgroundColor;
-                    traceRay(recursionCounter, intersection.getOutRay());
-                }
                 // If the last ray from an object is still intersected with an object the plan shadow color is drawn
-                if(isLastRay){
-                    return calculateShadowColor();
+                //else if(recursionCounter == 0 && isLastRay){
+                //    return calculateShadowColor();
+                //}
+                // Further recursions through objects
+                else {
+                    outColor = outColor.add( mAmbientColor);
+                //    outColor = traceRay(recursionCounter, intersection.getOutRay());
                 }
             }
             else{
                 // If the last ray from an object to the light is not intersected calculate the color on that point
-                if(isLastRay){
-                    return calculateLocalIllumination(inLight, (Shape) shape);
+                if( isLastRay ){
+                    outColor = outColor.add(mAmbientColor.add(calculateLocalIllumination(inLight, lastInterShape, lastIntersection)));
+                }
+                else {
+                    outColor = mBackgroundColor;
                 }
             }
         }
@@ -120,29 +118,28 @@ public class Raytracer {
     }
 
     private RgbColor calculateShadowColor(){
+        Log.warn(this, "Painting shadow");
         RgbColor outColor = mAmbientColor;
 
         return outColor;
     }
 
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){
-        RgbColor finalColor;
         Vec3 startPoint = mScene.getCamPos();
         Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
         Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
 
        //Log.warn(this, startPoint.toString() + ", " + destinationPoint.toString());
 
-        finalColor = traceRay(mMaxRecursions, primaryRay);
         //if (!finalColor.equals(new RgbColor(0,0,1)))
           //  Log.error(this, finalColor.toString());
         // 4: set background color
-        return finalColor;
+        return traceRay(mMaxRecursions, primaryRay);
     }
 
-    private RgbColor calculateLocalIllumination(Light light, Shape shape){
+    private RgbColor calculateLocalIllumination(Light light, Shape shape, Intersection intersection){
         //Log.error(this, "calc Illu");
-        return shape.getColor(light, mScene.getCamPos());
+        return shape.getColor(light, mScene.getCamPos(), intersection);
     }
 
     private Vec3 calculateDestinationPoint(){
