@@ -86,12 +86,27 @@ public class Raytracer {
             Intersection intersection = shape.intersect(inRay);
             // Shape was hit
             if( intersection.isHit() ){
-                outColor = new RgbColor(0,0,0);
-                for( Light light : mLightList ) {
-                    Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
+                if( recursionCounter == 0 && !isLastRay ) {
+                    RgbColor illuColor = new RgbColor(0,0,0);
+                    for (Light light : mLightList) {
+                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
 
-                    outColor = outColor.add(calculateLocalIllumination(light, shape, intersection));
+                        //outColor = outColor.add(calculateLocalIllumination(light, shape, intersection));
+                        illuColor = illuColor.add(findIntersection(recursionCounter, lightRay, localColor, light, shape, intersection, true));
+                    }
+                    outColor = illuColor.add(mAmbientColor);
                 }
+                //else if(recursionCounter == 0 && isLastRay){
+                //    return calculateShadowColor();
+                //}
+                // Further recursions through objects
+                else {
+                //    outColor = outColor.add( mAmbientColor);
+                    outColor = traceRay(recursionCounter, intersection.getOutRay());
+                }
+            }
+            if (isLastRay) {
+                outColor = calculateLocalIllumination(inLight, lastInterShape, lastIntersection);
             }
         }
         return outColor;
