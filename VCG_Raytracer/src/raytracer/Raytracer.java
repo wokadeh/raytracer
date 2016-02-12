@@ -89,13 +89,11 @@ public class Raytracer {
                     //outColor = outColor.add( mAmbientColor);
                 Ray lightRay = new Ray(intersection.getIntersectionPoint(), mLightList.get(0).getPosition());
 
-                outColor = calculateLocalIllumination(mLightList.get(0), shape, intersection);
+                return calculateLocalIllumination(mLightList.get(0), shape, intersection);
             }
-            else{
-                    outColor = mBackgroundColor;
-            }
+
         }
-        return outColor;
+        return mBackgroundColor;
     }
 
 //    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, Shape lastInterShape, Intersection lastIntersection, boolean isLastRay){

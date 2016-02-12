@@ -72,7 +72,10 @@ public class Main {
 
         Material sphereMaterial = new Material(AMBIENT_COLOR, new RgbColor(1.0f,0.4f,0.4f), new RgbColor(0.1f,0.1f,1.0f), 10, Material.PHONG);
 
-        renderScene.createSphere(new Vec3(0, -1, 0), sphereMaterial, 1f);
+        renderScene.createSphere(new Vec3(0, -0.5f, 0), sphereMaterial, 1f);
+        renderScene.createSphere(new Vec3(0.6f, 1.0f, -0.05f), sphereMaterial, 1.0f);
+
+
         renderScene.createPointLight(new Vec3( 0, 20, 0 ), new RgbColor(0.8f, 0.8f, 0.6f));
     }
 

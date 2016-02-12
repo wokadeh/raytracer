@@ -34,6 +34,10 @@ public class Vec3 {
         return new Vec3(this.x - inputVec.x, this.y - inputVec.y, this.z - inputVec.z);
     }
 
+    public Vec3 negate(){
+        return new Vec3(-this.x, -this.y, -this.z);
+    }
+
     public float scalar(Vec3 inputVec){
         return this.x * inputVec.x + this.y * inputVec.y + this.z * inputVec.z;
     }

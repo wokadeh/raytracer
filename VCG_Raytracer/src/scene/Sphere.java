@@ -19,7 +19,14 @@ public class Sphere extends Shape{
     public Intersection intersect(Ray ray){
         Intersection intersectionTest = new Intersection(ray, this);
 
-        float compB = 2 * ray.getStartPoint().scalar(ray.getDirection());
+        Vec3 lala = ray.getStartPoint().sub(this.getPosition());
+        float lala_sq = lala.scalar(lala);
+
+        if(lala_sq <= mSqrRadius){
+            return intersectionTest;
+        }
+
+        float compB = 2 * lala.scalar(ray.getDirection());
         float compC = ray.getStartPoint().scalar(ray.getStartPoint()) - mSqrRadius;
 
         float discriminant = compB * compB - 4 * compC;
