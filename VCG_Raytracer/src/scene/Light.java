@@ -14,8 +14,8 @@ public class Light extends SceneObject {
 
     public Light(Vec3 pos, RgbColor color) {
         super(pos);
-        Log.print(this, "Init with color " + mColor);
         mColor = color;
+        Log.print(this, "Init with color " + mColor);
     }
 
 
