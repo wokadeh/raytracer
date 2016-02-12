@@ -70,7 +70,7 @@ public class Main {
     public static void setupScene(Scene renderScene){
         renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-        Material sphereMaterial = new Material(AMBIENT_COLOR, new RgbColor(0.4f,0.4f,0.4f), new RgbColor(0.8f,0.8f,0.8f), 10, Material.PHONG);
+        Material sphereMaterial = new Material(AMBIENT_COLOR, new RgbColor(1.0f,0.4f,0.4f), new RgbColor(0.1f,0.1f,1.0f), 10, Material.PHONG);
 
         renderScene.createSphere(new Vec3(0, -1, 0), sphereMaterial, 1f);
         renderScene.createPointLight(new Vec3( 0, 20, 0 ), new RgbColor(0.8f, 0.8f, 0.6f));

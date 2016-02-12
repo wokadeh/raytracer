@@ -86,36 +86,55 @@ public class Raytracer {
             Intersection intersection = shape.intersect(inRay);
             // Shape was hit
             if( intersection.isHit() ){
-                // 3a: send secondary ray to the light source
-                if( recursionCounter == 0 && !isLastRay ){
-                    for( Light light : mLightList ) {
-                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
+                    //outColor = outColor.add( mAmbientColor);
+                Ray lightRay = new Ray(intersection.getIntersectionPoint(), mLightList.get(0).getPosition());
 
-                        outColor = outColor.add(findIntersection(recursionCounter, lightRay, localColor, light, shape, intersection, true));
-                    }
-                }
-                // If the last ray from an object is still intersected with an object the plan shadow color is drawn
-                //else if(recursionCounter == 0 && isLastRay){
-                //    return calculateShadowColor();
-                //}
-                // Further recursions through objects
-                else {
-                    outColor = outColor.add( mAmbientColor);
-                //    outColor = traceRay(recursionCounter, intersection.getOutRay());
-                }
+                outColor = calculateLocalIllumination(mLightList.get(0), shape, intersection);
             }
             else{
-                // If the last ray from an object to the light is not intersected calculate the color on that point
-                if( isLastRay ){
-                    outColor = outColor.add(mAmbientColor.add(calculateLocalIllumination(inLight, lastInterShape, lastIntersection)));
-                }
-                else {
                     outColor = mBackgroundColor;
-                }
             }
         }
         return outColor;
     }
+
+//    private RgbColor findIntersection(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, Shape lastInterShape, Intersection lastIntersection, boolean isLastRay){
+//        RgbColor outColor = localColor;
+//        // 2: Intersection test with all shapes
+//        for( Shape shape : mShapeList ){
+//            Intersection intersection = shape.intersect(inRay);
+//            // Shape was hit
+//            if( intersection.isHit() ){
+//                // 3a: send secondary ray to the light source
+//                if( recursionCounter == 0 && !isLastRay ){
+//                    for( Light light : mLightList ) {
+//                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
+//
+//                        outColor = outColor.add(findIntersection(recursionCounter, lightRay, localColor, light, shape, intersection, true));
+//                    }
+//                }
+//                // If the last ray from an object is still intersected with an object the plan shadow color is drawn
+//                //else if(recursionCounter == 0 && isLastRay){
+//                //    return calculateShadowColor();
+//                //}
+//                // Further recursions through objects
+//                else {
+//                    outColor = outColor.add( mAmbientColor);
+//                //    outColor = traceRay(recursionCounter, intersection.getOutRay());
+//                }
+//            }
+//            else{
+//                // If the last ray from an object to the light is not intersected calculate the color on that point
+//                if( isLastRay ){
+//                    outColor = outColor.add(new RgbColor(1,0,0));// = outColor.add(mAmbientColor.add(calculateLocalIllumination(inLight, lastInterShape, lastIntersection)));
+//                }
+//                else {
+//                    outColor = mBackgroundColor;
+//                }
+//            }
+//        }
+//        return outColor;
+//    }
 
     private RgbColor calculateShadowColor(){
         Log.warn(this, "Painting shadow");
