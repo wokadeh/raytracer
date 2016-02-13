@@ -46,22 +46,15 @@ public class Window {
 
     }
 
-    private void createLabel(){
-        mTimeLabel = new JLabel("time");
-        mFrame.add(mTimeLabel);
-        mTimeLabel.setHorizontalTextPosition(JLabel.LEFT);
-        mTimeLabel.setVerticalTextPosition(JLabel.BOTTOM);
-        //mTimeLabel.setBackground(Color.red);
-        //mTimeLabel.setOpaque(true);
-    }
-
     public void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
         bufferedImage.setRGB((int)screenPosition.x, (int)screenPosition.y, color.getRGB());
         mFrame.repaint();
     }
 
     public void setTimeToLabel(String text){
-        createLabel();
-        mTimeLabel.setText(text);
+        Graphics graphic = mBufferedImage.getGraphics();
+        graphic.drawString("Elapsed rendering time: " + text + " sec", 20, 20);
+
+        mFrame.repaint();
     }
 }
