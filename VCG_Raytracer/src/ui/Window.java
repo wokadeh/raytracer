@@ -1,6 +1,5 @@
 package ui;
 
-import utils.IO;
 import utils.RgbColor;
 import utils.Vec2;
 
@@ -16,7 +15,6 @@ public class Window {
     private BufferedImage mBufferedImage;
 
     private JFrame mFrame;
-    private JLabel mTimeLabel;
 
     public Window(int width, int height){
         mWidth = width;
@@ -43,7 +41,6 @@ public class Window {
         frame.setVisible(true);
 
         mFrame = frame;
-
     }
 
     public void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
@@ -53,7 +50,7 @@ public class Window {
 
     public void setTimeToLabel(String text){
         Graphics graphic = mBufferedImage.getGraphics();
-        graphic.drawString("Elapsed rendering time: " + text + " sec", 20, 20);
+        graphic.drawString("Elapsed rendering time: " + text + " sec", 10, mHeight - 10);
 
         mFrame.repaint();
     }
