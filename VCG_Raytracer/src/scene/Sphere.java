@@ -19,14 +19,17 @@ public class Sphere extends Shape{
     public Intersection intersect(Ray ray){
         Intersection intersectionTest = new Intersection(ray, this);
 
-        Vec3 lala = ray.getStartPoint().sub(this.getPosition());
-        float lala_sq = lala.scalar(lala);
+        if(ray.getStartPoint() == null){
+            Log.warn(this, "lalala");
+        }
+        Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
+        float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
-        if(lala_sq <= mSqrRadius){
+        if(distanceToPosSq <= mSqrRadius){
             return intersectionTest;
         }
 
-        float compB = 2 * lala.scalar(ray.getDirection());
+        float compB = 2 * distanceToPos.scalar(ray.getDirection());
         float compC = ray.getStartPoint().scalar(ray.getStartPoint()) - mSqrRadius;
 
         float discriminant = compB * compB - 4 * compC;
@@ -45,17 +48,18 @@ public class Sphere extends Shape{
         if( t0 > 0 ){
             intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t0));
-            intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()));
+
             intersectionTest.setIncoming(false);
         }
         else if(t1 > 0){
             intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t1));
-            intersectionTest.setNormal(this.getPosition().sub(intersectionPoint));
+
             intersectionTest.setIncoming(true);
         }
 
         intersectionTest.setIntersectionPoint(intersectionPoint);
+        intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()));
 
         return intersectionTest;
     }
