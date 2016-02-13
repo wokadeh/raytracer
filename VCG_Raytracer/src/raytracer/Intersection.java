@@ -23,14 +23,13 @@ public class Intersection {
         mShape = shape;
     }
 
-    private Ray createOutRay() {
+    private void createOutRay() {
         Vec3 normalN = mNormal.normalize();
         Vec3 directN = mInRay.getDirection().normalize();
         float angle = normalN.scalar(directN);
         Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(directN);
         mOutRay = new Ray(mIntersectionPoint, reflVec, 50);
-        return mOutRay;
     }
 
     public void setHit(boolean mHit) {
