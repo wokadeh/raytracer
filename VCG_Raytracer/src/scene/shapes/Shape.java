@@ -1,15 +1,15 @@
-package scene;
+package scene.shapes;
 
 import raytracer.Intersection;
 import raytracer.Ray;
+import scene.materials.Material;
+import scene.SceneObject;
+import scene.lights.Light;
 import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
-import utils.Vec4;
 
-import java.util.ArrayList;
-
-public abstract class Shape extends SceneObject{
+public abstract class Shape extends SceneObject {
 
     private Material material;
 

@@ -16,9 +16,9 @@
 
 package raytracer;
 
-import scene.Light;
+import scene.lights.Light;
 import scene.Scene;
-import scene.Shape;
+import scene.shapes.Shape;
 import ui.Window;
 import utils.*;
 

@@ -1,5 +1,6 @@
-package scene;
+package scene.materials;
 
+import scene.lights.Light;
 import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;

@@ -1,5 +1,6 @@
-package scene;
+package scene.cameras;
 
+import scene.SceneObject;
 import utils.Log;
 import utils.Vec2;
 import utils.Vec3;

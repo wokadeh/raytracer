@@ -1,6 +1,12 @@
 package scene;
 
 
+import scene.cameras.PerspectiveCamera;
+import scene.lights.Light;
+import scene.lights.PointLight;
+import scene.materials.Material;
+import scene.shapes.Shape;
+import scene.shapes.Sphere;
 import utils.Log;
 import utils.RgbColor;
 import utils.Vec2;

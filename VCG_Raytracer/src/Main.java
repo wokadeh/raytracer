@@ -24,7 +24,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 import raytracer.Raytracer;
-import scene.Material;
+import scene.materials.Material;
 import ui.Window;
 import scene.Scene;
 import utils.RgbColor;

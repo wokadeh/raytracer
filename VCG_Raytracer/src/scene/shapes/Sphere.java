@@ -1,11 +1,11 @@
-package scene;
+package scene.shapes;
 
 import raytracer.Intersection;
 import raytracer.Ray;
-import utils.Log;
+import scene.materials.Material;
 import utils.Vec3;
 
-public class Sphere extends Shape{
+public class Sphere extends Shape {
 
     private float mSqrRadius;
 
