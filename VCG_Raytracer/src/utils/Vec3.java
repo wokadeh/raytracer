@@ -22,8 +22,12 @@ public class Vec3 {
     }
 
     public Vec3 normalize(){
-        double length = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-        return new Vec3( (float) (this.x / length), (float) (this.y/ length), (float) (this.z / length));
+        float length = this.length();
+        return new Vec3(this.x / length, this.y / length, this.z / length);
+    }
+
+    public float length(){
+        return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
     public Vec3 add(Vec3 inputVec){
