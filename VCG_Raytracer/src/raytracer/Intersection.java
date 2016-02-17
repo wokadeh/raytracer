@@ -25,11 +25,11 @@ public class Intersection {
 
     private void createOutRay() {
         Vec3 normalN = mNormal.normalize();
-        Vec3 directN = mInRay.getDirection().normalize();
+        Vec3 directN = mInRay.getDirection().negate().normalize();
         float angle = normalN.scalar(directN);
         Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(directN);
-        mOutRay = new Ray(mIntersectionPoint, reflVec, 50);
+        mOutRay = new Ray(mIntersectionPoint, reflVec, 500);
     }
 
     public void setHit(boolean mHit) {
