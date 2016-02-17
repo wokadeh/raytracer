@@ -65,16 +65,10 @@ public class Material {
         Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
         float angle = clampAngle(normalN.scalar(lightVecN));
 
-        //if(angle >= 0) {
-            mDiffuse = calculateDiffuseColor(light.getColor(), angle);
-            mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
+        mDiffuse = calculateDiffuseColor(light.getColor(), angle);
+        mSpecular = calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
 
-            return mDiffuse.add(mSpecular);
-        //}
-
-//        Log.warn(this, mDiffuse + ", " + mSpecular);
-
-        //return mDiffuse;
+        return mDiffuse.add(mSpecular);
     }
 
     private RgbColor calculateSpecularColor(Vec3 normalN, Vec3 lightVecN, RgbColor lightColor, Vec3 position, Vec3 camPosition, float angle) {

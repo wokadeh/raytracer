@@ -19,9 +19,6 @@ public class Sphere extends Shape{
     public Intersection intersect(Ray ray){
         Intersection intersectionTest = new Intersection(ray, this);
 
-        if(ray.getStartPoint() == null){
-            Log.warn(this, "lalala");
-        }
         Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
         float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
@@ -33,8 +30,6 @@ public class Sphere extends Shape{
         float compC = ray.getStartPoint().scalar(ray.getStartPoint()) - mSqrRadius;
 
         float discriminant = compB * compB - 4 * compC;
-
-        //Log.warn(this, "CompB: " + String.valueOf(compB) + ", CompC: " + String.valueOf(compC) + ", Disc: " + discriminant);
 
         if( discriminant < 0 ){
             return intersectionTest;
