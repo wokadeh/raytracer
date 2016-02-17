@@ -35,6 +35,10 @@ public class Sphere extends Shape {
             return intersectionTest;
         }
 
+        return fillIntersectionInfo(intersectionTest, discriminant, ray, compB);
+    }
+
+    private Intersection fillIntersectionInfo(Intersection intersectionTest, float discriminant, Ray ray, float compB){
         float t0 = (float) ((- compB - Math.sqrt(discriminant) ) * 0.5f);
         float t1 = (float) ((- compB + Math.sqrt(discriminant) ) * 0.5f);
 
