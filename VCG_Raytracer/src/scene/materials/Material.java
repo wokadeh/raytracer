@@ -17,6 +17,7 @@ public class Material {
 
     public static int PHONG = 0;
     public static int BLINN = 1;
+    public static int LAMBERT = 2;
 
     private int mType;
 
@@ -43,11 +44,24 @@ public class Material {
         if(mType == BLINN){
             return getBlinnColor(light, normal, camPos, vertexPos);
         }
+        if(mType == LAMBERT){
+            return getLambertColor(light, normal, camPos, vertexPos);
+        }
         return new RgbColor(0,0,0);
     }
 
     private RgbColor getBlinnColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos) {
         return this.ambient;
+    }
+
+    private RgbColor getLambertColor(Light light, Vec3 normal, Vec3 camPos, Vec3 vertexPos) {
+
+        Vec3 normalN = normal.normalize();
+
+        Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
+        float angle = clampAngle(normalN.scalar(lightVecN));
+
+        return calculateDiffuseColor(light.getColor(), angle);
     }
 
     private float clampAngle(float angle){
