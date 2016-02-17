@@ -5,6 +5,7 @@ import scene.cameras.PerspectiveCamera;
 import scene.lights.Light;
 import scene.lights.PointLight;
 import scene.materials.Material;
+import scene.shapes.Plane;
 import scene.shapes.Shape;
 import scene.shapes.Sphere;
 import utils.Log;
@@ -36,6 +37,10 @@ public class Scene {
 
     public void createSphere(Vec3 pos, Material mat, float radius){
         mShapeList.add(new Sphere(pos, mat, radius));
+    }
+
+    public void createPlane(Vec3 pos, Material mat, int facingDirection){
+        mShapeList.add(new Plane(pos, mat, facingDirection));
     }
 
     public void createPointLight(Vec3 pos, RgbColor color){
