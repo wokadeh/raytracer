@@ -54,20 +54,20 @@ public class Main {
 
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
+        draw(renderWindow);
+
+        renderWindow.setTimeToLabel(String.valueOf(stopTime(tStart)));
+    }
+
+    private static void draw(Window renderWindow){
         Scene renderScene = new Scene();
 
         setupScene(renderScene);
 
         raytraceScene(renderWindow, renderScene);
-
-        long tEnd = System.currentTimeMillis();
-        long tDelta = tEnd - tStart;
-        double elapsedSeconds = tDelta / 1000.0;
-
-        renderWindow.setTimeToLabel(String.valueOf(elapsedSeconds));
     }
 
-    public static void setupScene(Scene renderScene){
+    private static void setupScene(Scene renderScene){
         renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
 
         Material sphereMaterial1 = new Material(AMBIENT_COLOR, new RgbColor(1.0f,0.4f,0.4f), new RgbColor(0.1f,1.0f,0.1f), 10, Material.PHONG);
@@ -82,9 +82,15 @@ public class Main {
         renderScene.createPointLight(new Vec3( -200, -200, 0 ), new RgbColor(0.8f, 0.0f, 0.6f));
     }
 
-    public static void raytraceScene(Window renderWindow, Scene renderScene){
+    private static void raytraceScene(Window renderWindow, Scene renderScene){
         Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR, BACKGROUND_COLOR);
 
         raytracer.renderScene();
+    }
+
+    private static double stopTime(long tStart){
+        long tEnd = System.currentTimeMillis();
+        long tDelta = tEnd - tStart;
+        return tDelta / 1000.0;
     }
 }
