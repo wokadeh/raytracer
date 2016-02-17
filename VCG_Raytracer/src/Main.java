@@ -24,7 +24,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 import raytracer.Raytracer;
+import scene.materials.LambertMaterial;
 import scene.materials.Material;
+import scene.materials.PhongMaterial;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
@@ -90,18 +92,18 @@ public class Main {
 
     private static void setupObjects(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new Material(AMBIENT_COLOR, RgbColor.MAGENTA, RgbColor.WHITE, 10, Material.PHONG);
-        Material sphereMaterial2 = new Material(AMBIENT_COLOR, RgbColor.BLUE, new RgbColor(0.8f,1.0f,0.8f), 10, Material.PHONG);
+        Material sphereMaterial1 = new PhongMaterial(AMBIENT_COLOR, RgbColor.MAGENTA, RgbColor.GRAY, 10);
+        Material sphereMaterial2 = new PhongMaterial(AMBIENT_COLOR, RgbColor.BLUE, RgbColor.GRAY, 10);
 
         renderScene.createSphere(new Vec3(-0.8f, 0.5f, 0), sphereMaterial1, 0.1f);
         renderScene.createSphere(new Vec3(0f, -0.5f, 0f), sphereMaterial2, 0.1f);
     }
 
     private static void setupCornellBox(Scene renderScene) {
-        // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material planeMaterial = new Material(RgbColor.BLACK, RgbColor.WHITE, RgbColor.BLACK, 10, Material.LAMBERT);
-        Material planeMaterialLeft = new Material(RgbColor.BLACK, RgbColor.RED, RgbColor.BLACK, 10, Material.LAMBERT);
-        Material planeMaterialRight = new Material(RgbColor.BLACK, RgbColor.GREEN, RgbColor.BLACK, 10, Material.LAMBERT);
+        // Materials: Ambient Color, Diffuse Coeeff
+        Material planeMaterial = new LambertMaterial(RgbColor.BLACK, RgbColor.WHITE);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLACK, RgbColor.RED);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.BLACK, RgbColor.GREEN);
 
         renderScene.createPlane(new Vec3( 1f, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -1f, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
