@@ -10,7 +10,7 @@ public class Sphere extends Shape {
     private float mSqrRadius;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
-        super(pos, mat);
+        super(pos, mat, "SPHERE");
 
         mSqrRadius = radius * radius;
     }
