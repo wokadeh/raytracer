@@ -70,31 +70,44 @@ public class Raytracer {
 
     private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, Shape lastInterShape, Intersection lastIntersection, boolean isLastRay){
         RgbColor outColor = localColor;
+
+        // Testing each pixel
+        float tempDistance = Float.MAX_VALUE;
+
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
             Intersection intersection = shape.intersect( inRay );
+
             // Shape was hit
             if( intersection.isHit() ){
-                // Enter, if the last recursion level is reached, but it is not the final ray to the light
-                if( recursionCounter == 0 && !isLastRay ) {
-                    RgbColor illuColor = new RgbColor( 0 ,0 ,0 );
-                    for( Light light : mLightList ) {
-                        Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
 
-                        illuColor = illuColor.add( traceRay(recursionCounter, lightRay, outColor, light, shape, intersection, true) );
+                float shapeDistance = mScene.getCamPos().sub(intersection.getIntersectionPoint()).length();
+
+                if(shapeDistance < tempDistance) {
+                    tempDistance = shapeDistance;
+
+                    // Enter, if the last recursion level is reached, but it is not the final ray to the light
+                    if (recursionCounter == 0 && !isLastRay) {
+                        RgbColor illuColor = new RgbColor(0, 0, 0);
+                        for (Light light : mLightList) {
+                            Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
+
+
+                            illuColor = illuColor.add(traceRay(recursionCounter, lightRay, outColor, light, shape, intersection, true));
+                        }
+                        outColor = illuColor.add(mAmbientColor);
+                    } else if (recursionCounter == 0 && isLastRay) {
+                        //return calculateShadowColor();
                     }
-                    outColor = illuColor.add(mAmbientColor);
-                }
-                else if(recursionCounter == 0 && isLastRay){
-                    //return calculateShadowColor();
-                }
-                // Further recursions through objects, if the recursion is not finished
-                else if( recursionCounter != 0 ){
-                   recursionCounter = recursionCounter - 1;
-                   outColor = traceRay( recursionCounter, inRay, outColor, inLight, shape, intersection, false );
+                    // Further recursions through objects, if the recursion is not finished
+                    else if (recursionCounter != 0) {
+                        recursionCounter = recursionCounter - 1;
+                        outColor = traceRay(recursionCounter, inRay, outColor, inLight, shape, intersection, false);
+                    }
                 }
             }
             if( isLastRay ) {
+
                 outColor = calculateLocalIllumination( inLight, lastInterShape, lastIntersection );
             }
         }
