@@ -1,6 +1,5 @@
 package scene.lights;
 
-import scene.lights.Light;
 import utils.RgbColor;
 import utils.Vec3;
 

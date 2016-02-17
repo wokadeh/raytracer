@@ -35,15 +35,13 @@ public class Raytracer {
 
     private int mMaxRecursions;
 
-    private RgbColor mAmbientColor;
     private RgbColor mBackgroundColor;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor ambientColor, RgbColor backColor){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor backColor){
         Log.print(this, "Init");
 
         mMaxRecursions = recursions;
         mBufferedImage = renderWindow.getBufferedImage();
-        mAmbientColor = ambientColor;
         mBackgroundColor = backColor;
         mScene = scene;
         mRenderWindow = renderWindow;
@@ -79,7 +77,7 @@ public class Raytracer {
             Intersection intersection = shape.intersect( inRay );
 
             // Shape was hit
-            if( intersection.isHit() ){
+            if( intersection.isHit() && intersection.isIncoming() ){
 
                 float shapeDistance = mScene.getCamPos().sub(intersection.getIntersectionPoint()).length();
 
@@ -89,15 +87,18 @@ public class Raytracer {
                     // Enter, if the last recursion level is reached, but it is not the final ray to the light
                     if (recursionCounter == 0 && !isLastRay) {
                         RgbColor illuColor = new RgbColor(0, 0, 0);
+
                         for (Light light : mLightList) {
                             Ray lightRay = new Ray(intersection.getIntersectionPoint(), light.getPosition());
 
 
                             illuColor = illuColor.add(traceRay(recursionCounter, lightRay, outColor, light, shape, intersection, true));
                         }
-                        outColor = illuColor.add(mAmbientColor);
+
+                        outColor = illuColor.add(shape.getAmbient());
+
                     } else if (recursionCounter == 0 && isLastRay) {
-                        //return calculateShadowColor();
+                        outColor = calculateShadowColor(shape);
                     }
                     // Further recursions through objects, if the recursion is not finished
                     else if (recursionCounter != 0) {
@@ -114,11 +115,8 @@ public class Raytracer {
         return outColor;
     }
 
-    private RgbColor calculateShadowColor(){
-        Log.warn(this, "Painting shadow");
-        RgbColor outColor = mAmbientColor;
-
-        return outColor;
+    private RgbColor calculateShadowColor(Shape shape){
+        return shape.getAmbient();
     }
 
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){

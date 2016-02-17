@@ -27,6 +27,10 @@ public abstract class Shape extends SceneObject {
         return this.type;
     }
 
+    public RgbColor getAmbient(){
+        return this.material.ambient;
+    }
+
     public RgbColor getColor(Light light, Vec3 camPos, Intersection intersection){
         if(intersection != null) {
             if(intersection.getNormal() != null) {

@@ -48,7 +48,6 @@ public class Main {
 
     static int RECURSIONS = 2;
 
-    static RgbColor AMBIENT_COLOR = RgbColor.LIGHT_GRAY;
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
     // Initial method. This is where the show begins.
@@ -92,11 +91,11 @@ public class Main {
 
     private static void setupObjects(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(AMBIENT_COLOR, RgbColor.MAGENTA, RgbColor.GRAY, 10);
-        Material sphereMaterial2 = new PhongMaterial(AMBIENT_COLOR, RgbColor.BLUE, RgbColor.GRAY, 10);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.LIGHT_GRAY, RgbColor.MAGENTA, RgbColor.WHITE, 10);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.BLUE, RgbColor.WHITE, 10);
 
-        renderScene.createSphere(new Vec3(-0.8f, 0.5f, 0), sphereMaterial1, 0.1f);
-        renderScene.createSphere(new Vec3(0f, -0.5f, 0f), sphereMaterial2, 0.1f);
+        renderScene.createSphere(new Vec3(-0.7f, -0.95f, 0f), sphereMaterial1, 0.100001f);
+        renderScene.createSphere(new Vec3(0.7f, -0.95f, 0f), sphereMaterial2, 0.001f);
     }
 
     private static void setupCornellBox(Scene renderScene) {
@@ -113,7 +112,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, AMBIENT_COLOR, BACKGROUND_COLOR);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR);
 
         raytracer.renderScene();
     }

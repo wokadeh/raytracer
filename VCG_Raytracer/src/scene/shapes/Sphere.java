@@ -8,10 +8,12 @@ import utils.Vec3;
 public class Sphere extends Shape {
 
     private float mSqrRadius;
+    private float mRadius;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
         super(pos, mat, "SPHERE");
 
+        mRadius = radius;
         mSqrRadius = radius * radius;
     }
 
@@ -22,7 +24,7 @@ public class Sphere extends Shape {
         Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
         float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
-        if(distanceToPosSq <= mSqrRadius){
+        if( distanceToPosSq <= mSqrRadius || mRadius == 0 ){
             return intersectionTest;
         }
 
@@ -48,17 +50,17 @@ public class Sphere extends Shape {
             intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t0));
 
-            intersectionTest.setIncoming(false);
+            intersectionTest.setIncoming(true);
         }
         else if(t1 > 0){
             intersectionTest.setHit(true);
             intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t1));
 
-            intersectionTest.setIncoming(true);
+            intersectionTest.setIncoming(false);
         }
 
         intersectionTest.setIntersectionPoint(intersectionPoint);
-        intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()));
+        intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()).multScalar( 1f / mRadius ));
 
         return intersectionTest;
     }

@@ -53,11 +53,11 @@ public class Plane extends Shape {
         if( intersectionTestValue < 0 ){
             return intersectionTest;
         } else if( intersectionTestValue > 0 ){
-            intersectionTest.setIncoming( false );
+            intersectionTest.setIncoming( true );
             return fillIntersectionInfo(intersectionTest, ray, intersectionTestValue);
         }
         else{
-            intersectionTest.setIncoming( true );
+            intersectionTest.setIncoming( false );
             return fillIntersectionInfo(intersectionTest, ray, intersectionTestValue);
         }
     }
