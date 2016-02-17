@@ -7,6 +7,17 @@ public class RgbColor {
     public float green(){ return colors.y; }
     public float blue(){ return colors.z; }
 
+    public static RgbColor RED = new RgbColor(1, 0, 0);
+    public static RgbColor GREEN = new RgbColor(0, 1, 0);
+    public static RgbColor BLUE = new RgbColor(0, 0, 1);
+    public static RgbColor WHITE = new RgbColor(1, 1, 1);
+    public static RgbColor BLACK = new RgbColor(0, 0, 0);
+    public static RgbColor CYAN = new RgbColor(0, 1, 1);
+    public static RgbColor MAGENTA = new RgbColor(1, 0, 1);
+    public static RgbColor YELLOW = new RgbColor(1, 1, 0);
+    public static RgbColor GRAY = new RgbColor(0.5f, 0.5f, 0.5f);
+    public static RgbColor LIGHT_GRAY = new RgbColor(0.25f, 0.25f, 0.25f);
+
     public RgbColor(float r, float g, float b){
         colors = new Vec3(r, g, b);
 
