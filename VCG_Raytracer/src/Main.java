@@ -25,6 +25,7 @@
 
 import raytracer.Raytracer;
 import scene.materials.Material;
+import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
 import utils.RgbColor;
@@ -40,13 +41,13 @@ public class Main {
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 54.43f;
-    static float FOCAL_LENGTH = 35f;
+    static float VIEW_ANGLE = 35;
+    static float FOCAL_LENGTH = 10;
 
-    static int RECURSIONS = 1;
+    static int RECURSIONS = 2;
 
-    static RgbColor AMBIENT_COLOR = new RgbColor(0, 0.2f, 0);
-    static RgbColor BACKGROUND_COLOR = new RgbColor(0.2f, 0.2f, 0.3f);
+    static RgbColor AMBIENT_COLOR = RgbColor.LIGHT_GRAY;
+    static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -68,18 +69,45 @@ public class Main {
     }
 
     private static void setupScene(Scene renderScene){
+        setupCameras(renderScene);
+
+        setupCornellBox(renderScene);
+
+        setupObjects(renderScene);
+
+        setupLights(renderScene);
+    }
+
+    private static void setupLights(Scene renderScene) {
+        renderScene.createPointLight(new Vec3( 0, 1, 0 ), RgbColor.WHITE);
+       //renderScene.createPointLight(new Vec3( 0, -1, 0 ), RgbColor.WHITE);
+       // renderScene.createPointLight(new Vec3( -200, -200, 0 ), RgbColor.WHITE);
+    }
+
+    private static void setupCameras(Scene renderScene) {
         renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
+    }
 
-        Material sphereMaterial1 = new Material(AMBIENT_COLOR, new RgbColor(1.0f,0.4f,0.4f), new RgbColor(0.1f,1.0f,0.1f), 10, Material.PHONG);
-        Material sphereMaterial2 = new Material(AMBIENT_COLOR, new RgbColor(0.0f,0.4f,0.8f), new RgbColor(0.8f,1.0f,0.8f), 10, Material.PHONG);
+    private static void setupObjects(Scene renderScene) {
+        // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
+        Material sphereMaterial1 = new Material(AMBIENT_COLOR, RgbColor.MAGENTA, RgbColor.WHITE, 10, Material.PHONG);
+        Material sphereMaterial2 = new Material(AMBIENT_COLOR, RgbColor.BLUE, new RgbColor(0.8f,1.0f,0.8f), 10, Material.PHONG);
 
-        renderScene.createSphere(new Vec3(-0.8f, 0.5f, 0), sphereMaterial1, 1f);
-        renderScene.createSphere(new Vec3(0f, -0.5f, 0f), sphereMaterial2, 1f);
+        renderScene.createSphere(new Vec3(-0.8f, 0.5f, 0), sphereMaterial1, 0.1f);
+        renderScene.createSphere(new Vec3(0f, -0.5f, 0f), sphereMaterial2, 0.1f);
+    }
 
+    private static void setupCornellBox(Scene renderScene) {
+        // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
+        Material planeMaterial = new Material(RgbColor.BLACK, RgbColor.WHITE, RgbColor.BLACK, 10, Material.LAMBERT);
+        Material planeMaterialLeft = new Material(RgbColor.BLACK, RgbColor.RED, RgbColor.BLACK, 10, Material.LAMBERT);
+        Material planeMaterialRight = new Material(RgbColor.BLACK, RgbColor.GREEN, RgbColor.BLACK, 10, Material.LAMBERT);
 
-        renderScene.createPointLight(new Vec3( 0, 200, 0 ), new RgbColor(0.8f, 0.8f, 0.6f));
-        renderScene.createPointLight(new Vec3( 0, -200, 0 ), new RgbColor(0.8f, 0.8f, 0.6f));
-        renderScene.createPointLight(new Vec3( -200, -200, 0 ), new RgbColor(0.8f, 0.0f, 0.6f));
+        renderScene.createPlane(new Vec3( 1f, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
+        renderScene.createPlane(new Vec3( -1f, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
+        renderScene.createPlane(new Vec3( 0f, 0f, -1f ), planeMaterial, Plane.FACING_FRONT);
+        renderScene.createPlane(new Vec3( 0f, -1f, 0 ), planeMaterial, Plane.FACING_UP);
+        renderScene.createPlane(new Vec3( 0f, 1f, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
