@@ -10,6 +10,7 @@ public class Intersection {
     private Vec3 mNormal;
     private Ray mInRay;
     private Ray mOutRay;
+
     private Shape mShape;
 
     private boolean mIncoming;
@@ -66,5 +67,9 @@ public class Intersection {
 
     public Vec3 getNormal() {
         return mNormal;
+    }
+
+    public Shape getShape() {
+        return mShape;
     }
 }
