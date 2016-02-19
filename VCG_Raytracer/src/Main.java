@@ -83,7 +83,7 @@ public class Main {
     }
 
     private static void setupLights(Scene renderScene) {
-        renderScene.createPointLight(new Vec3( 0, 1, 0 ), RgbColor.WHITE);
+        renderScene.createPointLight(new Vec3( 0, DIMENSION, 0 ), RgbColor.WHITE);
        //renderScene.createPointLight(new Vec3( 0, -1, 0 ), RgbColor.WHITE);
        // renderScene.createPointLight(new Vec3( -200, -200, 0 ), RgbColor.WHITE);
     }
@@ -98,7 +98,7 @@ public class Main {
         Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.BLUE, RgbColor.WHITE, 10);
 
         renderScene.createSphere(new Vec3(-2.7f, -0.95f, 0f), sphereMaterial1, 1);
-        //renderScene.createSphere(new Vec3(2.7f, -0.95f, 0f), sphereMaterial2, 1);
+        renderScene.createSphere(new Vec3(2.7f, -0.95f, 0f), sphereMaterial2, 1);
     }
 
     private static void setupCornellBox(Scene renderScene) {

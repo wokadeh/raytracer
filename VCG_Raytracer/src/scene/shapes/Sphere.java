@@ -19,13 +19,11 @@ public class Sphere extends Shape {
 
     @Override
     public Intersection intersect(Ray ray){
-        Intersection intersectionTest = new Intersection(ray, this);
-
         Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
         float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
         if( distanceToPosSq <= mSqrRadius || mRadius == 0 ){
-            return intersectionTest;
+            return null;
         }
 
         float compB = 2 * distanceToPos.scalar(ray.getDirection());
@@ -34,33 +32,37 @@ public class Sphere extends Shape {
         float discriminant = compB * compB - 4 * compC;
 
         if( discriminant < 0 ){
-            return intersectionTest;
+            return new Intersection(ray, this);
         }
 
-        return fillIntersectionInfo(intersectionTest, discriminant, ray, compB);
+        return fillIntersectionInfo(discriminant, ray, compB);
     }
 
-    private Intersection fillIntersectionInfo(Intersection intersectionTest, float discriminant, Ray ray, float compB){
+    private Intersection fillIntersectionInfo(float discriminant, Ray ray, float compB){
         float t0 = (float) ((- compB - Math.sqrt(discriminant) ) * 0.5f);
         float t1 = (float) ((- compB + Math.sqrt(discriminant) ) * 0.5f);
 
-        Vec3 intersectionPoint = new Vec3(-1,-1,-1);
-
+        // The smaller positive t is the closest intersection point
         if( t0 > 0 ){
-            intersectionTest.setHit(true);
-            intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t0));
-
-            intersectionTest.setIncoming(true);
+            return createIntersection(true, t0, ray);
         }
         else if(t1 > 0){
-            intersectionTest.setHit(true);
-            intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t1));
-
-            intersectionTest.setIncoming(false);
+            return createIntersection(false, t1, ray);
         }
 
+        return new Intersection(ray, this);
+    }
+
+    private Intersection createIntersection(boolean isIncoming, float t, Ray ray){
+        Intersection intersectionTest = new Intersection(ray, this);
+
+        intersectionTest.setHit(true);
+        Vec3 intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t));
+
+        intersectionTest.setIncoming(isIncoming);
+
         intersectionTest.setIntersectionPoint(intersectionPoint);
-        intersectionTest.setNormal(intersectionPoint.sub(this.getPosition()).multScalar( 1f / mRadius ));
+        intersectionTest.setNormal((intersectionPoint.sub(this.getPosition())).multScalar( 1f / mRadius ));
 
         return intersectionTest;
     }

@@ -27,16 +27,16 @@ public class Plane extends Shape {
     public Plane(Vec3 pos, Material mat, Vec3 normal) {
         super(pos, mat, "PLANE");
 
-        mNormal = normal;
+        mNormal = normal.normalize();
     }
 
     public Vec3 getFacingNormal(int facingDirection){
         switch( facingDirection ){
-            case 0 : return new Vec3( 1, 0, 0);
-            case 1 : return new Vec3( -1, 0, 0);
-            case 2 : return new Vec3( 0, -1, 0);
-            case 3 : return new Vec3( 0, 1, 0);
-            case 4 : return new Vec3( 0, 0, -1);
+            case 0 : return new Vec3( 1, 0, 0);         // RIGHT
+            case 1 : return new Vec3( -1, 0, 0);        // LEFT
+            case 2 : return new Vec3( 0, -1, 0);        // DOWN
+            case 3 : return new Vec3( 0, 1, 0);         // UP
+            case 4 : return new Vec3( 0, 0, -1);        // FRONT
             default:
                 Log.warn(this, "Plane cannot be created. The facing direction is unclear.");
             return new Vec3( 0, 0 ,0 );
@@ -45,39 +45,31 @@ public class Plane extends Shape {
 
     @Override
     public Intersection intersect(Ray ray) {
-        Intersection intersectionTest = new Intersection(ray, this);
-
         // Pn * D from slides
         float intersectionTestValue = mNormal.scalar(ray.getDirection());
 
         if( intersectionTestValue < 0 ){
-            return intersectionTest;
-        } else if( intersectionTestValue > 0 ){
-            intersectionTest.setIncoming( true );
-            return fillIntersectionInfo(intersectionTest, ray, intersectionTestValue);
-        }
-        else{
-            intersectionTest.setIncoming( false );
-            return fillIntersectionInfo(intersectionTest, ray, intersectionTestValue);
+            return new Intersection(ray, this);
+        } else{
+            return fillIntersectionInfo(ray, intersectionTestValue);
         }
     }
 
-    private Intersection fillIntersectionInfo(Intersection intersectionTest, Ray ray, float intersectionTestValue){
+    private Intersection fillIntersectionInfo(Ray ray, float intersectionTestValue){
 
+        Intersection intersectionTest = new Intersection(ray, this);
         intersectionTest.setHit(true);
+        intersectionTest.setIncoming( true );
 
         float distanceToOrigin = getPosition().sub(ray.getStartPoint()).scalar(mNormal);
 
         // Q from slides
         float t = ( distanceToOrigin / intersectionTestValue );
 
-        //Vec3 intersectionPoint = ray.getStartPoint().add( ray.getDirection().multScalar(intersectionTestValue) );
         Vec3 intersectionPoint = ray.getStartPoint().add( ray.getDirection().multScalar(t) );
 
         intersectionTest.setIntersectionPoint(intersectionPoint);
         intersectionTest.setNormal(mNormal);
-
-        //Log.error(this, intersectionPoint.toString());
 
         return intersectionTest;
     }
