@@ -30,7 +30,6 @@ public class Raytracer {
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
-    private ArrayList<Intersection> mIntersectList;
     private Scene mScene;
     private Window mRenderWindow;
 
@@ -49,7 +48,7 @@ public class Raytracer {
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
 
-        mIntersectList = new ArrayList<>();
+
     }
 
     public void renderScene(){
@@ -69,31 +68,39 @@ public class Raytracer {
         IO.saveImageToPng(mBufferedImage, "raytracing.png");
     }
 
-    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Light inLight, Shape lastInterShape, Intersection lastIntersection){
+    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
+        Vec3 startPoint = mScene.getCamPos();
+        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
+        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
+        ArrayList<Intersection> intersectList = new ArrayList<>();
+
+        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, intersectList);
+    }
+
+    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, ArrayList<Intersection> intersectList){
         RgbColor outColor = localColor;
 
         // For each pixel testing each shape to get nearest intersection
         Intersection intersection = getIntersection(inRay, Float.MAX_VALUE);
 
         if(intersection != null){
-
             // Enter, if the last recursion level is reached, but it is not the final ray to the light
             if (recursionCounter == 0) {
-                    // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
-                    outColor = traceIllumination(intersection);
+                // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
+                outColor = traceIllumination(intersection, intersectList);
             }
             // Further recursions through objects, if the recursion is not finished
             else {
                 recursionCounter = recursionCounter - 1;
-                mIntersectList.add(intersection);
-                outColor = traceRay(recursionCounter, inRay, outColor, inLight, intersection.getShape(), intersection);
+                intersectList.add(intersection);
+                outColor = traceRay(recursionCounter, inRay, outColor, intersectList);
             }
         }
 
         return outColor;
     }
 
-    private RgbColor traceIllumination(Intersection finalIntersection) {
+    private RgbColor traceIllumination(Intersection finalIntersection, ArrayList<Intersection> intersectList) {
         RgbColor illuColor = new RgbColor(0, 0, 0);
 
         for (Light light : mLightList) {
@@ -102,9 +109,10 @@ public class Raytracer {
             Intersection lightIntersection = getIntersection(lightRay, Float.MAX_VALUE);
 
             // This is never happening! Is always != null: BAAAAADDD
-            if(!lightIntersection.isHit()){
+            if(lightIntersection.isHit()){
                 // This was the last ray and nothing was hit on the ray from the last object to the light source
-                for(Intersection stepIntersec : mIntersectList) {
+                for(Intersection stepIntersec : intersectList) {
+                    // calculate the color of every object, that was hit in between, depending on recursive level
                     illuColor = calculateLocalIllumination(light, stepIntersec.getShape(), stepIntersec);
                 }
             }
@@ -139,23 +147,11 @@ public class Raytracer {
         return finalIntersection;
     }
 
-    private RgbColor calculateShadowColor(Shape shape){
-        return shape.getAmbient();
-    }
-
-    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
-        Vec3 startPoint = mScene.getCamPos();
-        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
-        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
-
-        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, null, null, null);
-    }
-
     private RgbColor calculateLocalIllumination(Light light, Shape shape, Intersection intersection){
         return shape.getColor(light, mScene.getCamPos(), intersection);
     }
 
-    private Vec3 calculateDestinationPoint(){
-        return new Vec3(0,0,0);
+    private RgbColor calculateShadowColor(Shape shape){
+        return shape.getAmbient();
     }
 }
