@@ -12,8 +12,11 @@ public class Intersection {
     private Ray mOutRay;
 
     private Shape mShape;
+    private float mDistance;
 
     private boolean mIncoming;
+
+    private boolean mIgnoreShadowing;
 
     private boolean mHit;
 
@@ -21,6 +24,7 @@ public class Intersection {
         mInRay = inRay;
         mHit = false;
         mShape = shape;
+        mIgnoreShadowing = false;
     }
 
     private void createOutRay() {
@@ -45,6 +49,17 @@ public class Intersection {
         this.createOutRay();
     }
 
+    public void setDistance(float dist){
+        mDistance = dist;
+    }
+
+    public void setIgnoreShadowing(boolean mIgnoreShadowing) {
+        this.mIgnoreShadowing = mIgnoreShadowing;
+    }
+
+    public boolean isIgnoreShadowing() {
+        return mIgnoreShadowing;
+    }
     public void setIncoming(boolean mIncoming) {
         this.mIncoming = mIncoming;
     }
@@ -68,6 +83,8 @@ public class Intersection {
     public Vec3 getNormal() {
         return mNormal;
     }
+
+    public float getDistance() { return mDistance; }
 
     public Shape getShape() {
         return mShape;

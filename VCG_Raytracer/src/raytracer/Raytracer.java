@@ -47,8 +47,6 @@ public class Raytracer {
         mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
-
-
     }
 
     public void renderScene(){
@@ -83,8 +81,8 @@ public class Raytracer {
         // For each pixel testing each shape to get nearest intersection
         Intersection intersection = getIntersection(inRay, Float.MAX_VALUE);
 
-        if(intersection != null){
-            // Enter, if the last recursion level is reached, but it is not the final ray to the light
+        if(intersection.isHit() && intersection.isIncoming()){
+            // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
             if (recursionCounter == 0) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 outColor = traceIllumination(intersection, intersectList);
@@ -109,8 +107,9 @@ public class Raytracer {
             Intersection lightIntersection = getIntersection(lightRay, Float.MAX_VALUE);
 
             // This is never happening! Is always != null: BAAAAADDD
-            if(lightIntersection.isHit()){
+            if(!lightIntersection.isHit() || lightIntersection.isIgnoreShadowing()){
                 // This was the last ray and nothing was hit on the ray from the last object to the light source
+                // Probably wrong. Calculating the color of each object traced, but must know, if there was light, too
                 for(Intersection stepIntersec : intersectList) {
                     // calculate the color of every object, that was hit in between, depending on recursive level
                     illuColor = calculateLocalIllumination(light, stepIntersec.getShape(), stepIntersec);
@@ -133,15 +132,9 @@ public class Raytracer {
             Intersection intersection = shape.intersect( inRay );
 
             // Shape was hit
-            if (intersection.isHit() && intersection.isIncoming()) {
-
-                float shapeDistance = mScene.getCamPos().sub(intersection.getIntersectionPoint()).length();
-
-                // Only continue if an object was hit nearer than a previous one
-                if (shapeDistance < tempDistance) {
-                    tempDistance = shapeDistance;
-                    finalIntersection = intersection;
-                }
+            if (intersection.isHit() && intersection.isIncoming() && intersection.getDistance() < tempDistance) {
+                tempDistance = intersection.getDistance();
+                finalIntersection = intersection;
             }
         }
         return finalIntersection;

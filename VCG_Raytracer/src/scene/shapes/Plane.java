@@ -70,6 +70,8 @@ public class Plane extends Shape {
 
         intersectionTest.setIntersectionPoint(intersectionPoint);
         intersectionTest.setNormal(mNormal);
+        intersectionTest.setDistance(Math.abs(t));
+        intersectionTest.setIgnoreShadowing(true);
 
         return intersectionTest;
     }

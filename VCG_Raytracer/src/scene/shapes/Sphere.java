@@ -60,7 +60,7 @@ public class Sphere extends Shape {
         Vec3 intersectionPoint = ray.getStartPoint().add(ray.getDirection().multScalar(t));
 
         intersectionTest.setIncoming(isIncoming);
-
+        intersectionTest.setDistance(Math.abs(t));
         intersectionTest.setIntersectionPoint(intersectionPoint);
         intersectionTest.setNormal((intersectionPoint.sub(this.getPosition())).multScalar( 1f / mRadius ));
 

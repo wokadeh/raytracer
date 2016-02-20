@@ -40,16 +40,16 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 20);
+    static Vec3 CAM_POS = new Vec3(0, 0, 50);
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
     static float VIEW_ANGLE = 35;
     static float FOCAL_LENGTH = 10;
 
-    static float DIMENSION = 5f;
+    static float DIMENSION = 10f;
 
-    static int RECURSIONS = 2;
+    static int RECURSIONS = 1;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -97,15 +97,15 @@ public class Main {
         Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.2f, 0.05f, 0.2f), RgbColor.MAGENTA, RgbColor.WHITE, 10);
         Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.BLUE, RgbColor.WHITE, 10);
 
-        renderScene.createSphere(new Vec3(-2.7f, -0.95f, 0f), sphereMaterial1, 1);
-        renderScene.createSphere(new Vec3(2.7f, -0.95f, 0f), sphereMaterial2, 1);
+        renderScene.createSphere(new Vec3(-4f, -0.95f, 0f), sphereMaterial1, 1);
+        renderScene.createSphere(new Vec3(4f, -0.95f, 0f), sphereMaterial2, 1);
     }
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.RED);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GREEN);
+        Material planeMaterial = new LambertMaterial(RgbColor.BLACK, RgbColor.WHITE);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLACK, RgbColor.RED);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.BLACK, RgbColor.GREEN);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
@@ -126,3 +126,10 @@ public class Main {
         return tDelta / 1000.0;
     }
 }
+
+
+/* Verbesserungen
+- Sicherstellen, dass die Normale nur einmal normalisiert wird
+
+
+*/

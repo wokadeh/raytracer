@@ -52,13 +52,13 @@ public abstract class Material {
         float specFactor = (float) Math.pow(specAngle, shininess);
 
         return this.specCoeff
-                .multScalar(lightColor)
+                .multRGB(lightColor)
                 .multScalar(specFactor);
     }
 
     protected RgbColor calculateDiffuseColor(RgbColor lightColor, float angle){
         return this.diffCoeff
-                .multScalar(lightColor)
+                .multRGB(lightColor)
                 .multScalar(angle);
     }
 }

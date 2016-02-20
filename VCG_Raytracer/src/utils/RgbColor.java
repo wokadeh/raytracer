@@ -42,7 +42,7 @@ public class RgbColor {
         return new RgbColor( colors.add(color.colors) );
     }
 
-    public RgbColor multScalar(RgbColor color){
+    public RgbColor multRGB(RgbColor color){
         return new RgbColor( colors.x * color.red(),
                              colors.y * color.green(),
                              colors.z * color.blue() );

@@ -15,9 +15,9 @@ public class PhongMaterial extends Material {
     @Override
     public RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos) {
         Vec3 normalN = normal.normalize();
-
         Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
-        float angle = clampAngle(normalN.scalar(lightVecN));
+
+        float angle = this.clampAngle(normalN.scalar(lightVecN));
 
         RgbColor diffuse = this.calculateDiffuseColor(light.getColor(), angle);
         RgbColor specular = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
