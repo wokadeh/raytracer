@@ -46,31 +46,39 @@ public class Plane extends Shape {
     @Override
     public Intersection intersect(Ray ray) {
         // Pn * D from slides
-        float intersectionTestValue = mNormal.scalar(ray.getDirection());
+
+        float intersectionTestValue = mNormal.scalar( ray.getDirection() );
 
         if( intersectionTestValue < 0 ){
             return new Intersection(ray, this);
         } else{
-            return fillIntersectionInfo(ray, intersectionTestValue);
+            return fillIntersectionInfo( ray, intersectionTestValue );
         }
     }
 
     private Intersection fillIntersectionInfo(Ray ray, float intersectionTestValue){
 
-        Intersection intersectionTest = new Intersection(ray, this);
-        intersectionTest.setHit(true);
+        Intersection intersectionTest = new Intersection( ray, this );
+        intersectionTest.setHit( true );
         intersectionTest.setIncoming( true );
 
-        float distanceToOrigin = getPosition().sub(ray.getStartPoint()).scalar(mNormal);
+        float angle = this.getPosition().sub(ray.getStartPoint()).scalar( mNormal );
 
         // Q from slides
-        float t = ( distanceToOrigin / intersectionTestValue );
+        float t = ( angle / intersectionTestValue );
 
         Vec3 intersectionPoint = ray.getStartPoint().add( ray.getDirection().multScalar(t) );
 
-        intersectionTest.setIntersectionPoint(intersectionPoint);
-        intersectionTest.setNormal(mNormal);
-        intersectionTest.setDistance(Math.abs(t));
+        intersectionTest.setIntersectionPoint( intersectionPoint );
+        intersectionTest.setNormal( mNormal );
+
+        t = Math.abs(t);
+
+        intersectionTest.setDistance( t );
+
+        //if( t > ray.getDistance() ){
+        //    return new Intersection(ray, this);
+        //}
         intersectionTest.setIgnoreShadowing(true);
 
         return intersectionTest;

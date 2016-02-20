@@ -40,14 +40,14 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 50);
+    static Vec3 CAM_POS = new Vec3(0, 0, 15);
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
     static float VIEW_ANGLE = 35;
     static float FOCAL_LENGTH = 10;
 
-    static float DIMENSION = 10f;
+    static float DIMENSION = 3f;
 
     static int RECURSIONS = 1;
 
@@ -83,8 +83,8 @@ public class Main {
     }
 
     private static void setupLights(Scene renderScene) {
-        renderScene.createPointLight(new Vec3( 0, DIMENSION, 0 ), RgbColor.WHITE);
-       //renderScene.createPointLight(new Vec3( 0, -1, 0 ), RgbColor.WHITE);
+        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, 0 ), RgbColor.WHITE);
+       //renderScene.createPointLight(new Vec3( 0, -DIMENSION, 0 ), RgbColor.WHITE);
        // renderScene.createPointLight(new Vec3( -200, -200, 0 ), RgbColor.WHITE);
     }
 
@@ -93,19 +93,20 @@ public class Main {
     }
 
     private static void setupObjects(Scene renderScene) {
+        float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.2f, 0.05f, 0.2f), RgbColor.MAGENTA, RgbColor.WHITE, 10);
         Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.BLUE, RgbColor.WHITE, 10);
 
-        renderScene.createSphere(new Vec3(-4f, -0.95f, 0f), sphereMaterial1, 1);
-        renderScene.createSphere(new Vec3(4f, -0.95f, 0f), sphereMaterial2, 1);
+        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
     }
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.BLACK, RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLACK, RgbColor.RED);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.BLACK, RgbColor.GREEN);
+        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.RED);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GREEN);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
