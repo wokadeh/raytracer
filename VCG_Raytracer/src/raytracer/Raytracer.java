@@ -107,7 +107,7 @@ public class Raytracer {
             Intersection lightIntersection = getIntersection(lightRay, Float.MAX_VALUE);
 
             // This is never happening! Is always != null: BAAAAADDD
-            if(!lightIntersection.isHit() || lightIntersection.isIgnoreShadowing()){
+            if(lightIntersection.isHit()){
                 // This was the last ray and nothing was hit on the ray from the last object to the light source
                 // Probably wrong. Calculating the color of each object traced, but must know, if there was light, too
                 for(Intersection stepIntersec : intersectList) {

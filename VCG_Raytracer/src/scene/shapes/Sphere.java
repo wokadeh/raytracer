@@ -31,24 +31,24 @@ public class Sphere extends Shape {
 
     private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection intersectionTest, Vec3 distanceToPos) {
         float t;
-        float compB = distanceToPos.negate().scalar(ray.getDirection());
-        float compC = (compB * compB) - distanceToPosSq + (mRadius * mRadius);
+        float compB = -distanceToPos.scalar(ray.getDirection());
+        float discriminant = (compB * compB) - distanceToPosSq + mSqrRadius;
 
-        if (compC < 0.0f)
+        if (discriminant < 0.0f)
             return intersectionTest;
 
-        compC = (float) Math.sqrt(compC);
-        float t0 = compB - compC;
-        float t1 = compB + compC;
+        discriminant = (float) Math.sqrt(discriminant);
+        float t0 = compB - discriminant;
+        float t1 = compB + discriminant;
 
         if (t0 > 0 && t1 > 0)
             t = t0;
-        else if (t0 < 0.0f && t1 < 0)
-            return intersectionTest;
+        //else if (t0 < 0.0f && t1 < 0)
+        //    return intersectionTest;
         else if (t0 < 0.0f && t1 > 0)
             t = t1;
-        else if (t0 == t1)
-            t = t0;
+        //else if (t0 == t1)
+        //    t = t0;
         else
             return intersectionTest;
 

@@ -45,41 +45,24 @@ public class Plane extends Shape {
 
     @Override
     public Intersection intersect(Ray ray) {
+        Intersection intersectionTest = new Intersection(ray, this);
         // Pn * D from slides
+        Vec3 vecToRay = getPosition().sub(ray.getStartPoint());
+        float angle = mNormal.scalar(ray.getDirection());
+        float t = vecToRay.scalar(mNormal) / angle;
 
-        float intersectionTestValue = mNormal.scalar( ray.getDirection() );
+        if (t < 0)
+            return intersectionTest;
 
-        if( intersectionTestValue < 0 ){
-            return new Intersection(ray, this);
-        } else{
-            return fillIntersectionInfo( ray, intersectionTestValue );
-        }
+        return createIntersection(intersectionTest, t, ray);
     }
 
-    private Intersection fillIntersectionInfo(Ray ray, float intersectionTestValue){
-
-        Intersection intersectionTest = new Intersection( ray, this );
-        intersectionTest.setHit( true );
-        intersectionTest.setIncoming( true );
-
-        float angle = this.getPosition().sub(ray.getStartPoint()).scalar( mNormal );
-
-        // Q from slides
-        float t = ( angle / intersectionTestValue );
-
-        Vec3 intersectionPoint = ray.getStartPoint().add( ray.getDirection().multScalar(t) );
-
-        intersectionTest.setIntersectionPoint( intersectionPoint );
-        intersectionTest.setNormal( mNormal );
-
-        t = Math.abs(t);
-
-        intersectionTest.setDistance( t );
-
-        //if( t > ray.getDistance() ){
-        //    return new Intersection(ray, this);
-        //}
-        intersectionTest.setIgnoreShadowing(true);
+    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
+        intersectionTest.setIntersectionPoint(ray.getDirection().multScalar(t).add(ray.getStartPoint()));
+        intersectionTest.setNormal(mNormal.normalize());
+        intersectionTest.setDistance(t);
+        intersectionTest.setHit(true);
+        intersectionTest.setIncoming(true);
 
         return intersectionTest;
     }
