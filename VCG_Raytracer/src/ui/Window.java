@@ -50,6 +50,7 @@ public class Window {
 
     public void setTimeToLabel(String text){
         Graphics graphic = mBufferedImage.getGraphics();
+        graphic.setColor(Color.black);
         graphic.drawString("Elapsed rendering time: " + text + " sec", 10, mHeight - 10);
 
         mFrame.repaint();

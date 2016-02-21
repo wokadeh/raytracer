@@ -98,9 +98,11 @@ public class Main {
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.2f, 0.05f, 0.2f), RgbColor.MAGENTA, RgbColor.WHITE, 10);
         Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.BLUE, RgbColor.WHITE, 10);
+        Material sphereMaterial3 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.YELLOW, RgbColor.WHITE, 10);
 
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(-DIMENSION/2f, 0, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(DIMENSION/2f, sphereRadius + 1, DIMENSION/3f+3), sphereMaterial3, sphereRadius);
     }
 
     private static void setupCornellBox(Scene renderScene) {
