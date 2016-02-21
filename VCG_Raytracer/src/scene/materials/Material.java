@@ -26,8 +26,12 @@ public abstract class Material {
         mType = type;
     }
 
-    public String isType(){
+    public String getType(){
         return mType;
+    }
+
+    public boolean isType(String type){
+        return mType.equals(type);
     }
 
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);

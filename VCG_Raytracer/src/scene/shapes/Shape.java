@@ -42,6 +42,10 @@ public abstract class Shape extends SceneObject {
         return this.material.ambient;
     }
 
+    public boolean isDiffus(){
+        return this.material.isType("LAMBERT");
+    }
+
     @Override
     public String toString(){
         return this.type;
