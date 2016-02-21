@@ -83,9 +83,10 @@ public class Main {
     }
 
     private static void setupLights(Scene renderScene) {
-        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION ), RgbColor.WHITE);
-       //renderScene.createPointLight(new Vec3( 0, -DIMENSION, 0 ), RgbColor.WHITE);
-       // renderScene.createPointLight(new Vec3( -200, -200, 0 ), RgbColor.WHITE);
+        // Note: Never put the light source inside a plane
+        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION-1 ), RgbColor.WHITE);
+        renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
+        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, -DIMENSION+1 ), RgbColor.WHITE);
     }
 
     private static void setupCameras(Scene renderScene) {
@@ -105,8 +106,8 @@ public class Main {
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.RED);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GREEN);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GREEN);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.RED);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
