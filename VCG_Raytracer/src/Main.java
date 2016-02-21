@@ -49,7 +49,7 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 1;
+    static int RECURSIONS = 2;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -85,7 +85,7 @@ public class Main {
     private static void setupLights(Scene renderScene) {
         // Note: Never put the light source inside a plane
         renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION-1 ), RgbColor.WHITE);
-        renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
+        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
         //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, -DIMENSION+1 ), RgbColor.WHITE);
     }
 

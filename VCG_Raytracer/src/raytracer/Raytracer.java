@@ -72,33 +72,34 @@ public class Raytracer {
         Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
         ArrayList<Intersection> intersectList = new ArrayList<>();
 
-        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, intersectList);
+        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, null);
     }
 
-    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, ArrayList<Intersection> intersectList){
+    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
         RgbColor outColor = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
-        Intersection intersection = getIntersectionOnShapes(inRay, Float.MAX_VALUE);
+        Intersection intersection = getIntersectionOnShapes(inRay, Float.MAX_VALUE, prevIntersec);
 
-        if(intersection.isHit() && intersection.isIncoming()){
+        if( intersection.isHit() && intersection.isIncoming() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
-            if (recursionCounter == 0) {
+            if( recursionCounter == 0 ) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
-                outColor = traceIllumination(intersection, intersectList);
+                return outColor;
             }
             // Further recursions through objects, if the recursion is not finished
             else {
                 recursionCounter = recursionCounter - 1;
-                intersectList.add(intersection);
-                outColor = traceRay(recursionCounter, inRay, outColor, intersectList);
+                outColor = traceRay( recursionCounter, intersection.getOutRay(), outColor, intersection );
             }
+            // Calculate the color of every object, that was hit in between, depending on recursive level
+            outColor = outColor.add( traceIllumination( intersection ) );
         }
 
         return outColor;
     }
 
-    private RgbColor traceIllumination(Intersection finalIntersection, ArrayList<Intersection> intersectList) {
+    private RgbColor traceIllumination(Intersection finalIntersection) {
         RgbColor illuColor = new RgbColor(0, 0, 0);
 
         boolean isInTheShade = true;
@@ -112,12 +113,9 @@ public class Raytracer {
             // Only if no intersection is happening between the last intersection Point and the light source draw the color
             if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
                 // This was the last ray and nothing was hit on the ray from the last object to the light source
-                // Probably wrong. Calculating the color of each object traced, but must know, if there was light, too
-                for(Intersection stepIntersec : intersectList) {
-                    // Calculate the color of every object, that was hit in between, depending on recursive level
-                    illuColor = illuColor.add( calculateLocalIllumination(light, stepIntersec.getShape(), stepIntersec ));
-                    isInTheShade = false;
-                }
+
+                illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
+                isInTheShade = false;
             }
         }
 
@@ -130,15 +128,22 @@ public class Raytracer {
         return illuColor.add(finalIntersection.getShape().getAmbient());
     }
 
-    private Intersection getIntersectionOnShapes(Ray inRay, float tempDistance) {
+    private Intersection getIntersectionOnShapes(Ray inRay, float tempDistance, Intersection prevIntersec) {
         Intersection finalIntersection = new Intersection(inRay, null);
 
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
-            Intersection intersection = shape.intersect( inRay );
+            // Important: Avoid intersection with itself
+            if(prevIntersec != null) {
+                if (prevIntersec.getShape().equals(shape)) {
+                    return finalIntersection;
+                }
+            }
+
+            Intersection intersection = shape.intersect(inRay);
 
             // Shape was not hit + the ray is incoming + the distance is adequate
-            if (intersection.isHit() && intersection.isIncoming() && ( intersection.getDistance() < tempDistance )) {
+            if( intersection.isHit() && intersection.isIncoming() && (intersection.getDistance() < tempDistance) ) {
                 tempDistance = intersection.getDistance();
                 finalIntersection = intersection;
             }
