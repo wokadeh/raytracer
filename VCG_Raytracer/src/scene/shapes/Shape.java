@@ -42,7 +42,7 @@ public abstract class Shape extends SceneObject {
         return this.material.ambient;
     }
 
-    public boolean isDiffus(){
+    public boolean isDiffuse(){
         return this.material.isType("LAMBERT");
     }
 
