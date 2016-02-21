@@ -83,7 +83,7 @@ public class Main {
     }
 
     private static void setupLights(Scene renderScene) {
-        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, 0 ), RgbColor.WHITE);
+        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION ), RgbColor.WHITE);
        //renderScene.createPointLight(new Vec3( 0, -DIMENSION, 0 ), RgbColor.WHITE);
        // renderScene.createPointLight(new Vec3( -200, -200, 0 ), RgbColor.WHITE);
     }

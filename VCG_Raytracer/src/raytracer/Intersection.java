@@ -16,7 +16,7 @@ public class Intersection {
 
     private boolean mIncoming;
 
-    private boolean mIgnoreShadowing;
+    private boolean mOutOfDistance;
 
     private boolean mHit;
 
@@ -24,7 +24,7 @@ public class Intersection {
         mInRay = inRay;
         mHit = false;
         mShape = shape;
-        mIgnoreShadowing = false;
+        mOutOfDistance = false;
     }
 
     private void createOutRay() {
@@ -53,12 +53,12 @@ public class Intersection {
         mDistance = dist;
     }
 
-    public void setIgnoreShadowing(boolean mIgnoreShadowing) {
-        this.mIgnoreShadowing = mIgnoreShadowing;
+    public void setOutOfDistance(boolean outOfDistance) {
+        this.mOutOfDistance = outOfDistance;
     }
 
-    public boolean isIgnoreShadowing() {
-        return mIgnoreShadowing;
+    public boolean isOutOfDistance() {
+        return mOutOfDistance;
     }
     public void setIncoming(boolean mIncoming) {
         this.mIncoming = mIncoming;

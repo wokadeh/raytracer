@@ -2,7 +2,6 @@ package scene.shapes;
 
 import raytracer.Intersection;
 import raytracer.Ray;
-import scene.SceneObject;
 import scene.materials.Material;
 import utils.Log;
 import utils.Vec3;
@@ -18,7 +17,7 @@ public class Plane extends Shape {
     public static int FACING_FRONT = 4;
 
     public Plane(Vec3 pos, Material mat, int facingDirection) {
-        super(pos, mat, "PLANE");
+        super(pos, mat, "PLANE" + facingDirection);
 
         // The normal of a plane is always the vector coming from the position showing to the center of the scene
         mNormal = getFacingNormal(facingDirection);
@@ -57,12 +56,19 @@ public class Plane extends Shape {
         return createIntersection(intersectionTest, t, ray);
     }
 
+//    @Override
+//    public boolean equals(Shape shape) {
+//        return getPosition().equals(shape.getPosition());
+//    }
+
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
         intersectionTest.setIntersectionPoint(ray.getDirection().multScalar(t).add(ray.getStartPoint()));
         intersectionTest.setNormal(mNormal.normalize());
         intersectionTest.setDistance(t);
-        intersectionTest.setHit(true);
+        // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
+        intersectionTest.setHit(ray.getDistance() > t);
         intersectionTest.setIncoming(true);
+        //intersectionTest.setOutOfDistance(ray.getDistance() < t);
 
         return intersectionTest;
     }

@@ -8,6 +8,7 @@ import utils.Vec3;
 public class Sphere extends Shape {
 
     private float mSqrRadius;
+
     private float mRadius;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
@@ -27,6 +28,16 @@ public class Sphere extends Shape {
             return intersectionTest;
 
         return fillIntersectionInfo(ray, distanceToPosSq, intersectionTest, distanceToPos);
+    }
+
+    // Warning: Material is not compared
+//    @Override
+//    public boolean equals(Shape shape) {
+//        return getPosition().equals(shape.getPosition());
+//    }
+
+    public float getRadius() {
+        return mRadius;
     }
 
     private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection intersectionTest, Vec3 distanceToPos) {

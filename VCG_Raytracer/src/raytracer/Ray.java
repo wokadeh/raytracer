@@ -12,28 +12,15 @@ public class Ray {
     public Ray(Vec3 startPoint, Vec3 endPoint){
         mStartPoint = startPoint;
         mEndPoint = endPoint;
-        mDirection = mEndPoint.sub(mStartPoint);
-        recalculateDistance();
+        mDirection = mEndPoint.sub(mStartPoint).normalize();
+        mDistance = mEndPoint.sub(mStartPoint).length();
     }
 
     public Ray(Vec3 startPoint, Vec3 direction, float param){
         mStartPoint = startPoint;
-        mDirection = direction;
+        mDirection = direction.normalize();
         mEndPoint = mDirection.multScalar(param);
-        recalculateDistance();
-    }
-
-    public void recalculateDistance(float distance){
-        mDistance = distance;
-        recalculateEndPoint();
-    }
-
-    public void recalculateEndPoint(){
-        mEndPoint = mStartPoint.add( mDirection.multScalar(mDistance) );
-    }
-
-    public void recalculateDistance(){
-        mDistance = mStartPoint.sub( mEndPoint ).length();
+        mDistance = mEndPoint.sub(mStartPoint).length();
     }
 
     public Vec3 getStartPoint() {

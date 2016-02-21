@@ -23,6 +23,8 @@ public abstract class Shape extends SceneObject {
 
     public abstract Intersection intersect(Ray ray);
 
+    //public abstract boolean equals(Shape shape);
+
     public String isType() {
         return this.type;
     }
@@ -38,5 +40,10 @@ public abstract class Shape extends SceneObject {
             }
         }
         return this.material.ambient;
+    }
+
+    @Override
+    public String toString(){
+        return this.type;
     }
 }

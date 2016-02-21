@@ -104,18 +104,19 @@ public class Raytracer {
         for (Light light : mLightList) {
             Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
 
-            Intersection lightIntersection = getIntersection(lightRay, Float.MAX_VALUE);
+            Intersection lightIntersection = getIntersection(lightRay, Float.MAX_VALUE, finalIntersection);
 
             // This is never happening! Is always != null: BAAAAADDD
-            if(lightIntersection.isHit()){
+            if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
                 // This was the last ray and nothing was hit on the ray from the last object to the light source
                 // Probably wrong. Calculating the color of each object traced, but must know, if there was light, too
                 for(Intersection stepIntersec : intersectList) {
                     // calculate the color of every object, that was hit in between, depending on recursive level
-                    illuColor = calculateLocalIllumination(light, stepIntersec.getShape(), stepIntersec);
+                    illuColor = illuColor.add(calculateLocalIllumination(light, stepIntersec.getShape(), stepIntersec));
                 }
             }
             else{
+                //Log.warn(this, "Shadow on ");
                 // Something was hit in between of the light source and the current shape. Draw ambient
                 return calculateShadowColor(finalIntersection.getShape());
             }
@@ -131,10 +132,32 @@ public class Raytracer {
         for( Shape shape : mShapeList ){
             Intersection intersection = shape.intersect( inRay );
 
-            // Shape was hit
-            if (intersection.isHit() && intersection.isIncoming() && intersection.getDistance() < tempDistance) {
+            // Shape was not hit + the ray is incoming + the distance is adequate
+            if (intersection.isHit() && intersection.isIncoming() && ( intersection.getDistance() < tempDistance )) {
                 tempDistance = intersection.getDistance();
                 finalIntersection = intersection;
+            }
+        }
+        return finalIntersection;
+    }
+
+    private Intersection getIntersection(Ray inRay, float tempDistance, Intersection prevIntersec) {
+        Intersection finalIntersection = new Intersection(inRay, null);
+
+        // 2: Intersection test with all shapes
+        for( Shape shape : mShapeList ){
+            if(!prevIntersec.getShape().equals(shape)) {
+                Intersection intersection = shape.intersect(inRay);
+
+                // Shape was not hit + the ray is incoming + the distance is adequate
+                if (intersection.isHit() && intersection.isIncoming() && (intersection.getDistance() < tempDistance)) {
+                    tempDistance = intersection.getDistance();
+                    finalIntersection = intersection;
+                }
+                //Log.error(this, "Non equal shapes");
+            }
+            else{
+                //Log.warn(this, "Equal shapes");
             }
         }
         return finalIntersection;
