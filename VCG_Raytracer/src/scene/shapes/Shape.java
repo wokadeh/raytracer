@@ -46,6 +46,10 @@ public abstract class Shape extends SceneObject {
         return this.material.isType("LAMBERT");
     }
 
+    public boolean isReflective(){
+        return this.material.isReflective();
+    }
+
     @Override
     public String toString(){
         return this.type;

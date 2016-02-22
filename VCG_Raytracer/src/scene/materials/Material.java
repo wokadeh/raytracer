@@ -34,6 +34,8 @@ public abstract class Material {
         return mType.equals(type);
     }
 
+    public abstract boolean isReflective();
+
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);
 
     protected float clampAngle(float angle){

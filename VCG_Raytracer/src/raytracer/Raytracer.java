@@ -39,7 +39,6 @@ public class Raytracer {
 
     public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor backColor){
         Log.print(this, "Init");
-
         mMaxRecursions = recursions;
         mBufferedImage = renderWindow.getBufferedImage();
         mBackgroundColor = backColor;
@@ -70,7 +69,6 @@ public class Raytracer {
         Vec3 startPoint = mScene.getCamPos();
         Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
         Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
-        ArrayList<Intersection> intersectList = new ArrayList<>();
 
         return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, null);
     }
@@ -88,7 +86,7 @@ public class Raytracer {
                 return outColor;
             }
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
-            else if(!intersection.getShape().isDiffuse()){
+            else if(intersection.getShape().isReflective()){
                 recursionCounter = recursionCounter - 1;
                 outColor = traceRay( recursionCounter, intersection.getOutRay(), outColor, intersection );
             }
@@ -96,7 +94,7 @@ public class Raytracer {
             outColor = outColor.add( traceIllumination( intersection ) );
 
             // Stop on diffuse material
-            if( intersection.getShape().isDiffuse() ){
+            if(! intersection.getShape().isReflective() ){
                 return outColor;
             }
         }

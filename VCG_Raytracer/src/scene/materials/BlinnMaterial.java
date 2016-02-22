@@ -11,6 +11,11 @@ public class BlinnMaterial extends Material {
     }
 
     @Override
+    public boolean isReflective() {
+        return false;
+    }
+
+    @Override
     public RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos) {
         return this.ambient;
     }
