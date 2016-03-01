@@ -23,6 +23,7 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+import com.interactivemesh.jfx.importer.Importer;
 import raytracer.Raytracer;
 import scene.materials.LambertMaterial;
 import scene.materials.Material;
@@ -33,6 +34,9 @@ import scene.Scene;
 import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
+
+import java.io.File;
+import java.net.URL;
 
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
