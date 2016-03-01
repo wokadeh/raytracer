@@ -15,6 +15,7 @@ public class Plane extends Shape {
     public static int FACING_DOWN = 2;
     public static int FACING_UP = 3;
     public static int FACING_FRONT = 4;
+    public static int FACING_BACK = 5;
 
     public Plane(Vec3 pos, Material mat, int facingDirection) {
         super(pos, mat, "PLANE" + facingDirection);
@@ -36,6 +37,7 @@ public class Plane extends Shape {
             case 2 : return new Vec3( 0, -1, 0);        // DOWN
             case 3 : return new Vec3( 0, 1, 0);         // UP
             case 4 : return new Vec3( 0, 0, -1);        // FRONT
+            case 5 : return new Vec3( 0, 0, 1);        // FRONT
             default:
                 Log.warn(this, "Plane cannot be created. The facing direction is unclear.");
             return new Vec3( 0, 0 ,0 );
