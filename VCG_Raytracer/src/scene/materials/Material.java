@@ -7,7 +7,6 @@ import utils.Vec3;
 
 public abstract class Material {
 
-    public RgbColor ambient;
     protected RgbColor diffCoeff;
     protected RgbColor specCoeff;
 
@@ -15,10 +14,9 @@ public abstract class Material {
 
     private String mType;
 
-    protected Material(RgbColor ambientColor, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
+    protected Material(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
         Log.print(this, "Init " + type);
 
-        this.ambient = ambientColor;
         this.diffCoeff = diffuseCoefficient;
         this.specCoeff = specularCoefficient;
         this.shininess = shininess;
@@ -35,6 +33,8 @@ public abstract class Material {
     }
 
     public abstract boolean isReflective();
+
+    public abstract boolean isTransparent();
 
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);
 

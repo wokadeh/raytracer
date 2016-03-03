@@ -9,8 +9,8 @@ public class PhongMaterial extends Material {
 
     float mReflectivity;
 
-    public PhongMaterial(RgbColor ambientColor, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity) {
-        super(ambientColor, diffuseCoefficient, specularCoefficient, shininess, "PHONG");
+    public PhongMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity) {
+        super(diffuseCoefficient, specularCoefficient, shininess, "PHONG");
 
         mReflectivity = reflectivity;
     }
@@ -18,6 +18,11 @@ public class PhongMaterial extends Material {
     @Override
     public boolean isReflective() {
         return mReflectivity > 0;
+    }
+
+    @Override
+    public boolean isTransparent() {
+        return false;
     }
 
     @Override

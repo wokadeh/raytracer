@@ -38,6 +38,8 @@ import utils.Vec3;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.3f, 0.3f, 0.2f);
+
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
@@ -97,9 +99,9 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.2f, 0.05f, 0.2f), RgbColor.MAGENTA, RgbColor.WHITE, 10, 1);
-        Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.BLUE, RgbColor.WHITE, 10, 1);
-        Material sphereMaterial3 = new PhongMaterial(new RgbColor(0.05f, 0.05f, 0.2f), RgbColor.YELLOW, RgbColor.WHITE, 10, 1);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, 10, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, 10, 1);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, 10, 1);
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
@@ -108,9 +110,9 @@ public class Main {
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GREEN);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.RED);
+        Material planeMaterial = new LambertMaterial(RgbColor.WHITE);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.GREEN);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.RED);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
@@ -121,7 +123,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR, AMBIENT_LIGHT);
 
         raytracer.renderScene();
     }
