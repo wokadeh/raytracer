@@ -30,16 +30,6 @@ public class Sphere extends Shape {
         return fillIntersectionInfo(ray, distanceToPosSq, intersectionTest, distanceToPos);
     }
 
-    // Warning: Material is not compared
-//    @Override
-//    public boolean equals(Shape shape) {
-//        return getPosition().equals(shape.getPosition());
-//    }
-
-    public float getRadius() {
-        return mRadius;
-    }
-
     private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection intersectionTest, Vec3 distanceToPos) {
         float t;
         float compB = -distanceToPos.scalar(ray.getDirection());
@@ -54,12 +44,10 @@ public class Sphere extends Shape {
 
         if (t0 > 0 && t1 > 0)
             t = t0;
-        //else if (t0 < 0.0f && t1 < 0)
-        //    return intersectionTest;
         else if (t0 < 0.0f && t1 > 0)
             t = t1;
-        //else if (t0 == t1)
-        //    t = t0;
+        else if (t0 == t1)
+            t = t0;
         else
             return intersectionTest;
 

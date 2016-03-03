@@ -82,6 +82,7 @@ public class Raytracer {
         if( intersection.isHit() && intersection.isIncoming() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
             if( recursionCounter == 0) {
+                Log.warn(this, "got End");
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
@@ -115,8 +116,8 @@ public class Raytracer {
 
             // Only if no intersection is happening between the last intersection Point and the light source draw the color
             if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
-                // This was the last ray and nothing was hit on the ray from the last object to the light source
 
+                // This was the last ray and nothing was hit on the ray from the last object to the light source
                 illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
                 isInTheShade = false;
             }
@@ -127,7 +128,7 @@ public class Raytracer {
             return calculateShadowColor(finalIntersection.getShape());
         }
 
-        // Finally add ambient color to each object
+        // No shadow: finally add ambient color to each object only once
         return illuColor.add(finalIntersection.getShape().getAmbient());
     }
 

@@ -35,9 +35,6 @@ import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
 
-import java.io.File;
-import java.net.URL;
-
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
@@ -49,11 +46,11 @@ public class Main {
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
     static float VIEW_ANGLE = 35;
-    static float FOCAL_LENGTH = 10;
+    static float FOCAL_LENGTH = 1;
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 2;
+    static int RECURSIONS = 3;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -106,6 +103,7 @@ public class Main {
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(0, -DIMENSION + sphereRadius, 0), sphereMaterial3, sphereRadius);
     }
 
     private static void setupCornellBox(Scene renderScene) {
