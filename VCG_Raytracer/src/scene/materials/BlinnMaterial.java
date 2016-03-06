@@ -6,8 +6,10 @@ import utils.RgbColor;
 import utils.Vec3;
 
 public class BlinnMaterial extends Material {
-    public BlinnMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, int type) {
+    public BlinnMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity) {
         super(diffuseCoefficient, specularCoefficient, shininess, "BLINN");
+
+        this.calculateMaterialCoeff(reflectivity);
     }
 
     @Override

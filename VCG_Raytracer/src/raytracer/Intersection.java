@@ -9,7 +9,8 @@ public class Intersection {
 
     private Vec3 mNormal;
     private Ray mInRay;
-    private Ray mOutRay;
+    private Ray mReflectionRay;
+    private Ray mRefractionRay;
 
     private Shape mShape;
     private float mDistance;
@@ -27,13 +28,37 @@ public class Intersection {
         mOutOfDistance = false;
     }
 
-    private void createOutRay() {
+    private void calculateReflectionRay() {
         Vec3 normalN = mNormal.normalize();
         Vec3 directN = mInRay.getDirection().negate().normalize();
         float angle = normalN.scalar(directN);
+
         Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(directN).normalize();
-        mOutRay = new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
+        mReflectionRay = new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
+    }
+
+    private void calculateRefractionRay() {
+        Vec3 normalN = mNormal.normalize();
+        Vec3 directN = mInRay.getDirection().negate().normalize();
+        float angle = normalN.scalar(directN);
+        float switchedMaterialCoeff = 1 / mShape.getMaterialCoeff();
+
+        float incidentAngle = calculateIncidentAngle(angle, switchedMaterialCoeff);
+        float transmissionAngle = calculateTransmissionAngle(angle, switchedMaterialCoeff);
+    }
+
+    private float calculateIncidentAngle(float angle, float switchedMaterialCoeff) {
+
+        return 0f;
+    }
+
+    private float calculateTransmissionAngle(float angle, float switchedMaterialCoeff) {
+        float secondPart = 1 - angle * angle;
+
+        float firstPart = switchedMaterialCoeff * switchedMaterialCoeff;
+
+        return (float) Math.sqrt( 1 - firstPart * secondPart );
     }
 
     public void setHit(boolean mHit) {
@@ -46,7 +71,6 @@ public class Intersection {
 
     public void setNormal(Vec3 mNormal) {
         this.mNormal = mNormal;
-        this.createOutRay();
     }
 
     public void setDistance(float dist){
@@ -76,8 +100,13 @@ public class Intersection {
         return mIntersectionPoint;
     }
 
-    public Ray getOutRay() {
-        return mOutRay;
+    public Ray getReflectionRay() {
+        this.calculateReflectionRay();
+        return mReflectionRay;
+    }
+
+    public Ray getRefractionRay() {
+        return mReflectionRay;
     }
 
     public Vec3 getNormal() {

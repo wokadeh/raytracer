@@ -38,6 +38,10 @@ public abstract class Shape extends SceneObject {
         return new RgbColor(0,0,0);
     }
 
+    public float getMaterialCoeff(){
+        return this.material.getFractionCoeff();
+    }
+
     public boolean isDiffuse(){
         return this.material.isType("LAMBERT");
     }

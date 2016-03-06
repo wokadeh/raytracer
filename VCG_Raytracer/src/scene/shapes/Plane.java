@@ -70,7 +70,6 @@ public class Plane extends Shape {
         // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
         intersectionTest.setHit(ray.getDistance() > t);
         intersectionTest.setIncoming(true);
-        //intersectionTest.setOutOfDistance(ray.getDistance() < t);
 
         return intersectionTest;
     }

@@ -7,15 +7,25 @@ import utils.Vec3;
 
 public abstract class Material {
 
-    public static float GLASS = 1.0f;
-    public static float MIRROR = -1.0f;
-    public static float SILVER = -0.75f;
+    /* TRANSMISSION INDICES */
+    public static float DIAMOND = 2.417f;
+    public static float WATER = 2.00f;
+    public static float GLASS = 1.54f;
+    public static float AIR = 1.0003f;
+
+    /* REFLECTION INDICES */
+    public static float TOTAL_REFLECTION = 1.0f;
+    public static float MOST_REFLECTION = 0.75f;
+    public static float HALF_REFLECTION = 0.75f;
+    public static float NO_REFLECTION = 0f;
 
     protected RgbColor diffCoeff;
     protected RgbColor specCoeff;
 
-    protected float shininess;
-    protected float reflectivity;
+    protected float shininess = 0;
+
+    protected float fractionCoeff = 0;
+    protected float reflectionCoeff = 0;
 
     private String mType;
 
@@ -29,8 +39,8 @@ public abstract class Material {
         mType = type;
     }
 
-    public String getType(){
-        return mType;
+    protected void calculateMaterialCoeff(float fractionCoeff){
+        this.fractionCoeff = this.AIR / fractionCoeff;
     }
 
     public boolean isType(String type){
@@ -38,14 +48,21 @@ public abstract class Material {
     }
 
     public boolean isReflective() {
-        return this.reflectivity < 0;
+        return this.reflectionCoeff != 0;
     }
 
     public boolean isTransparent(){
-        return this.reflectivity > 0;
+        return this.fractionCoeff != 0;
     }
 
+    public String getType(){
+        return mType;
+    }
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);
+
+    public float getFractionCoeff() {
+        return this.fractionCoeff;
+    }
 
     protected float clampAngle(float angle){
         if(angle > 1f){
@@ -64,7 +81,7 @@ public abstract class Material {
         reflectN = reflectN.sub(lightVecN);
 
         float specAngle = reflectN.scalar(viewVecN);
-        float specFactor = (float) Math.pow(specAngle, shininess);
+        float specFactor = (float) Math.pow(specAngle, this.shininess);
 
         return this.specCoeff
                 .multRGB(lightColor)

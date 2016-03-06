@@ -23,7 +23,6 @@
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-import com.interactivemesh.jfx.importer.Importer;
 import raytracer.Raytracer;
 import scene.materials.LambertMaterial;
 import scene.materials.Material;
@@ -31,7 +30,6 @@ import scene.materials.PhongMaterial;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
-import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
 
@@ -99,9 +97,9 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, 10, Material.MIRROR);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, 10, Material.MIRROR);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, 10, Material.MIRROR);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.GLASS);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.GLASS);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.GLASS);
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);

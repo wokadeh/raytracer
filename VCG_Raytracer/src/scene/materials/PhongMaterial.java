@@ -1,17 +1,21 @@
 package scene.materials;
 
 import scene.lights.Light;
-import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
 
 public class PhongMaterial extends Material {
 
+    public static float SHINY = 10;
+    public static float VERY_SHINY = 100;
+    public static float NOT_SHINY = 0;
 
-    public PhongMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity) {
+    public PhongMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity, float fractionCoeff) {
         super(diffuseCoefficient, specularCoefficient, shininess, "PHONG");
 
-        this.reflectivity = reflectivity;
+        this.reflectionCoeff = reflectivity;
+
+        this.calculateMaterialCoeff(fractionCoeff);
     }
 
     @Override
