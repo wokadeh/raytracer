@@ -91,11 +91,11 @@ public class Raytracer {
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if(intersection.getShape().isReflective()){
                 recursionCounter = recursionCounter - 1;
-                outColor = traceRay( recursionCounter, intersection.getReflectionRay(), outColor, intersection );
+                outColor = outColor.add(traceRay( recursionCounter, intersection.getReflectionRay(), outColor, intersection ));
             }
 //            if(intersection.getShape().isTransparent()){
 //                recursionCounter = recursionCounter - 1;
-//                outColor = traceRay( recursionCounter, intersection.getReflectionRay(), outColor, intersection );
+//                outColor = outColor.add(traceRay( recursionCounter, intersection.getRefractionRay(), outColor, intersection ));
 //            }
             // Calculate the color of every object, that was hit in between, depending on recursive level
             outColor = outColor.add( shade( intersection ) );

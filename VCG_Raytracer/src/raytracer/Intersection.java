@@ -44,13 +44,17 @@ public class Intersection {
         float angle = normalN.scalar(directN);
         float switchedMaterialCoeff = 1 / mShape.getMaterialCoeff();
 
-        float incidentAngle = calculateIncidentAngle(angle, switchedMaterialCoeff);
-        float transmissionAngle = calculateTransmissionAngle(angle, switchedMaterialCoeff);
+        Vec3 firstVec = calculateIncidentDir(angle, normalN, directN, switchedMaterialCoeff);
+        Vec3 secVec = normalN.multScalar(calculateTransmissionAngle(angle, switchedMaterialCoeff));
+        Vec3 refrDir = firstVec.sub(secVec);
+
+        mRefractionRay = new Ray(mIntersectionPoint, refrDir, Float.MAX_VALUE);
     }
 
-    private float calculateIncidentAngle(float angle, float switchedMaterialCoeff) {
+    private Vec3 calculateIncidentDir(float angle, Vec3 normalN, Vec3 directN, float switchedMaterialCoeff) {
 
-        return 0f;
+        Vec3 secDir = ((normalN.multScalar(angle)).sub(directN));
+        return secDir.multScalar(switchedMaterialCoeff);
     }
 
     private float calculateTransmissionAngle(float angle, float switchedMaterialCoeff) {
@@ -106,7 +110,8 @@ public class Intersection {
     }
 
     public Ray getRefractionRay() {
-        return mReflectionRay;
+        this.calculateRefractionRay();
+        return mRefractionRay;
     }
 
     public Vec3 getNormal() {

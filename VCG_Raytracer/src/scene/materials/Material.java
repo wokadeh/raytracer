@@ -12,6 +12,7 @@ public abstract class Material {
     public static float WATER = 2.00f;
     public static float GLASS = 1.54f;
     public static float AIR = 1.0003f;
+    public static float NO_TRANSMISSION = 0f;
 
     /* REFLECTION INDICES */
     public static float TOTAL_REFLECTION = 1.0f;

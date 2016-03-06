@@ -98,8 +98,8 @@ public class Main {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.GLASS);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.GLASS);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.GLASS);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
