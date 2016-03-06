@@ -7,22 +7,11 @@ import utils.Vec3;
 
 public class PhongMaterial extends Material {
 
-    float mReflectivity;
 
     public PhongMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity) {
         super(diffuseCoefficient, specularCoefficient, shininess, "PHONG");
 
-        mReflectivity = reflectivity;
-    }
-
-    @Override
-    public boolean isReflective() {
-        return mReflectivity > 0;
-    }
-
-    @Override
-    public boolean isTransparent() {
-        return false;
+        this.reflectivity = reflectivity;
     }
 
     @Override
@@ -35,6 +24,6 @@ public class PhongMaterial extends Material {
         RgbColor diffuse = this.calculateDiffuseColor(light.getColor(), angle);
         RgbColor specular = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
 
-        return diffuse.add(specular).multScalar(mReflectivity);
+        return diffuse.add(specular);
     }
 }

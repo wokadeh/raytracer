@@ -99,9 +99,9 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, 10, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, 10, 1);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, 10, 1);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, 10, Material.MIRROR);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, 10, Material.MIRROR);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, 10, Material.MIRROR);
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);

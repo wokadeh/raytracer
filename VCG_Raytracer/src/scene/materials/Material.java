@@ -7,10 +7,15 @@ import utils.Vec3;
 
 public abstract class Material {
 
+    public static float GLASS = 1.0f;
+    public static float MIRROR = -1.0f;
+    public static float SILVER = -0.75f;
+
     protected RgbColor diffCoeff;
     protected RgbColor specCoeff;
 
     protected float shininess;
+    protected float reflectivity;
 
     private String mType;
 
@@ -32,9 +37,13 @@ public abstract class Material {
         return mType.equals(type);
     }
 
-    public abstract boolean isReflective();
+    public boolean isReflective() {
+        return this.reflectivity < 0;
+    }
 
-    public abstract boolean isTransparent();
+    public boolean isTransparent(){
+        return this.reflectivity > 0;
+    }
 
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);
 
