@@ -98,39 +98,41 @@ public class Raytracer {
                 outColor = traceRay( recursionCounter, intersection.getOutRay(), outColor, intersection );
             }
             // Calculate the color of every object, that was hit in between, depending on recursive level
-            outColor = outColor.add( traceIllumination( intersection ) );
+            outColor = outColor.add( shade( intersection ) );
         }
 
         return outColor;
     }
 
-    private RgbColor traceIllumination(Intersection finalIntersection) {
-        RgbColor illuColor = new RgbColor(0, 0, 0);
-
-        boolean isInTheShade = true;
+    private RgbColor shade(Intersection finalIntersection) {
+        RgbColor illuColor = RgbColor.BLACK;
 
         // Check the ray from the intersection point to any light source
         for (Light light : mLightList) {
-            Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
-
-            Intersection lightIntersection = getIntersectionBetweenLight(lightRay, finalIntersection);
-
-            // Only if no intersection is happening between the last intersection Point and the light source draw the color
-            if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
-
-                // This was the last ray and nothing was hit on the ray from the last object to the light source
-                illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
-                isInTheShade = false;
-            }
+            illuColor = traceIllumination(illuColor, light, finalIntersection);
         }
 
-        // Something was hit in between of the light source and the current shape. Draw ambient
-        if( isInTheShade ){
+        // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
+        if( illuColor.equals( RgbColor.BLACK ) ){
             return illuColor.add(calculateShadowColor(finalIntersection.getShape()));
         }
 
         // No shadow: finally add ambient color to each object only once
         return illuColor.add(mAmbientLight);
+    }
+
+    private RgbColor traceIllumination(RgbColor illuColor, Light light, Intersection finalIntersection){
+        Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
+
+        Intersection lightIntersection = getIntersectionBetweenLight(lightRay, finalIntersection);
+
+        // Only if no intersection is happening between the last intersection Point and the light source draw the color
+        if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
+
+            // This was the last ray and nothing was hit on the ray from the last object to the light source
+            illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
+        }
+        return illuColor;
     }
 
     private Intersection getIntersectionOnShapes(Ray inRay, float tempDistance, Intersection prevIntersec) {
