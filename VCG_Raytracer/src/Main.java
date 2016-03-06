@@ -38,7 +38,7 @@ import utils.Vec3;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.3f, 0.3f, 0.2f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.1f, 0.1f, 0.1f);
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
