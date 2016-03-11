@@ -46,7 +46,8 @@ public class Intersection {
     }
 
     public Ray calculateRefractionRay() {
-        float angle = mNormal.scalar(mInRay.getDirection().negate());
+        Vec3 inRay = mInRay.getDirection().negate();
+        float angle = mNormal.scalar(inRay);
         float n;
 
         if (angle > 0.0f) {
@@ -58,12 +59,12 @@ public class Intersection {
         float k = (float) Math.sqrt(1.0f - n * n * (1.0f - angle * angle));
 
         if (k < 0.0f) { // Total internal reflection
-            return calculateReflectionRay(mInRay.getDirection().negate());
+            return calculateReflectionRay( mInRay.getDirection());
         }
 
-        Vec3 temp_a = (mNormal.multScalar(n * angle - k));
-        Vec3 temp_b = mInRay.getDirection().multScalar(n);
-        return new Ray(mIntersectionPoint, temp_b.sub(temp_a), Float.MAX_VALUE);
+        Vec3 temp_a = mNormal.multScalar( n * angle - k );
+        Vec3 temp_b =  mInRay.getDirection().multScalar( n );
+        return new Ray(mIntersectionPoint, temp_a.sub( temp_b ), Float.MAX_VALUE);
     }
 
     public void setHit(boolean mHit) {
@@ -89,6 +90,7 @@ public class Intersection {
     public boolean isOutOfDistance() {
         return mOutOfDistance;
     }
+
     public void setIncoming(boolean mIncoming) {
         this.mIncoming = mIncoming;
     }
