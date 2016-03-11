@@ -17,7 +17,7 @@ public abstract class Material {
     /* REFLECTION INDICES */
     public static float TOTAL_REFLECTION = 1.0f;
     public static float MOST_REFLECTION = 0.75f;
-    public static float HALF_REFLECTION = 0.75f;
+    public static float HALF_REFLECTION = 0.5f;
     public static float NO_REFLECTION = 0f;
 
     protected RgbColor diffCoeff;
@@ -41,7 +41,9 @@ public abstract class Material {
     }
 
     protected void calculateMaterialCoeff(float fractionCoeff){
-        this.fractionCoeff = this.AIR / fractionCoeff;
+        if (fractionCoeff != 0) {
+            this.fractionCoeff = this.AIR / fractionCoeff;
+        }
     }
 
     public boolean isType(String type){

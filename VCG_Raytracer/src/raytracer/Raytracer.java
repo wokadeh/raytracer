@@ -84,19 +84,18 @@ public class Raytracer {
         if( intersection.isHit() && intersection.isIncoming() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
             if( recursionCounter == 0) {
-                Log.warn(this, "got End");
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if(intersection.getShape().isReflective()){
                 recursionCounter = recursionCounter - 1;
-                outColor = outColor.add(traceRay( recursionCounter, intersection.getReflectionRay(), outColor, intersection ));
+                outColor = outColor.add(traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
             }
-//            if(intersection.getShape().isTransparent()){
-//                recursionCounter = recursionCounter - 1;
-//                outColor = outColor.add(traceRay( recursionCounter, intersection.getRefractionRay(), outColor, intersection ));
-//            }
+            if(intersection.getShape().isTransparent()){
+                recursionCounter = recursionCounter - 1;
+                outColor = outColor.add(traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
+            }
             // Calculate the color of every object, that was hit in between, depending on recursive level
             outColor = outColor.add( shade( intersection ) );
         }

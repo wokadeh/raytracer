@@ -9,9 +9,6 @@ public class Intersection {
 
     private Vec3 mNormal;
     private Ray mInRay;
-    private Ray mReflectionRay;
-    private Ray mRefractionRay;
-
     private Shape mShape;
     private float mDistance;
 
@@ -28,31 +25,32 @@ public class Intersection {
         mOutOfDistance = false;
     }
 
-    private void calculateReflectionRay() {
+    public Ray calculateReflectionRay() {
         Vec3 normalN = mNormal.normalize();
         Vec3 directN = mInRay.getDirection().negate().normalize();
         float angle = normalN.scalar(directN);
 
         Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(directN).normalize();
-        mReflectionRay = new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
+        return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
     }
 
-    private void calculateRefractionRay() {
+    public Ray calculateRefractionRay() {
         Vec3 normalN = mNormal.normalize();
         Vec3 directN = mInRay.getDirection().negate().normalize();
         float angle = normalN.scalar(directN);
-        float switchedMaterialCoeff = 1 / mShape.getMaterialCoeff();
+        float switchedMaterialCoeff = 1f / mShape.getMaterialCoeff();
 
         Vec3 firstVec = calculateIncidentDir(angle, normalN, directN, switchedMaterialCoeff);
         Vec3 secVec = normalN.multScalar(calculateTransmissionAngle(angle, switchedMaterialCoeff));
         Vec3 refrDir = firstVec.sub(secVec);
 
-        mRefractionRay = new Ray(mIntersectionPoint, refrDir, Float.MAX_VALUE);
+        return new Ray(mIntersectionPoint, refrDir, Float.MAX_VALUE);
     }
 
     private Vec3 calculateIncidentDir(float angle, Vec3 normalN, Vec3 directN, float switchedMaterialCoeff) {
 
+        // WARNING: angle has no effect!
         Vec3 secDir = ((normalN.multScalar(angle)).sub(directN));
         return secDir.multScalar(switchedMaterialCoeff);
     }
@@ -102,16 +100,6 @@ public class Intersection {
 
     public Vec3 getIntersectionPoint() {
         return mIntersectionPoint;
-    }
-
-    public Ray getReflectionRay() {
-        this.calculateReflectionRay();
-        return mReflectionRay;
-    }
-
-    public Ray getRefractionRay() {
-        this.calculateRefractionRay();
-        return mRefractionRay;
     }
 
     public Vec3 getNormal() {
