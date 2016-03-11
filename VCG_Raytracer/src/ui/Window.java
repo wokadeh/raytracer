@@ -54,5 +54,10 @@ public class Window {
         graphic.drawString("Elapsed rendering time: " + text + " sec", 10, mHeight - 10);
 
         mFrame.repaint();
+
+        graphic.setColor(Color.white);
+        graphic.drawString("Elapsed rendering time: " + text + " sec", mWidth - 250, mHeight - 10);
+
+        mFrame.repaint();
     }
 }
