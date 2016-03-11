@@ -24,10 +24,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 import raytracer.Raytracer;
-import scene.materials.LambertMaterial;
-import scene.materials.Material;
-import scene.materials.PhongMaterial;
-import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
 import utils.RgbColor;
@@ -76,49 +72,11 @@ public class Main {
     private static void setupScene(Scene renderScene){
         setupCameras(renderScene);
 
-        setupCornellBox(renderScene);
-
-        setupObjects(renderScene);
-
-        setupLights(renderScene);
     }
-
-    private static void setupLights(Scene renderScene) {
-        // Note: Never put the light source inside a plane
-        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION-1 ), RgbColor.WHITE);
-        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
-        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, -DIMENSION+1 ), RgbColor.WHITE);
-    }
-
     private static void setupCameras(Scene renderScene) {
         renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
-    private static void setupObjects(Scene renderScene) {
-        float sphereRadius = 1;
-        // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.GLASS);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
-
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
-        renderScene.createSphere(new Vec3(0, -DIMENSION + sphereRadius, 0), sphereMaterial3, sphereRadius);
-    }
-
-    private static void setupCornellBox(Scene renderScene) {
-        // Materials: Ambient Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.GREEN);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.RED);
-
-        renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
-        renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
-        //renderScene.createPlane(new Vec3( 0f, 0f, DIMENSION/2 ), planeMaterial, Plane.FACING_FRONT);
-        renderScene.createPlane(new Vec3( 0f, 0f, CAM_POS.y + 0.1f ), planeMaterial, Plane.FACING_BACK);
-        renderScene.createPlane(new Vec3( 0f, -DIMENSION, 0 ), planeMaterial, Plane.FACING_UP);
-        renderScene.createPlane(new Vec3( 0f, DIMENSION, 0 ), planeMaterial, Plane.FACING_DOWN);
-    }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
         Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR, AMBIENT_LIGHT);

@@ -1,17 +1,17 @@
 package scene.cameras;
 
-import scene.SceneObject;
 import utils.Log;
 import utils.Vec2;
 import utils.Vec3;
 
-public class PerspectiveCamera extends SceneObject {
+public class PerspectiveCamera {
 
     private Vec3 v;
     private Vec3 u;
     private Vec3 s;
 
     private float ratio;
+    private Vec3 position;
 
     private float focalLength;
 
@@ -24,8 +24,8 @@ public class PerspectiveCamera extends SceneObject {
     private Vec3 center;
 
     public PerspectiveCamera(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec, float angleOfView, float focalLength, int screenWidth, int screenHeight) {
-        super(pos);
         Log.print(this, "Init");
+        this.position = pos;
         this.focalLength = focalLength;
         this.center = centerOfInterest;
         this.screenWidth = screenWidth;
@@ -41,6 +41,14 @@ public class PerspectiveCamera extends SceneObject {
         this.viewPlaneWidth = this.ratio * this.viewPlaneHeight;
 
         logParameters(centerOfInterest, pos, upVec, angleOfView);
+    }
+
+    public Vec3 getPosition(){
+        return this.position;
+    }
+
+    public Vec3 getLookAt(){
+        return this.center;
     }
 
     public Vec3 calculateDestPoint(Vec2 pixelPos){
