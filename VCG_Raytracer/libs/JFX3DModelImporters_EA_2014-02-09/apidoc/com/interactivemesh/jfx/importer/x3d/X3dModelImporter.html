@@ -331,7 +331,7 @@ Node[] rootNodes = x3dImporter.getImport();
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/interactivemesh/jfx/importer/x3d/X3dModelImporter.html#getResourceBasePath--">getResourceBasePath</a></span>()</code>
-<div class="block">Gets the path where files associated with the imported 3D model file are located.</div>
+<div class="block">Gets the mPath where files associated with the imported 3D model file are located.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
@@ -361,7 +361,7 @@ Node[] rootNodes = x3dImporter.getImport();
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/interactivemesh/jfx/importer/x3d/X3dModelImporter.html#read-java.lang.String-">read</a></span>(java.lang.String&nbsp;filePath)</code>
-<div class="block">Imports a 3D model file with the passed file path.</div>
+<div class="block">Imports a 3D model file with the passed file mPath.</div>
 </td>
 </tr>
 <tr id="i17" class="rowColor">
@@ -390,8 +390,8 @@ Node[] rootNodes = x3dImporter.getImport();
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/interactivemesh/jfx/importer/x3d/X3dModelImporter.html#setResourceBasePath-java.lang.String-">setResourceBasePath</a></span>(java.lang.String&nbsp;path)</code>
-<div class="block">Sets the path where files associated with the imported 3D model file are located.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/interactivemesh/jfx/importer/x3d/X3dModelImporter.html#setResourceBasePath-java.lang.String-">setResourceBasePath</a></span>(java.lang.String&nbsp;mPath)</code>
+<div class="block">Sets the mPath where files associated with the imported 3D model file are located.</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
@@ -447,7 +447,7 @@ Node[] rootNodes = x3dImporter.getImport();
 <li class="blockList">
 <h4>getResourceBasePath</h4>
 <pre>public&nbsp;java.lang.String&nbsp;getResourceBasePath()</pre>
-<div class="block">Gets the path where files associated with the imported 3D model file are located.
+<div class="block">Gets the mPath where files associated with the imported 3D model file are located.
  Default value: <code>null</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -480,15 +480,15 @@ Node[] rootNodes = x3dImporter.getImport();
 <ul class="blockList">
 <li class="blockList">
 <h4>setResourceBasePath</h4>
-<pre>public&nbsp;void&nbsp;setResourceBasePath(java.lang.String&nbsp;path)</pre>
-<div class="block">Sets the path where files associated with the imported 3D model file are located.
+<pre>public&nbsp;void&nbsp;setResourceBasePath(java.lang.String&nbsp;mPath)</pre>
+<div class="block">Sets the mPath where files associated with the imported 3D model file are located.
  Only needs to be set if the base directory differs from that 
  containing the imported 3D model file. Default value: <code>null</code>.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../com/interactivemesh/jfx/importer/ModelImporter.html#setResourceBasePath-java.lang.String-">setResourceBasePath</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/interactivemesh/jfx/importer/ModelImporter.html" title="interface in com.interactivemesh.jfx.importer">ModelImporter</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>path</code> - location of associated files</dd>
+<dd><code>mPath</code> - location of associated files</dd>
 </dl>
 </li>
 </ul>
@@ -627,7 +627,7 @@ Node[] rootNodes = x3dImporter.getImport();
 <li class="blockList">
 <h4>read</h4>
 <pre>public&nbsp;void&nbsp;read(java.lang.String&nbsp;filePath)</pre>
-<div class="block">Imports a 3D model file with the passed file path.
+<div class="block">Imports a 3D model file with the passed file mPath.
  The data of the last imported file will be disposed of. 
  The imported data is available as soon as this method returns.</div>
 <dl>

@@ -30,8 +30,12 @@ import scene.materials.PhongMaterial;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
+import utils.ModelImporter;
+import utils.Log;
 import utils.RgbColor;
 import utils.Vec3;
+
+import java.io.File;
 
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
@@ -58,14 +62,21 @@ public class Main {
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
+        importObject("models/Scooter-smgrps.obj");
+
         long tStart = System.currentTimeMillis();
 
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
         draw(renderWindow);
 
-        renderWindow.setOutputLabel(String.valueOf(stopTime(tStart)), RECURSIONS);
+        renderWindow.setOutputLabel(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING);
     }
+
+    private static void importObject(String path){
+        ModelImporter.load(path);
+    }
+
 
     private static void draw(Window renderWindow){
         Scene renderScene = new Scene();
@@ -99,7 +110,7 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.GLASS);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
         Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
         Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
 
