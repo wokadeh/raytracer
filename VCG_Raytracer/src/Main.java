@@ -50,7 +50,7 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 3;
+    static int RECURSIONS = 4;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -62,7 +62,7 @@ public class Main {
 
         draw(renderWindow);
 
-        renderWindow.setTimeToLabel(String.valueOf(stopTime(tStart)));
+        renderWindow.setOutputLabel(String.valueOf(stopTime(tStart)), RECURSIONS);
     }
 
     private static void draw(Window renderWindow){
@@ -132,10 +132,3 @@ public class Main {
         return tDelta / 1000.0;
     }
 }
-
-
-/* Verbesserungen
-- Sicherstellen, dass die Normale nur einmal normalisiert wird
-
-
-*/
