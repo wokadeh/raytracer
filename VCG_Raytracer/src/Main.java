@@ -52,6 +52,8 @@ public class Main {
 
     static int RECURSIONS = 4;
 
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
+
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
     // Initial method. This is where the show begins.
@@ -121,7 +123,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR, AMBIENT_LIGHT);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
 
         raytracer.renderScene();
     }

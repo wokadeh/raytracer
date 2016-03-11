@@ -48,10 +48,10 @@ public class Window {
         mFrame.repaint();
     }
 
-    public void setOutputLabel(String text, int recursions){
+    public void setOutputLabel(String text, int recursions, int antiAliasing){
         Graphics graphic = mBufferedImage.getGraphics();
         graphic.setColor(Color.black);
-        graphic.drawString("Elapsed rendering time: " + text + " sec, Recusions: " + recursions, 10, mHeight - 10);
+        graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing, 10, mHeight - 10);
 
         mFrame.repaint();
     }

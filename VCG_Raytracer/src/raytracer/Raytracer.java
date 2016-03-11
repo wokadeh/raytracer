@@ -27,6 +27,11 @@ import java.util.ArrayList;
 
 public class Raytracer {
 
+    public static int ANTI_ALIASING_LOW = 2;
+    public static int ANTI_ALIASING_MEDIUM = 4;
+    public static int ANTI_ALIASING_HIGH = 8;
+    public static int ANTI_ALIASING_INSANE = 16;
+
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
@@ -34,11 +39,13 @@ public class Raytracer {
     private Window mRenderWindow;
 
     private int mMaxRecursions;
+    private float mAntiAliasingFactor;
+    private float mAntiAliasingCounter;
 
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor backColor, RgbColor ambientLight){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mBufferedImage = renderWindow.getBufferedImage();
@@ -48,23 +55,41 @@ public class Raytracer {
         mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
+        mAntiAliasingFactor = 1f / (antiAliasingSamples * antiAliasingSamples);
+        mAntiAliasingCounter = 1f / antiAliasingSamples;
     }
 
     public void renderScene(){
         Log.print(this, "Start rendering");
 
-        RgbColor pixelColor;
+        Vec2 screenPosition;
         // Columns
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Rows
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
-                Vec2 screenPosition = new Vec2(x, y);
-                pixelColor = sendPrimaryRay(screenPosition);
-                mRenderWindow.setPixel(mBufferedImage, pixelColor, screenPosition);
+
+                RgbColor antiAlisedColor = antiAliase(y, x);
+                screenPosition = new Vec2(x, y);
+                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
             }
         }
 
         IO.saveImageToPng(mBufferedImage, "raytracing.png");
+    }
+
+    private RgbColor antiAliase(int y, int x) {
+        Vec2 screenPosition;
+        RgbColor antiAlisedColor = RgbColor.BLACK;
+        // Start super sampling x4
+        for(float i = x; i < x + 1f; i += mAntiAliasingCounter){
+            for(float j = y; j < y + 1f; j += mAntiAliasingCounter){
+
+                screenPosition = new Vec2(i, j);
+                antiAlisedColor = antiAlisedColor.add( sendPrimaryRay(screenPosition).multScalar( mAntiAliasingFactor ) );
+
+            }
+        }
+        return antiAlisedColor;
     }
 
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){
