@@ -63,12 +63,12 @@ public class Raytracer {
         Log.print(this, "Start rendering");
 
         Vec2 screenPosition;
-        // Columns
+        // Rows
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
-            // Rows
+            // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
-                RgbColor antiAlisedColor = antiAliase(y, x);
+                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
                 screenPosition = new Vec2(x, y);
                 mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
             }
@@ -77,10 +77,10 @@ public class Raytracer {
         IO.saveImageToPng(mBufferedImage, "raytracing.png");
     }
 
-    private RgbColor antiAliase(int y, int x) {
+    private RgbColor calculateAntiAliasedColor(int y, int x) {
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
-        // Start super sampling x4
+        // Start super sampling
         for(float i = x; i < x + 1f; i += mAntiAliasingCounter){
             for(float j = y; j < y + 1f; j += mAntiAliasingCounter){
 
@@ -115,11 +115,11 @@ public class Raytracer {
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if(intersection.getShape().isReflective()){
                 recursionCounter = recursionCounter - 1;
-                outColor = outColor.add(traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
             }
             if(intersection.getShape().isTransparent()){
                 recursionCounter = recursionCounter - 1;
-                outColor = outColor.add(traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
             }
             // Calculate the color of every object, that was hit in between, depending on recursive level
             outColor = outColor.add( shade( intersection ) );
@@ -133,16 +133,16 @@ public class Raytracer {
 
         // Check the ray from the intersection point to any light source
         for (Light light : mLightList) {
-            illuColor = traceIllumination(illuColor, light, finalIntersection);
+            illuColor = traceIllumination( illuColor, light, finalIntersection );
         }
 
         // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
         if( illuColor.equals( RgbColor.BLACK ) ){
-            return illuColor.add(calculateShadowColor(finalIntersection.getShape()));
+            return illuColor.add( calculateShadowColor( finalIntersection.getShape() ));
         }
 
         // No shadow: finally add ambient color to each object only once
-        return illuColor.add(mAmbientLight);
+        return illuColor.add( mAmbientLight );
     }
 
     private RgbColor traceIllumination(RgbColor illuColor, Light light, Intersection finalIntersection){
@@ -151,10 +151,13 @@ public class Raytracer {
         Intersection lightIntersection = getIntersectionBetweenLight(lightRay, finalIntersection);
 
         // Only if no intersection is happening between the last intersection Point and the light source draw the color
-        if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance() ){
+        if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance(lightRay.getDistance()) ){
 
             // This was the last ray and nothing was hit on the ray from the last object to the light source
             illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
+        }
+        else if(finalIntersection.getShape().toString().equals("PLANE2") ) {
+            Log.print(this, finalIntersection.getShape().toString());
         }
         return illuColor;
     }
@@ -186,10 +189,10 @@ public class Raytracer {
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
             // Important: Avoid intersection with itself
-            if(!prevIntersec.getShape().equals(shape)) {
+            if( !prevIntersec.getShape().equals( shape ) ) {
 
                 // Find intersection between shape and the light source
-                Intersection intersection = shape.intersect(inRay);
+                Intersection intersection = shape.intersect( inRay );
 
                 // Shape was not hit + the ray is incoming + the distance is adequate
                 if (intersection.isHit() && intersection.isIncoming()) {

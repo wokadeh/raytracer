@@ -98,7 +98,7 @@ public class Main {
 
     private static void setupLights(Scene renderScene) {
         // Note: Never put the light source inside a plane
-        renderScene.createPointLight(new Vec3( 0, DIMENSION-1, DIMENSION-1 ), RgbColor.WHITE);
+        renderScene.createPointLight(new Vec3( 0, DIMENSION-0.3f, DIMENSION-1 ), RgbColor.WHITE);
         //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
         //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, -DIMENSION+1 ), RgbColor.WHITE);
     }
@@ -116,7 +116,7 @@ public class Main {
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
-        renderScene.createSphere(new Vec3(0, -DIMENSION + sphereRadius, 0), sphereMaterial3, sphereRadius);
+        //renderScene.createSphere(new Vec3(0, DIMENSION-0.1f, DIMENSION-1 ), sphereMaterial3, 0.2f);
     }
 
     private static void setupCornellBox(Scene renderScene) {

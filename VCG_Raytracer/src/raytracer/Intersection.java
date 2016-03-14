@@ -1,7 +1,6 @@
 package raytracer;
 
 import scene.shapes.Shape;
-import utils.Log;
 import utils.Vec3;
 
 public class Intersection {
@@ -11,11 +10,9 @@ public class Intersection {
     private Vec3 mNormal;
     private Ray mInRay;
     private Shape mShape;
-    private float mDistance;
+    private float mDistanceToIntersection;
 
     private boolean mIncoming;
-
-    private boolean mOutOfDistance;
 
     private boolean mHit;
 
@@ -23,7 +20,6 @@ public class Intersection {
         mInRay = inRay;
         mHit = false;
         mShape = shape;
-        mOutOfDistance = false;
     }
 
     public Ray calculateReflectionRay() {
@@ -80,15 +76,11 @@ public class Intersection {
     }
 
     public void setDistance(float dist){
-        mDistance = dist;
+        mDistanceToIntersection = dist;
     }
 
-    public void setOutOfDistance(boolean outOfDistance) {
-        this.mOutOfDistance = outOfDistance;
-    }
-
-    public boolean isOutOfDistance() {
-        return mOutOfDistance;
+    public boolean isOutOfDistance( float distanceToObject ) {
+        return (mDistanceToIntersection > distanceToObject);
     }
 
     public void setIncoming(boolean mIncoming) {
@@ -111,7 +103,7 @@ public class Intersection {
         return mNormal;
     }
 
-    public float getDistance() { return mDistance; }
+    public float getDistance() { return mDistanceToIntersection; }
 
     public Shape getShape() {
         return mShape;
