@@ -42,6 +42,10 @@ public abstract class Shape extends SceneObject {
         return this.material.getFractionCoeff();
     }
 
+    public float getSwitchedMaterialCoeff(){
+        return this.material.getSwitchedFractionCoeff();
+    }
+
     public boolean isDiffuse(){
         return this.material.isType("LAMBERT");
     }

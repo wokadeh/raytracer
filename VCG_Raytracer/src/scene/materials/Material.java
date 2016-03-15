@@ -26,6 +26,7 @@ public abstract class Material {
     protected float shininess = 0;
 
     protected float fractionCoeff = 0;
+    protected float switchedFractionCoeff = 0;
     protected float reflectionCoeff = 0;
 
     private String mType;
@@ -42,7 +43,8 @@ public abstract class Material {
 
     protected void calculateMaterialCoeff(float fractionCoeff){
         if (fractionCoeff != 0) {
-            this.fractionCoeff = this.AIR / fractionCoeff;
+            this.fractionCoeff = fractionCoeff;
+            this.switchedFractionCoeff = Material.AIR / fractionCoeff;
         }
     }
 
@@ -65,6 +67,10 @@ public abstract class Material {
 
     public float getFractionCoeff() {
         return this.fractionCoeff;
+    }
+
+    public float getSwitchedFractionCoeff() {
+        return this.switchedFractionCoeff;
     }
 
     protected float clampAngle(float angle){

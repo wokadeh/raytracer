@@ -20,23 +20,23 @@ public class Sphere extends Shape {
 
     @Override
     public Intersection intersect(Ray ray){
-        Intersection intersectionTest = new Intersection(ray, this);
+        Intersection emptyIntersectionTest = new Intersection(ray, this);
         Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
         float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
         if (distanceToPosSq <= mRadius)
-            return intersectionTest;
+            return emptyIntersectionTest;
 
-        return fillIntersectionInfo(ray, distanceToPosSq, intersectionTest, distanceToPos);
+        return fillIntersectionInfo(ray, distanceToPosSq, emptyIntersectionTest, distanceToPos);
     }
 
-    private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection intersectionTest, Vec3 distanceToPos) {
+    private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection emptyIntersectionTest, Vec3 distanceToPos) {
         float t;
         float compB = -distanceToPos.scalar(ray.getDirection());
         float discriminant = (compB * compB) - distanceToPosSq + mSqrRadius;
 
         if (discriminant < 0.0f)
-            return intersectionTest;
+            return emptyIntersectionTest;
 
         discriminant = (float) Math.sqrt(discriminant);
         float t0 = compB - discriminant;
@@ -49,9 +49,9 @@ public class Sphere extends Shape {
         else if (t0 == t1)
             t = t0;
         else
-            return intersectionTest;
+            return emptyIntersectionTest;
 
-        return createIntersection(intersectionTest, t, ray);
+        return createIntersection(emptyIntersectionTest, t, ray);
     }
 
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){

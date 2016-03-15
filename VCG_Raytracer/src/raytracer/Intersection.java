@@ -1,5 +1,6 @@
 package raytracer;
 
+import scene.materials.Material;
 import scene.shapes.Shape;
 import utils.Vec3;
 
@@ -23,20 +24,18 @@ public class Intersection {
     }
 
     public Ray calculateReflectionRay() {
-        Vec3 normalN = mNormal.normalize();
         Vec3 directN = mInRay.getDirection().negate().normalize();
-        float angle = normalN.scalar(directN);
+        float angle = mNormal.scalar(directN);
 
-        Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
+        Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(directN).normalize();
         return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
     }
 
     public Ray calculateReflectionRay(Vec3 inDir) {
-        Vec3 normalN = mNormal.normalize();
-        float angle = normalN.scalar(inDir);
+        float angle = mNormal.scalar(inDir);
 
-        Vec3 reflVec = normalN.multScalar(angle).multScalar(2f);
+        Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub(inDir).normalize();
         return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
     }
@@ -44,12 +43,10 @@ public class Intersection {
     public Ray calculateRefractionRay() {
         Vec3 inRay = mInRay.getDirection().negate();
         float angle = mNormal.scalar(inRay);
-        float n;
+        float n = mShape.getMaterialCoeff();
 
         if (angle > 0.0f) {
-            n = mShape.getMaterialCoeff();
-        } else {
-            n = 1f / mShape.getMaterialCoeff();
+            n = mShape.getSwitchedMaterialCoeff();
         }
 
         float k = (float) Math.sqrt(1.0f - n * n * (1.0f - angle * angle));
@@ -72,7 +69,7 @@ public class Intersection {
     }
 
     public void setNormal(Vec3 mNormal) {
-        this.mNormal = mNormal;
+        this.mNormal = mNormal.normalize();
     }
 
     public void setDistance(float dist){

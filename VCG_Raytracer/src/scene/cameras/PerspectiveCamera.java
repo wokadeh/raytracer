@@ -59,7 +59,7 @@ public class PerspectiveCamera extends SceneObject {
     }
 
     private void logParameters(Vec3 centerOfInterest, Vec3 camPos, Vec3 upVec, float angleOfView) {
-        Log.print(this, "PerspectiveCamera Position: \t" + camPos);
+        Log.print(this, "Position: \t" + camPos);
         Log.print(this, "Center of Interest: \t" + centerOfInterest);
         Log.print(this, "Up-Vector: \t\t\t" + upVec);
         Log.print(this, "Angle of View: \t\t" + angleOfView);
