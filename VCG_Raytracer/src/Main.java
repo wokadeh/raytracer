@@ -110,8 +110,8 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.MAGENTA, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
         Material sphereMaterial3 = new PhongMaterial(RgbColor.YELLOW, RgbColor.WHITE, PhongMaterial.SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
 
         renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
@@ -122,13 +122,13 @@ public class Main {
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
         Material planeMaterial = new LambertMaterial(RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.GREEN);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.RED);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
-        //renderScene.createPlane(new Vec3( 0f, 0f, DIMENSION/2 ), planeMaterial, Plane.FACING_FRONT);
-        renderScene.createPlane(new Vec3( 0f, 0f, CAM_POS.y + 0.1f ), planeMaterial, Plane.FACING_BACK);
+        renderScene.createPlane(new Vec3( 0f, 0f, 2*DIMENSION ), planeMaterial, Plane.FACING_FRONT);
+        renderScene.createPlane(new Vec3( 0f, 0f, 0f ), planeMaterial, Plane.FACING_BACK);
         renderScene.createPlane(new Vec3( 0f, -DIMENSION, 0 ), planeMaterial, Plane.FACING_UP);
         renderScene.createPlane(new Vec3( 0f, DIMENSION, 0 ), planeMaterial, Plane.FACING_DOWN);
     }

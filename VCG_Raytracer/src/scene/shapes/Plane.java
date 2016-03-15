@@ -21,7 +21,7 @@ public class Plane extends Shape {
         super(pos, mat, "PLANE" + facingDirection);
 
         // The normal of a plane is always the vector coming from the position showing to the center of the scene
-        mNormal = getFacingNormal(facingDirection);
+        mNormal = getFacingNormal( facingDirection );
     }
 
     public Plane(Vec3 pos, Material mat, Vec3 normal) {
@@ -37,7 +37,7 @@ public class Plane extends Shape {
             case 2 : return new Vec3( 0, -1, 0);        // DOWN
             case 3 : return new Vec3( 0, 1, 0);         // UP
             case 4 : return new Vec3( 0, 0, -1);        // FRONT
-            case 5 : return new Vec3( 0, 0, 1);        // FRONT
+            case 5 : return new Vec3( 0, 0, 1);         // BACK
             default:
                 Log.warn(this, "Plane cannot be created. The facing direction is unclear.");
             return new Vec3( 0, 0 ,0 );
@@ -46,16 +46,26 @@ public class Plane extends Shape {
 
     @Override
     public Intersection intersect(Ray ray) {
-        Intersection intersectionTest = new Intersection(ray, this);
+        Intersection emptyIntersectionTest = new Intersection(ray, this);
         // Pn * D from slides
-        Vec3 vecToRay = getPosition().sub(ray.getStartPoint());
+
         float angle = mNormal.scalar(ray.getDirection());
-        float t = vecToRay.scalar(mNormal) / angle;
 
-        if (t < 0)
-            return intersectionTest;
+        // Don't draw a plane facing the same direction as the camera: both have normal (0,0,-1)
+        if( angle > 0 ){
+            return emptyIntersectionTest;
+        }
 
-        return createIntersection(intersectionTest, t, ray);
+        Vec3 vecToRay = getPosition().sub(ray.getStartPoint());
+        float t = vecToRay.scalar( mNormal ) / angle;
+
+        // Is from behind
+        if (t < 0 ) {
+            //Log.warn(this, this.type);
+            return emptyIntersectionTest;
+        }
+
+        return createIntersection(emptyIntersectionTest, t, ray);
     }
 
 //    @Override
