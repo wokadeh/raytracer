@@ -98,9 +98,21 @@ public class Main {
 
     private static void setupLights(Scene renderScene) {
         // Note: Never put the light source inside a plane
-        renderScene.createPointLight(new Vec3( 0, DIMENSION-0.3f, DIMENSION-1 ), RgbColor.WHITE);
-        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, 0 ), RgbColor.WHITE);
-        //renderScene.createPointLight(new Vec3( 0, -DIMENSION+1, -DIMENSION+1 ), RgbColor.WHITE);
+
+        float lightHeight = DIMENSION - 0.3f;
+        float lightDist = DIMENSION - 1f;
+
+        /* Middle Light */
+        renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
+
+        /* Left Back Light */
+        renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
+        /* Right Back Light */
+        renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
+        /* Left Front Light */
+        renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
+        /* Right Back Light */
+        renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
     }
 
     private static void setupCameras(Scene renderScene) {

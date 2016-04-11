@@ -86,7 +86,6 @@ public class Raytracer {
 
                 screenPosition = new Vec2(i, j);
                 antiAlisedColor = antiAlisedColor.add( sendPrimaryRay(screenPosition).multScalar( mAntiAliasingFactor ) );
-
             }
         }
         return antiAlisedColor;
@@ -138,7 +137,7 @@ public class Raytracer {
 
         // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
         if( illuColor.equals( RgbColor.BLACK ) ){
-            return illuColor.add( calculateShadowColor( finalIntersection.getShape() ));
+            return illuColor.add( calculateShadowColor( finalIntersection.getShape() )).multScalar( 1f / (( float )mLightList.size() * 20f));
         }
 
         // No shadow: finally add ambient color to each object only once
@@ -155,9 +154,6 @@ public class Raytracer {
 
             // This was the last ray and nothing was hit on the ray from the last object to the light source
             illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
-        }
-        else if(finalIntersection.getShape().toString().equals("PLANE2") ) {
-            Log.print(this, finalIntersection.getShape().toString());
         }
         return illuColor;
     }
