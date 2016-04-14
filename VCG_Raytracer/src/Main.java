@@ -37,11 +37,11 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 15);
+    static Vec3 CAM_POS = new Vec3(0, 0, 5);
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 35;
+    static float VIEW_ANGLE = 160;
     static float FOCAL_LENGTH = 1;
 
     static float DIMENSION = 3f;

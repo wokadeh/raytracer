@@ -69,12 +69,13 @@ public class Raytracer {
     }
 
     private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor){
-        RgbColor outColor = RgbColor.BLUE;
+        RgbColor outColor;
 
-        float lala = (float) Math.cos(inRay.getDirection().scalar(new Vec3(0,0,-5.7f)));
-        Log.warn(this, String.valueOf(lala));
+        Vec3 output = new Vec3((((inRay.getDirection().x + 1) / 2f )), (((inRay.getDirection().y + 1) / 2f)), (((inRay.getDirection().z + 1) / 2f)));
+        Log.warn(this, output.toString());
 
-        outColor = localColor.add(new RgbColor(lala, lala, lala));
+
+        outColor = localColor.add(new RgbColor(output.x, output.y, output.z));
 
         return outColor;
     }
