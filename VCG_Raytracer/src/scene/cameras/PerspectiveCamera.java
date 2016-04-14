@@ -44,10 +44,12 @@ public class PerspectiveCamera extends SceneObject {
     }
 
     public Vec3 calculateDestPoint(Vec2 pixelPos){
+        float pNormX = 2f * (pixelPos.x + 0.5f) / ((float) this.screenWidth - 1f) - 1f ;
+        float pNormY = -2f * (pixelPos.y + 0.5f) / ((float) this.screenHeight - 1f) + 1f;
 
         // Attention: Coordinates are flipped because the positive y axis is going down
-        float x = (2f * (pixelPos.x + 0.5f) / ((float) this.screenWidth - 1f) - 1f ) * this.viewPlaneWidth;
-        float y = (-2f * (pixelPos.y + 0.5f) / ((float) this.screenHeight - 1f) + 1f ) * this.viewPlaneHeight;
+        float x = pNormX * this.viewPlaneWidth;
+        float y = pNormY * this.viewPlaneHeight;
 
         Vec3 destPoint = new Vec3()
                 .add( this.v.multScalar( this.focalLength ) )
