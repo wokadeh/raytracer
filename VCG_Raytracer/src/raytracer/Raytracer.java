@@ -139,7 +139,7 @@ public class Raytracer {
 
         // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
         if( illuColor.equals( RgbColor.BLACK ) ){
-            return illuColor.add( calculateShadowColor( finalIntersection.getShape() )).multScalar( 1f / (( float )mLightList.size() * 20f));
+            illuColor = illuColor.add( calculateShadowColor( finalIntersection.getShape() )).multScalar( 1f / (( float )mLightList.size() * 20f));
         }
 
         // No shadow: finally add ambient color to each object only once
