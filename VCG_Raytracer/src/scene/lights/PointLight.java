@@ -6,6 +6,6 @@ import utils.Vec3;
 public class PointLight extends Light {
 
     public PointLight(Vec3 pos, RgbColor color) {
-        super(pos, color);
+        super(pos, color, "PointLight");
     }
 }

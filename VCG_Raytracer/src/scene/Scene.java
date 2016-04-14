@@ -2,6 +2,7 @@ package scene;
 
 
 import scene.cameras.PerspectiveCamera;
+import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.lights.PointLight;
 import scene.materials.Material;
@@ -45,6 +46,10 @@ public class Scene {
 
     public void createPointLight(Vec3 pos, RgbColor color){
         mLightList.add(new PointLight(pos, color));
+    }
+
+    public void createAreaLight(Vec3 pos, float dim, short res, RgbColor color){
+        mLightList.add(new AreaLight(pos, dim, res, color));
     }
 
     public void createPerspCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){

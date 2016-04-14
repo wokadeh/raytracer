@@ -16,8 +16,10 @@
 
 package raytracer;
 
+import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.Scene;
+import scene.lights.PointLight;
 import scene.shapes.Shape;
 import ui.Window;
 import utils.*;
@@ -131,8 +133,8 @@ public class Raytracer {
         RgbColor illuColor = RgbColor.BLACK;
 
         // Check the ray from the intersection point to any light source
-        for (Light light : mLightList) {
-            illuColor = traceIllumination( illuColor, light, finalIntersection );
+        for( Light light : mLightList ) {
+            illuColor = illuColor.add(traceIllumination( illuColor, light, finalIntersection ));
         }
 
         // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
@@ -145,6 +147,29 @@ public class Raytracer {
     }
 
     private RgbColor traceIllumination(RgbColor illuColor, Light light, Intersection finalIntersection){
+        if( light.isType().equals("PointLight")){
+            illuColor = getColorFromPointLight(illuColor, light, finalIntersection);
+        }
+        if( light.isType().equals("AreaLight")){
+            illuColor = getColorFromAreaLight(illuColor, light, finalIntersection);
+        }
+        return illuColor;
+    }
+
+    private RgbColor getColorFromAreaLight(RgbColor illuColor, Light light, Intersection finalIntersection) {
+
+        ArrayList<PointLight> lightPoints = ((AreaLight) light).getPositionList();
+
+        float factor = 1.0f / lightPoints.size();
+
+        for( PointLight subLight : lightPoints ) {
+            illuColor = illuColor.add( getColorFromPointLight(illuColor, subLight, finalIntersection).multScalar( factor ) );
+        }
+
+        return illuColor;
+    }
+
+    private RgbColor getColorFromPointLight(RgbColor illuColor, Light light, Intersection finalIntersection) {
         Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
 
         Intersection lightIntersection = getIntersectionBetweenLight(lightRay, finalIntersection);

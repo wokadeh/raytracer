@@ -103,16 +103,18 @@ public class Main {
         float lightDist = DIMENSION - 1f;
 
         /* Middle Light */
-        renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
+        //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
+
+        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, (short) 14, RgbColor.WHITE);
 
         /* Left Back Light */
-        renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
+        //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
         /* Right Back Light */
-        renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
+        //renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
         /* Left Front Light */
-        renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
+        //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
         /* Right Back Light */
-        renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
+        //renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
     }
 
     private static void setupCameras(Scene renderScene) {

@@ -12,12 +12,16 @@ public class Light extends SceneObject {
     }
 
     private RgbColor mColor;
+    protected String type;
 
-    public Light(Vec3 pos, RgbColor color) {
+    public Light(Vec3 pos, RgbColor color, String type) {
         super(pos);
         mColor = color;
+        this.type = type;
         Log.print(this, "Init with color " + mColor);
     }
 
-
+    public String isType() {
+        return this.type;
+    }
 }

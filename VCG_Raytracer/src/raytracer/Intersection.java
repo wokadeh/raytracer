@@ -1,6 +1,5 @@
 package raytracer;
 
-import scene.materials.Material;
 import scene.shapes.Shape;
 import utils.Vec3;
 
