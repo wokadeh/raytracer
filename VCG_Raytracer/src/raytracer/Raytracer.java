@@ -47,12 +47,22 @@ public class Raytracer {
         Log.print(this, "Start rendering");
 
         RgbColor pixelColor;
+
+        float xFactor = 1.0f / mBufferedImage.getHeight();
+        float yFactor = 1.0f / mBufferedImage.getWidth();
+
         // Columns
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
+            Log.print(this, Integer.toString(y));
             // Rows
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
                 Vec2 screenPosition = new Vec2(x, y);
-                pixelColor = sendPrimaryRay(screenPosition);
+
+                pixelColor = new RgbColor(xFactor * x, yFactor * y, 0);
+
+                Log.print(this, Integer.toString(x));
+
+                //sendPrimaryRay(screenPosition);
                 mRenderWindow.setPixel(mBufferedImage, pixelColor, screenPosition);
             }
         }
@@ -60,23 +70,23 @@ public class Raytracer {
         IO.saveImageToPng(mBufferedImage, "raytracing.png");
     }
 
-    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
-        Vec3 startPoint = mScene.getCamPos();
-        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
-        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
-
-        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor);
-    }
-
-    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor){
-        RgbColor outColor;
-
-        Vec3 output = new Vec3((((inRay.getDirection().x + 1) / 2f )), (((inRay.getDirection().y + 1) / 2f)), (((inRay.getDirection().z + 1) / 2f)));
-        Log.warn(this, output.toString());
-
-
-        outColor = localColor.add(new RgbColor(output.x, output.y, output.z));
-
-        return outColor;
-    }
+//    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
+//        Vec3 startPoint = mScene.getCamPos();
+//        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
+//        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
+//
+//        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor);
+//    }
+//
+//    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor){
+//        RgbColor outColor;
+//
+//        Vec3 output = new Vec3((((inRay.getDirection().x + 1) / 2f )), (((inRay.getDirection().y + 1) / 2f)), (((inRay.getDirection().z + 1) / 2f)));
+//        Log.warn(this, output.toString());
+//
+//
+//        outColor = localColor.add(new RgbColor(output.x, output.y, output.z));
+//
+//        return outColor;
+//    }
 }

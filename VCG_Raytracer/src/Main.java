@@ -37,14 +37,14 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 5);
-    static Vec3 LOOK_AT = new Vec3(0, 0, 0);
-    static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
-
-    static float VIEW_ANGLE = 160;
-    static float FOCAL_LENGTH = 1;
-
-    static float DIMENSION = 3f;
+//    static Vec3 CAM_POS = new Vec3(0, 0, 5);
+//    static Vec3 LOOK_AT = new Vec3(0, 0, 0);
+//    static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
+//
+//    static float VIEW_ANGLE = 160;
+//    static float FOCAL_LENGTH = 1;
+//
+//    static float DIMENSION = 3f;
 
     static int RECURSIONS = 3;
 
@@ -64,18 +64,18 @@ public class Main {
     private static void draw(Window renderWindow){
         Scene renderScene = new Scene();
 
-        setupScene(renderScene);
+        //setupScene(renderScene);
 
         raytraceScene(renderWindow, renderScene);
     }
 
-    private static void setupScene(Scene renderScene){
-        setupCameras(renderScene);
-
-    }
-    private static void setupCameras(Scene renderScene) {
-        renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
-    }
+//    private static void setupScene(Scene renderScene){
+//        setupCameras(renderScene);
+//
+//    }
+//    private static void setupCameras(Scene renderScene) {
+//        renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
+//    }
 
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
@@ -90,10 +90,3 @@ public class Main {
         return tDelta / 1000.0;
     }
 }
-
-
-/* Verbesserungen
-- Sicherstellen, dass die Normale nur einmal normalisiert wird
-
-
-*/
