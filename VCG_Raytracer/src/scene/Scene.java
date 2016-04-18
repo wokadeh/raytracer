@@ -9,6 +9,7 @@ import scene.materials.Material;
 import scene.shapes.Plane;
 import scene.shapes.Shape;
 import scene.shapes.Sphere;
+import scene.shapes.Square;
 import utils.Log;
 import utils.RgbColor;
 import utils.Vec2;
@@ -42,6 +43,10 @@ public class Scene {
 
     public void createPlane(Vec3 pos, Material mat, int facingDirection){
         mShapeList.add(new Plane(pos, mat, facingDirection));
+    }
+
+    public void createSquare(Vec3 pos, Material mat, float dim, int facingDirection){
+        mShapeList.add(new Square(pos, mat, dim, facingDirection));
     }
 
     public void createPointLight(Vec3 pos, RgbColor color){

@@ -84,22 +84,5 @@ public class AreaLight  extends Light {
 		return sampleNumberList;
 	}
 
-	public boolean hitsAreaLight(Ray inputRay){
-		// intersects plane?
-		Intersection intersection = mPlane.intersect(inputRay);
 
-		boolean hit = intersection.isHit();
-
-		// is within borders?
-		if( hit ) {
-			if ((intersection.getIntersectionPoint().x < this.getPosition().x + mDim) &&
-					(intersection.getIntersectionPoint().x > this.getPosition().x - mDim) &&
-					(intersection.getIntersectionPoint().z < this.getPosition().z + mDim) &&
-					(intersection.getIntersectionPoint().z > this.getPosition().z - mDim)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 }

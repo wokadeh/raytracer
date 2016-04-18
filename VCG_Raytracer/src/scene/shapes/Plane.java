@@ -30,6 +30,10 @@ public class Plane extends Shape {
         mNormal = normal.normalize();
     }
 
+    public Vec3 getNormal(){
+        return mNormal;
+    }
+
     public Vec3 getFacingNormal(int facingDirection){
         switch( facingDirection ){
             case 0 : return new Vec3( 1, 0, 0);         // RIGHT
