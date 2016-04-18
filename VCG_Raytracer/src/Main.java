@@ -56,7 +56,8 @@ public class Main {
 
     static int RECURSIONS = 8;
 
-    static short LIGHT_SAMPLES = 14;
+    static short LIGHT_DENSITY = 40;
+    static short LIGHT_SAMPLES = 30;
 
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
 
@@ -107,7 +108,7 @@ public class Main {
         /* Middle Light */
         //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
 
-        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
+        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
 
         /* Left Back Light */
         //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);

@@ -32,8 +32,8 @@ public class Scene {
 
     public Scene(){
         Log.print(this, "Init");
-        mShapeList = new ArrayList<Shape>();
-        mLightList = new ArrayList<Light>();
+        mShapeList = new ArrayList<>();
+        mLightList = new ArrayList<>();
     }
 
     public void createSphere(Vec3 pos, Material mat, float radius){
@@ -48,8 +48,8 @@ public class Scene {
         mLightList.add(new PointLight(pos, color));
     }
 
-    public void createAreaLight(Vec3 pos, float dim, short res, RgbColor color){
-        mLightList.add(new AreaLight(pos, dim, res, color));
+    public void createAreaLight(Vec3 pos, float dim, short res, short samples, RgbColor color){
+        mLightList.add(new AreaLight(pos, dim, res, samples, color));
     }
 
     public void createPerspCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){

@@ -7,45 +7,59 @@ import utils.RgbColor;
 import utils.Vec3;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class AreaLight  extends Light {
 
 	private Plane mPlane;
 	private float mDim;
 	private short mRes;
+	private short mSamples;
 	private float mSteps;
 	private RgbColor mColor;
 	private Vec3 mStartPoint;
+	private PointLight mCenterLight;
 
-	public ArrayList<PointLight> getPositionList() {
-		return mPositionList;
-	}
+	private ArrayList<PointLight> mTempPositionList;
 
-	private ArrayList<PointLight> mPositionList;
-
-
-	public AreaLight(Vec3 pos, float dimension, short resolution, RgbColor color) {
+	public AreaLight(Vec3 pos, float dimension, short resolution, short samples, RgbColor color) {
 		super(pos, color, "AreaLight");
 
 		mPlane = new Plane(pos, null, Plane.FACING_DOWN);
 		mColor = color;
 		mDim = dimension;
 		mRes = resolution;
-		mPositionList = new ArrayList<>();
-		mPositionList.add( new PointLight(pos, color) );
+		mSamples = samples;
+
+		mCenterLight = new PointLight(getPosition(), mColor);
+
+		mTempPositionList = new ArrayList<>();
 
 		mSteps = mDim / mRes;
 		mStartPoint = new Vec3(pos.x - mDim / 2, pos.y, pos.z - mDim / 2);
 
-		calculatePositions();
+		fillTempPointLightList();
 	}
 
-	private void calculatePositions(){
+	public ArrayList<PointLight> getPositionList() {
+
+		ArrayList<PointLight> positionList = new ArrayList<>();
+		positionList.add( mCenterLight );
 
 		if( mRes <= 1 ){
-			return;
+			return positionList;
 		}
 
+		ArrayList<Integer> sampleNumberList = fillSampleNumberList();
+
+		for( Integer i : sampleNumberList ){
+			positionList.add( mTempPositionList.get( i - 1 ) );
+		}
+
+		return positionList;
+	}
+
+	private void fillTempPointLightList() {
 		float m, n = 0;
 
 		for( short i = 0; i < mRes; i++ ){
@@ -54,8 +68,20 @@ public class AreaLight  extends Light {
 			}
 			m = mStartPoint.x + i * mSteps;
 
-			mPositionList.add(new PointLight( new Vec3(m, getPosition().y, n ), mColor));
+			mTempPositionList.add( new PointLight( new Vec3(m, getPosition().y, n ), mColor) );
 		}
+	}
+
+	private ArrayList<Integer> fillSampleNumberList(){
+		Random rand = new Random();
+
+		ArrayList<Integer> sampleNumberList = new ArrayList<>();
+
+		for(int i = 0; i < mSamples; i++){
+			sampleNumberList.add( rand.nextInt( mRes ) + 1 );
+			// same multiple values possible!!
+		}
+		return sampleNumberList;
 	}
 
 	public boolean hitsAreaLight(Ray inputRay){
