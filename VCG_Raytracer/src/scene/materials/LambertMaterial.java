@@ -5,8 +5,8 @@ import utils.RgbColor;
 import utils.Vec3;
 
 public class LambertMaterial  extends Material {
-    public LambertMaterial(RgbColor diffuseCoefficient) {
-        super(diffuseCoefficient, null, 0, "LAMBERT");
+    public LambertMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient) {
+        super(ambientCoefficient, diffuseCoefficient, null, 0, "LAMBERT");
     }
 
     @Override

@@ -113,6 +113,10 @@ public class Raytracer {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
+            // Calculate the color of every object, that was hit in between, depending on recursive level
+            outColor = outColor.add( mAmbientLight.multRGB( intersection.getShape().getMaterial().getAmbientCoeff() ) );
+            outColor = outColor.add( shade( intersection ) );
+
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if(intersection.getShape().isReflective()){
                 recursionCounter = recursionCounter - 1;
@@ -122,8 +126,6 @@ public class Raytracer {
                 recursionCounter = recursionCounter - 1;
                 outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
             }
-            // Calculate the color of every object, that was hit in between, depending on recursive level
-            outColor = outColor.add( shade( intersection ) );
         }
 
         return outColor;
@@ -136,14 +138,9 @@ public class Raytracer {
         for( Light light : mLightList ) {
             illuColor = illuColor.add(traceIllumination( illuColor, light, finalIntersection ));
         }
+        // If illuColor is BLACK nothing was hit the position is in shadow - do nothing
 
-        // Shadow: Something was hit in between of the light source and the current shape. Draw ambient
-        if( illuColor.equals( RgbColor.BLACK ) ){
-            illuColor = illuColor.add( calculateShadowColor( finalIntersection.getShape() )).multScalar( 1f / (( float )mLightList.size() * 20f));
-        }
-
-        // No shadow: finally add ambient color to each object only once
-        return illuColor.add( mAmbientLight );
+        return illuColor;
     }
 
     private RgbColor traceIllumination(RgbColor illuColor, Light light, Intersection finalIntersection){
@@ -227,9 +224,5 @@ public class Raytracer {
 
     private RgbColor calculateLocalIllumination(Light light, Shape shape, Intersection intersection){
         return shape.getColor(light, mScene.getCamPos(), intersection);
-    }
-
-    private RgbColor calculateShadowColor(Shape shape){
-        return mAmbientLight;
     }
 }

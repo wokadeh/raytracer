@@ -40,7 +40,7 @@ import java.io.File;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.2f, 0.2f, 0.2f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.1f, 0.1f, 0.1f);
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
@@ -54,7 +54,9 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 4;
+    static int RECURSIONS = 8;
+
+    static short LIGHT_SAMPLES = 14;
 
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
 
@@ -105,7 +107,7 @@ public class Main {
         /* Middle Light */
         //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
 
-        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, (short) 14, RgbColor.WHITE);
+        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
 
         /* Left Back Light */
         //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
@@ -124,20 +126,20 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: Ambient Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR);
 
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial3, sphereRadius - 0.2f);
+        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial1, sphereRadius);
+        //renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial3, sphereRadius - 0.2f);
     }
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: Ambient Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.WHITE);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLUE);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.RED);
+        Material planeMaterial = new LambertMaterial(RgbColor.WHITE, RgbColor.WHITE);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.BLUE, RgbColor.BLUE);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.RED, RgbColor.RED);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);

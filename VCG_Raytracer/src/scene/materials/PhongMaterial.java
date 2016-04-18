@@ -10,8 +10,8 @@ public class PhongMaterial extends Material {
     public static float VERY_SHINY = 100;
     public static float NOT_SHINY = 0;
 
-    public PhongMaterial(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity, float fractionCoeff) {
-        super(diffuseCoefficient, specularCoefficient, shininess, "PHONG");
+    public PhongMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity, float fractionCoeff) {
+        super(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, "PHONG");
 
         this.reflectionCoeff = reflectivity;
 

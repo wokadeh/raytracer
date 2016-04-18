@@ -20,6 +20,7 @@ public abstract class Material {
     public static float HALF_REFLECTION = 0.5f;
     public static float NO_REFLECTION = 0f;
 
+    protected RgbColor ambiCoeff;
     protected RgbColor diffCoeff;
     protected RgbColor specCoeff;
 
@@ -31,9 +32,10 @@ public abstract class Material {
 
     private String mType;
 
-    protected Material(RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
+    protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
         Log.print(this, "Init " + type);
 
+        this.ambiCoeff = ambientCoefficient;
         this.diffCoeff = diffuseCoefficient;
         this.specCoeff = specularCoefficient;
         this.shininess = shininess;
@@ -67,6 +69,10 @@ public abstract class Material {
 
     public float getFractionCoeff() {
         return this.fractionCoeff;
+    }
+
+    public RgbColor getAmbientCoeff() {
+        return this.ambiCoeff;
     }
 
     public float getSwitchedFractionCoeff() {
