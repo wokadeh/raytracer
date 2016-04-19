@@ -40,11 +40,11 @@ public class Intersection {
     }
 
     public Ray calculateRefractionRay() {
-        Vec3 inRay = mInRay.getDirection().negate();
+        Vec3 inRay = mInRay.getDirection();
         float angle = mNormal.scalar(inRay);
         float n = mShape.getMaterial().getFractionCoeff();
 
-        if (angle > 0.0f) {
+        if (angle < 0.0f) {
             n = mShape.getSwitchedMaterialCoeff();
         }
 

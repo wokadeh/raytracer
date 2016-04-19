@@ -42,10 +42,16 @@ public class Sphere extends Shape {
         float t0 = compB - discriminant;
         float t1 = compB + discriminant;
 
-        if (t0 > 0 && t1 > 0)
-            t = t0;
+        if (t0 > 0 && t1 > 0) {
+            if( t0 < t1 )
+                t = t0;
+            else
+                t = t1;
+        }
         else if (t0 < 0.0f && t1 > 0)
             t = t1;
+        else if (t0 > 0.0f && t1 < 0)
+            t = t0;
         else if (t0 == t1)
             t = t0;
         else

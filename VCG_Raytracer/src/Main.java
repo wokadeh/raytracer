@@ -128,7 +128,7 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.GLASS);
         Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
         Material sphereMaterial3 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR);
 
