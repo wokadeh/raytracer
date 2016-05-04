@@ -50,8 +50,8 @@ public class PerspectiveCamera extends SceneObject {
         float pNormY = -2f * (pixelPos.y + 0.5f) / ((float) this.screenHeight - 1f) + 1f;
 
         // Calculate normalized pixels with world scale and add to camera vectors
-        float x = 0.5f * this.viewPlaneWidth * pNormX;
-        float y = 0.5f * this.viewPlaneHeight * pNormY;
+        float x = (0.5f * this.viewPlaneWidth) * pNormX;
+        float y = (0.5f * this.viewPlaneHeight) * pNormY;
 
         Vec3 destPoint = new Vec3()
                 .add( this.v.multScalar( this.focalLength ) )
