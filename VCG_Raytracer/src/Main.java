@@ -50,7 +50,7 @@ public class Main {
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 35;
+    static float VIEW_ANGLE = 75;
     static float FOCAL_LENGTH = 1;
 
     static float DIMENSION = 3f;

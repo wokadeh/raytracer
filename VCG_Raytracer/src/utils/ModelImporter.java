@@ -14,7 +14,7 @@ public class ModelImporter {
 		File file = new File(path);
 
 		ObjModelImporter importer = new ObjModelImporter();
-		importer.read(file);
+//		importer.read(file);
 		MeshView[] meshes = importer.getImport();
 
 		Log.print(ModelImporter.class, "... done!");
