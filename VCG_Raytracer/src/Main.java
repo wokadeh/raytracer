@@ -55,12 +55,12 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 8;
+    static int RECURSIONS = 2;
 
     static short LIGHT_DENSITY = 1;//40;
     static short LIGHT_SAMPLES = 1;//30;
 
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -109,7 +109,7 @@ public class Main {
         /* Middle Light */
         //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
 
-        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
+        //renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
 
         /* Left Back Light */
         //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist - 0.2f ), RgbColor.DARK_GRAY);
@@ -118,7 +118,7 @@ public class Main {
         /* Left Front Light */
         //renderScene.createPointLight(new Vec3( -0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
         /* Right Back Light */
-        //renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist + 0.2f ), RgbColor.DARK_GRAY);
+        renderScene.createPointLight(new Vec3( 0.2f, lightHeight, lightDist + 0.2f ), RgbColor.WHITE);
     }
 
     private static void setupCameras(Scene renderScene) {
@@ -137,7 +137,7 @@ public class Main {
         //renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial3, sphereRadius - 0.2f);
 
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
-        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION - 1f ), planeMaterial, 0.6f, Plane.FACING_DOWN);
+        //renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION - 1f ), planeMaterial, 0.6f, Plane.FACING_DOWN);
 
     }
 
