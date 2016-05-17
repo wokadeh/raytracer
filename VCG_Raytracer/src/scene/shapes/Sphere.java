@@ -19,21 +19,19 @@ public class Sphere extends Shape {
     }
 
     @Override
-    public Intersection intersect(Ray ray){
+    public Intersection intersect(Ray ray) {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
-        Vec3 distanceToPos = ray.getStartPoint().sub(this.getPosition());
-        float distanceToPosSq = distanceToPos.scalar(distanceToPos);
 
-        if (distanceToPosSq <= mRadius)
-            return emptyIntersectionTest;
+        // Transformation, otherwise the sphere is in the origin
+        Vec3 position = ray.getStartPoint().sub(this.getPosition());
 
-        return fillIntersectionInfo(ray, distanceToPosSq, emptyIntersectionTest, distanceToPos);
-    }
+        // B = 2(x0xd + y0yd + z0zd)
+        float compB = -2f * position.scalar( ray.getDirection() );
 
-    private Intersection fillIntersectionInfo(Ray ray, float distanceToPosSq, Intersection emptyIntersectionTest, Vec3 distanceToPos) {
-        float t;
-        float compB = -distanceToPos.scalar(ray.getDirection());
-        float discriminant = (compB * compB) - distanceToPosSq + mSqrRadius;
+        // C = x0^2 + y0^2 + z0^2 - r^2
+        float compC = position.scalar(position) - mSqrRadius;
+
+        float discriminant = (compB * compB) - 4 * compC;
 
         if (discriminant < 0.0f)
             return emptyIntersectionTest;
@@ -42,30 +40,33 @@ public class Sphere extends Shape {
         float t0 = compB - discriminant;
         float t1 = compB + discriminant;
 
-        if (t0 > 0 && t1 > 0) {
-            if( t0 < t1 )
-                t = t0;
-            else
-                t = t1;
-        }
-        else if (t0 < 0.0f && t1 > 0)
-            t = t1;
-        else if (t0 > 0.0f && t1 < 0)
-            t = t0;
-        else if (t0 == t1)
-            t = t0;
-        else
+        float t;
+
+        if (t0 < 0 && t1 < 0) {
             return emptyIntersectionTest;
+        }
+        else if (t0 < 0){
+            t = t1;
+        }
+        else if (t1 < 0){
+            t = t0;
+        }
+        else if ((t0 * t0) < (t1 * t1)){
+            t = t0;
+        }
+        else {
+            t = t1;
+        }
 
         return createIntersection(emptyIntersectionTest, t, ray);
     }
 
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
-        intersectionTest.setIntersectionPoint(ray.getDirection().multScalar(t).add(ray.getStartPoint()));
-        intersectionTest.setNormal(intersectionTest.getIntersectionPoint().sub(getPosition().multScalar( 1f / mRadius)));
-        intersectionTest.setDistance(t);
-        intersectionTest.setHit(true);
-        intersectionTest.setIncoming(true);
+        intersectionTest.setIntersectionPoint( ray.getDirection().multScalar( t ).add( ray.getStartPoint() ) );
+        intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( getPosition() ).multScalar( 1f / mRadius) );
+        intersectionTest.setDistance( t );
+        intersectionTest.setHit( true );
+        intersectionTest.setIncoming( true );
 
         return intersectionTest;
     }
