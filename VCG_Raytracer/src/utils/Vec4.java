@@ -47,6 +47,15 @@ public class Vec4 {
         );
     }
 
+    public Vec4 multMatrix(Matrix mat){
+        return new Vec4(
+          this.x * ( float ) mat.getValueAt(1,1) + this.y * ( float ) mat.getValueAt(1,2) + this.z * ( float ) mat.getValueAt(1,3) + ( float ) mat.getValueAt(1,4),
+          this.x * ( float ) mat.getValueAt(1,1) + this.y * ( float ) mat.getValueAt(1,2) + this.z * ( float ) mat.getValueAt(1,3) + ( float ) mat.getValueAt(1,4),
+          this.x * ( float ) mat.getValueAt(1,1) + this.y * ( float ) mat.getValueAt(1,2) + this.z * ( float ) mat.getValueAt(1,3) + ( float ) mat.getValueAt(1,4),
+          this.x * ( float ) mat.getValueAt(1,1) + this.y * ( float ) mat.getValueAt(1,2) + this.z * ( float ) mat.getValueAt(1,3) + ( float ) mat.getValueAt(1,4)
+        );
+    }
+
     @Override
     public String toString(){
         return "( " + this.x + ", " + this.y + ", " + this.z + ")";

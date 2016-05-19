@@ -1,6 +1,7 @@
 package raytracer;
 
 import scene.shapes.Shape;
+import utils.Log;
 import utils.Vec3;
 
 public class Intersection {
@@ -23,26 +24,24 @@ public class Intersection {
     }
 
     public Ray calculateReflectionRay() {
+        // like in Phong, but take vector opposite to incoming direction
         Vec3 directN = mInRay.getDirection().negate().normalize();
-        float angle = mNormal.scalar(directN);
-
-        Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
-        reflVec = reflVec.sub(directN).normalize();
-        return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
+        return calculateReflectionRay( directN );
     }
 
-    public Ray calculateReflectionRay(Vec3 inDir) {
-        float angle = mNormal.scalar(inDir);
+    public Ray calculateReflectionRay( Vec3 inDir ) {
+        float angle = mNormal.scalar( inDir );
 
         Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
-        reflVec = reflVec.sub(inDir).normalize();
+        reflVec = reflVec.sub( inDir ).normalize();
+
         return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
     }
 
     public Ray calculateRefractionRay() {
         Vec3 inRay = mInRay.getDirection();
         float angle = mNormal.scalar(inRay);
-        float n = mShape.getMaterial().getFractionCoeff();
+        float n = isIncoming() ? mShape.getMaterial().getFractionCoeff() : 1f / mShape.getMaterial().getFractionCoeff();
 
         if (angle < 0.0f) {
             n = mShape.getSwitchedMaterialCoeff();

@@ -70,9 +70,11 @@ public class Raytracer {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
-                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
-                screenPosition = new Vec2(x, y);
-                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
+                //if(x == 335 && y ==428) {
+                    RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
+                    screenPosition = new Vec2(x, y);
+                    mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
+                //}
             }
         }
 
@@ -105,7 +107,7 @@ public class Raytracer {
         RgbColor outColor = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
-        Intersection intersection = getIntersectionOnShapes(inRay, Float.MAX_VALUE, prevIntersec);
+        Intersection intersection = getIntersectionOnShapes(inRay, 10000, prevIntersec);
 
         if( intersection.isHit() && intersection.isIncoming() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
@@ -114,18 +116,21 @@ public class Raytracer {
                 return outColor;
             }
             // Calculate the color of every object, that was hit in between, depending on recursive level
-            outColor = outColor.add( mAmbientLight.multRGB( intersection.getShape().getMaterial().getAmbientCoeff() ) );
+
             outColor = outColor.add( shade( intersection ) );
 
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
-            if(intersection.getShape().isReflective()){
+            if( intersection.getShape().isReflective() ){
+                //Log.warn(this, "Reflecting " + recursionCounter);
                 recursionCounter = recursionCounter - 1;
                 outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
             }
-            if(intersection.getShape().isTransparent()){
-                recursionCounter = recursionCounter - 1;
-                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
-            }
+//            if(intersection.getShape().isTransparent()){
+//                recursionCounter = recursionCounter - 1;
+//                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
+//            }
+            //outColor = outColor.add( mAmbientLight );
+            //outColor = outColor.add( intersection.getShape().getMaterial().getAmbientCoeff( ));
         }
 
         return outColor;
@@ -136,7 +141,7 @@ public class Raytracer {
 
         // Check the ray from the intersection point to any light source
         for( Light light : mLightList ) {
-            illuColor = illuColor.add(traceIllumination( illuColor, light, finalIntersection ));
+            illuColor = illuColor.add( traceIllumination( illuColor, light, finalIntersection ) );
         }
         // If illuColor is BLACK nothing was hit the position is in shadow - do nothing
 
@@ -183,22 +188,30 @@ public class Raytracer {
     private Intersection getIntersectionOnShapes(Ray inRay, float tempDistance, Intersection prevIntersec) {
         Intersection finalIntersection = new Intersection(inRay, null);
 
+        boolean skip = false;
+
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
             // Important: Avoid intersection with itself
             if(prevIntersec != null) {
                 if (prevIntersec.getShape().equals(shape)) {
-                    return finalIntersection;
+                    skip = true;
                 }
             }
 
-            Intersection intersection = shape.intersect(inRay);
+            if(!skip) {
+                Intersection intersection = shape.intersect(inRay);
 
-            // Shape was not hit + the ray is incoming + the distance is adequate
-            if( intersection.isHit() && intersection.isIncoming() && (intersection.getDistance() < tempDistance) ) {
-                tempDistance = intersection.getDistance();
-                finalIntersection = intersection;
+                // Shape was not hit + the ray is incoming + the distance is adequate
+                if (intersection.isHit() && intersection.isIncoming()       // is Hit and coming from the correct side
+                        && (intersection.getDistance() < tempDistance)      // shortest distance of all
+                        && (intersection.getDistance() > 0.00001))       // minimum distance
+                {
+                    tempDistance = intersection.getDistance();
+                    finalIntersection = intersection;
+                }
             }
+            skip = false;
         }
         return finalIntersection;
     }
