@@ -72,11 +72,6 @@ public class Plane extends Shape {
         return createIntersection(emptyIntersectionTest, t, ray);
     }
 
-//    @Override
-//    public boolean equals(Shape shape) {
-//        return getPosition().equals(shape.getPosition());
-//    }
-
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
         intersectionTest.setIntersectionPoint(ray.getDirection().multScalar(t).add(ray.getStartPoint()));
         intersectionTest.setNormal(mNormal.normalize());

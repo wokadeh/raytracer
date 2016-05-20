@@ -12,6 +12,7 @@ public class RgbColor {
     public static RgbColor GREEN = new RgbColor(0, 1, 0);
     public static RgbColor DARK_GREEN = new RgbColor(0, .3f, 0);
     public static RgbColor BLUE = new RgbColor(0, 0, 1);
+    public static RgbColor DARK_BLUE = new RgbColor(0, 0, .3f);
     public static RgbColor WHITE = new RgbColor(1, 1, 1);
     public static RgbColor BLACK = new RgbColor(0, 0, 0);
     public static RgbColor CYAN = new RgbColor(0, 1, 1);
