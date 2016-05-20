@@ -19,6 +19,7 @@ public abstract class Material {
     public static float TOTAL_REFLECTION = 1.0f;
     public static float MOST_REFLECTION = 0.75f;
     public static float HALF_REFLECTION = 0.5f;
+    public static float TINY_REFLECTION = 0.1f;
     public static float NO_REFLECTION = 0f;
 
     protected RgbColor ambiCoeff;
@@ -29,7 +30,7 @@ public abstract class Material {
 
     protected float fractionCoeff = 0;
     protected float switchedFractionCoeff = 0;
-    protected float reflectionCoeff = 0;
+    protected float transparency = 0;
 
     private String mType;
 
@@ -46,7 +47,7 @@ public abstract class Material {
 
     protected void calculateMaterialCoeff(float fractionCoeff){
         if (fractionCoeff != 0) {
-            this.fractionCoeff = fractionCoeff;
+            this.fractionCoeff = fractionCoeff / Material.AIR ;
             this.switchedFractionCoeff = Material.AIR / fractionCoeff;
         }
     }
@@ -78,6 +79,16 @@ public abstract class Material {
 
     public float getSwitchedFractionCoeff() {
         return this.switchedFractionCoeff;
+    }
+
+    public float getReflectivity() {
+        return reflectionCoeff;
+    }
+
+    protected float reflectionCoeff = 0;
+
+    public float getTransparency() {
+        return transparency;
     }
 
     protected float clampAngle(float angle){

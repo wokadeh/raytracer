@@ -128,8 +128,8 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.HALF_REFLECTION, Material.NO_TRANSMISSION);
-        Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND);
+        Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.HALF_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
         //Material sphereMaterial3 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR);
 
 
@@ -148,7 +148,7 @@ public class Main {
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
 
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
+        //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION, 1);
 
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);

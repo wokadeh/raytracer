@@ -124,11 +124,13 @@ public class Raytracer {
             if( intersection.getShape().isReflective() ){
                 //Log.warn(this, "Reflecting " + recursionCounter);
                 recursionCounter = recursionCounter - 1;
-                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
+                float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ).multScalar( reflectivity ));
             }
             if(intersection.getShape().isTransparent()){
                 recursionCounter = recursionCounter - 1;
-                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
+                float transparency = intersection.getShape().getMaterial().getTransparency();
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ).multScalar( transparency ));
             }
             //outColor = outColor.add( mAmbientLight );
             //if(!outColor.equals(RgbColor.BLACK)) {

@@ -31,7 +31,7 @@ public class Intersection {
 
     public Ray calculateReflectionRay( Vec3 inDir ) {
         float angle = mNormal.scalar( inDir );
-
+        mNormal = mNormal.normalize();
         Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
         reflVec = reflVec.sub( inDir ).normalize();
 
@@ -39,23 +39,36 @@ public class Intersection {
     }
 
     public Ray calculateRefractionRay() {
-        Vec3 inRay = mInRay.getDirection();
-        float angle = mNormal.scalar(inRay);
-        float n = isIncoming() ? mShape.getMaterial().getFractionCoeff() : 1f / mShape.getMaterial().getFractionCoeff();
+        Vec3 inRay = mInRay.getDirection().negate().normalize();
+        mNormal = mNormal.normalize();
 
-        if (angle < 0.0f) {
+        float normDotIn = mNormal.scalar(inRay);
+        float n = mShape.getMaterial().getFractionCoeff();
+
+        if (normDotIn < 0.0f) {
             n = mShape.getSwitchedMaterialCoeff();
         }
 
-        float k = (float) Math.sqrt(1.0f - n * n * (1.0f - angle * angle));
+        float sinBeta2 = n * n;
+        float cosBetaDet = 1f - sinBeta2;
 
-        if (k < 0.0f) { // Total internal reflection
-            return calculateReflectionRay( mInRay.getDirection());
+        if(cosBetaDet > 0) {
+            //float cosBeta = (float) Math.sqrt(cosBetaDet);
+            float cosBeta = (float) Math.sqrt(1.0f - sinBeta2 * (1.0f - normDotIn * normDotIn));
+            //Vec3 refDir = (mNormal.multScalar(normDotIn)).multScalar(n).sub(inRay).sub(mNormal.multScalar(nCosBeta));
+
+            //Ray refRay = new Ray(mIntersectionPoint.add(refDir.multScalar(0.001f)), refDir, Float.MAX_VALUE);
+
+            Vec3 temp_b = mNormal.multScalar(cosBeta);
+            Vec3 temp_a = temp_b.negate().multScalar(cosBeta).sub(inRay).multScalar(n);
+            Vec3 refRay = temp_a.sub(temp_b);
+            return new Ray(mIntersectionPoint, refRay, Float.MAX_VALUE);
+            //return refRay;
         }
-
-        Vec3 temp_a = mNormal.multScalar( n * angle - k );
-        Vec3 temp_b =  mInRay.getDirection().multScalar( n );
-        return new Ray(mIntersectionPoint, temp_a.sub( temp_b ), Float.MAX_VALUE);
+        // Total internal reflection
+        else{
+            return calculateReflectionRay(mInRay.getDirection());
+        }
     }
 
     public void setHit(boolean mHit) {
