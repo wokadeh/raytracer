@@ -60,7 +60,7 @@ public class Plane extends Shape {
             return emptyIntersectionTest;
         }
 
-        Vec3 vecToRay = getPosition().sub(ray.getStartPoint());
+        Vec3 vecToRay = this.getPosition().sub(ray.getStartPoint());
         float t = vecToRay.scalar( mNormal ) / angle;
 
         // Is from behind

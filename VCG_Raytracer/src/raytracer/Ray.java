@@ -1,6 +1,5 @@
 package raytracer;
 
-import utils.Matrix;
 import utils.Vec3;
 import utils.Vec4;
 
@@ -23,20 +22,6 @@ public class Ray {
         mDirection = direction.normalize();
         mEndPoint = mDirection.multScalar(param);
         mDistance = mEndPoint.sub(mStartPoint).length();
-    }
-
-    public Ray transform(Matrix mat){
-        Vec4 start = new Vec4(mStartPoint.x, mStartPoint.y, mStartPoint.z, 1);
-        Vec4 direction = new Vec4(mDirection.x, mDirection.y, mDirection.z, 0);
-
-        Vec4 transformedStart = start.multMatrix(mat);
-        Vec4 transformedDir = direction.multMatrix(mat);
-        transformedDir.w = 0;
-        transformedDir.normalize();
-
-        Ray transformedRay = new Ray(new Vec3(transformedStart.x, transformedStart.y, transformedStart.z), new Vec3(transformedDir.x, transformedDir.y, transformedDir.z), 1 );
-
-        return transformedRay;
     }
 
     public Vec3 getStartPoint() {
