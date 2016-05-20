@@ -10,6 +10,7 @@ public abstract class Material {
     /* TRANSMISSION INDICES */
     public static float DIAMOND = 2.417f;
     public static float WATER = 2.00f;
+    public static float CUSTOM = 1.46f;
     public static float GLASS = 1.54f;
     public static float AIR = 1.0003f;
     public static float NO_TRANSMISSION = 0f;

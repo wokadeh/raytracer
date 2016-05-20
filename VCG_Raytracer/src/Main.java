@@ -55,7 +55,7 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 8;
+    static int RECURSIONS = 3;
 
     static short LIGHT_DENSITY = 1;//40;
     static short LIGHT_SAMPLES = 1;//30;
@@ -128,12 +128,12 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         float sphereRadius = 1;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GREEN, RgbColor.GREEN, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.NO_TRANSMISSION);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_RED, RgbColor.RED, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION);
+        Material sphereMaterial1 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.HALF_REFLECTION, Material.NO_TRANSMISSION);
+        Material sphereMaterial2 = new PhongMaterial(new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), new RgbColor(0.08f, 0.01f, 0.01f), PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.CUSTOM);
         //Material sphereMaterial3 = new PhongMaterial(RgbColor.WHITE, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR);
 
 
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
         //renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial3, sphereRadius - 0.2f);
 
@@ -144,7 +144,7 @@ public class Main {
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.WHITE, RgbColor.WHITE);
+        Material planeMaterial = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.RED, RgbColor.RED);
 
@@ -154,7 +154,7 @@ public class Main {
         //renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
         //renderScene.createPlane(new Vec3( 0f, 0f, 2 * DIMENSION ), planeMaterial, Plane.FACING_FRONT);
         //renderScene.createPlane(new Vec3( 0f, 0f, 0f ), planeMaterial, Plane.FACING_BACK);
-        renderScene.createPlane(new Vec3( 0f, -DIMENSION, 0 ), sphereMaterial2, Plane.FACING_UP);
+        renderScene.createPlane(new Vec3( 0f, -DIMENSION, 0 ), planeMaterial, Plane.FACING_UP);
         //renderScene.createPlane(new Vec3( 0f, DIMENSION, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 

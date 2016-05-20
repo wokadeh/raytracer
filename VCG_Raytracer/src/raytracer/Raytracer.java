@@ -71,6 +71,7 @@ public class Raytracer {
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
                 //if(x == 335 && y ==428) {
+
                     RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
                     screenPosition = new Vec2(x, y);
                     mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
@@ -125,12 +126,14 @@ public class Raytracer {
                 recursionCounter = recursionCounter - 1;
                 outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ));
             }
-//            if(intersection.getShape().isTransparent()){
-//                recursionCounter = recursionCounter - 1;
-//                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
-//            }
+            if(intersection.getShape().isTransparent()){
+                recursionCounter = recursionCounter - 1;
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ));
+            }
             //outColor = outColor.add( mAmbientLight );
-            //outColor = outColor.add( intersection.getShape().getMaterial().getAmbientCoeff( ));
+            //if(!outColor.equals(RgbColor.BLACK)) {
+            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff());
+            //}
         }
 
         return outColor;

@@ -4,6 +4,7 @@ import raytracer.Intersection;
 import raytracer.Ray;
 import scene.materials.Material;
 import utils.Log;
+import utils.Matrix4;
 import utils.Vec3;
 
 public class Sphere extends Shape {
@@ -25,14 +26,21 @@ public class Sphere extends Shape {
     public Intersection intersect(Ray ray) {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
-        // Transformation, otherwise the sphere is in the origin
-        Vec3 position = ray.getStartPoint().sub(this.getPosition());
+        // Translation from ray origin to sphere center, otherwise the sphere is in the origin
+        Vec3 transformation = ray.getStartPoint().sub( this.getPosition() );
+
+        //Matrix4 transfMatrix = new Matrix4();
+        //transfMatrix = transfMatrix.translate(this.getPosition());
+        //transfMatrix = transfMatrix.invert();
+
+        //Vec3 localOrigin = transfMatrix.multVec3( ray.getStartPoint() );
+        //Vec3 localDirection = transfMatrix.multVec3( ray.getDirection() );
 
         // B = 2(x0xd + y0yd + z0zd)
-        float compB = 2 * position.scalar( ray.getDirection() );
+        float compB = 2 * transformation.scalar( ray.getDirection() );
 
         // C = x0^2 + y0^2 + z0^2 - r^2
-        float compC = position.scalar(position) - mSqrRadius;
+        float compC = transformation.scalar( transformation ) - mSqrRadius;
 
         // D = B*B - 4C
         float discriminant = (compB * compB) - 4 * compC;
@@ -64,14 +72,25 @@ public class Sphere extends Shape {
 
         emptyIntersectionTest.setIncoming( t > EPSILON );
 
-        return createIntersection(emptyIntersectionTest, t, ray);
+        return createIntersection(emptyIntersectionTest, transformation, t, ray);
     }
 
-    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
+    private Intersection createIntersection(Intersection intersectionTest, Vec3 transformation, float t, Ray ray){
+
         intersectionTest.setIntersectionPoint( ray.getDirection().multScalar( t ).add( ray.getStartPoint() ) );
         intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( getPosition() ).multScalar( 1f / mRadius) );
         intersectionTest.setDistance( t );
         intersectionTest.setHit( true );
+
+//        Vec3 intersectionPoint = ray.getDirection().multScalar( t );
+//        intersectionPoint = intersectionPoint.add( transformation );
+//        Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius );
+//
+//
+//        intersectionTest.setIntersectionPoint( intersectionPoint );
+//        intersectionTest.setNormal( normal );
+//        intersectionTest.setDistance( t );
+//        intersectionTest.setHit( true );
 
         if(intersectionTest.isIncoming() == false){
             Log.error(this, "normal switch");
