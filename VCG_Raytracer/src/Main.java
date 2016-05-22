@@ -55,10 +55,10 @@ public class Main {
 
     static float DIMENSION = 3f;
 
-    static int RECURSIONS = 3;
+    static int RECURSIONS = 5;
 
-    static short LIGHT_DENSITY = 1;// 40;
-    static short LIGHT_SAMPLES = 1;//30;
+    static short LIGHT_DENSITY =  40;
+    static short LIGHT_SAMPLES = 30;
 
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
 
@@ -120,19 +120,20 @@ public class Main {
         float sphereRadius = 1;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_CUSTOM, new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_CUSTOM, RgbColor.DARK_CUSTOM, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.GLASS, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.BLACK, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
-        renderScene.createSphere(new Vec3(-DIMENSION/2f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(DIMENSION/2f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(DIMENSION/4f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
 
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
-        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION ), planeMaterial, 0.6f, Plane.FACING_DOWN);
+        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION+1 ), planeMaterial, 0.6f, Plane.FACING_DOWN);
 
     }
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
         Material planeMaterial = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE);
+        Material planeMaterialBack = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
 
