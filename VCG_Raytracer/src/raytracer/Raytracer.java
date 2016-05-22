@@ -120,17 +120,27 @@ public class Raytracer {
 
             outColor = outColor.add( shade( intersection ) );
 
-            // Further recursions through objects, if the recursion is not finished and object is not diffuse
-            if( intersection.getShape().isReflective() ){
-                //Log.warn(this, "Reflecting " + recursionCounter);
+            if( intersection.getShape().isReflective() && intersection.getShape().isTransparent()){
                 recursionCounter = recursionCounter - 1;
                 float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ).multScalar( reflectivity ));
-            }
-            if(intersection.getShape().isTransparent()){
-                recursionCounter = recursionCounter - 1;
+                RgbColor refColor = traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection );
+                refColor = refColor.square().square();
                 float transparency = intersection.getShape().getMaterial().getTransparency();
-                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ).multScalar( transparency ));
+                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ).multScalar( transparency )).add(refColor);
+            }
+            else {
+                // Further recursions through objects, if the recursion is not finished and object is not diffuse
+                if (intersection.getShape().isReflective()) {
+                    //Log.warn(this, "Reflecting " + recursionCounter);
+                    recursionCounter = recursionCounter - 1;
+                    float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+                    outColor = outColor.add(traceRay(recursionCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity));
+                }
+                if (intersection.getShape().isTransparent()) {
+                    recursionCounter = recursionCounter - 1;
+                    float transparency = intersection.getShape().getMaterial().getTransparency();
+                    outColor = outColor.add(traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency));
+                }
             }
             //outColor = outColor.add( mAmbientLight );
             //if(!outColor.equals(RgbColor.BLACK)) {

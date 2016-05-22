@@ -107,9 +107,9 @@ public class Main {
         float lightDist = DIMENSION;
 
         /* Middle Light */
-        //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.WHITE);
+        //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.LIGHT_GRAY);
 
-        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
+        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
     }
 
     private static void setupCameras(Scene renderScene) {
@@ -120,13 +120,13 @@ public class Main {
         float sphereRadius = 1;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_CUSTOM, new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.BLACK, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.BLACK, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TINY_REFLECTION, Material.DIAMOND, 1);
 
         renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/4f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
 
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
-        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION+1 ), planeMaterial, 0.6f, Plane.FACING_DOWN);
+        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION + 1 ), planeMaterial, 0.6f, Plane.FACING_DOWN);
 
     }
 

@@ -20,7 +20,7 @@ public class RgbColor {
     public static RgbColor MAGENTA = new RgbColor(1, 0, 1);
     public static RgbColor YELLOW = new RgbColor(1, 1, 0);
     public static RgbColor GRAY = new RgbColor(0.5f, 0.5f, 0.5f);
-    public static RgbColor SOFT_GRAY = new RgbColor(0.55f, 0.55f, 0.55f);
+    public static RgbColor SOFT_GRAY = new RgbColor(0.20f, 0.20f, 0.20f);
     public static RgbColor LIGHT_GRAY = new RgbColor(0.25f, 0.25f, 0.25f);
     public static RgbColor DARK_GRAY = new RgbColor(0.1f, 0.1f, 0.1f);
 
@@ -60,6 +60,10 @@ public class RgbColor {
 
     public int getRGB(){
         return ((int) (this.red() * 255f) << 16) + ((int) (this.green() * 255f) << 8) + ((int) (this.blue() * 255f));
+    }
+
+    public RgbColor square(){
+        return new RgbColor(this.red() * this.red(), this.green() * this.green(),this.blue() * this.blue());
     }
 
     private void clamp(){
