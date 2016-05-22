@@ -29,10 +29,6 @@ public class Sphere extends Shape {
         // Translation from ray origin to sphere center, otherwise the sphere is in the origin
         Vec3 transformation = ray.getStartPoint().sub( this.getPosition() );
 
-        //Matrix4 transfMatrix = new Matrix4();
-        //transfMatrix = transfMatrix.translate(this.getPosition());
-        //transfMatrix = transfMatrix.invert();
-
         //Vec3 localOrigin = transfMatrix.multVec3( ray.getStartPoint() );
         //Vec3 localDirection = transfMatrix.multVec3( ray.getDirection() );
 
@@ -72,25 +68,15 @@ public class Sphere extends Shape {
 
         emptyIntersectionTest.setIncoming( t > EPSILON );
 
-        return createIntersection(emptyIntersectionTest, transformation, t, ray);
+        return createIntersection(emptyIntersectionTest, t, ray);
     }
 
-    private Intersection createIntersection(Intersection intersectionTest, Vec3 transformation, float t, Ray ray){
+    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
 
         intersectionTest.setIntersectionPoint( ray.getDirection().multScalar( t ).add( ray.getStartPoint() ) );
         intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( getPosition() ).multScalar( 1f / mRadius) );
         intersectionTest.setDistance( t );
         intersectionTest.setHit( true );
-
-//        Vec3 intersectionPoint = ray.getDirection().multScalar( t );
-//        intersectionPoint = intersectionPoint.add( transformation );
-//        Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius );
-//
-//
-//        intersectionTest.setIntersectionPoint( intersectionPoint );
-//        intersectionTest.setNormal( normal );
-//        intersectionTest.setDistance( t );
-//        intersectionTest.setHit( true );
 
         if(intersectionTest.isIncoming() == false){
             Log.error(this, "normal switch");
