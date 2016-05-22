@@ -42,6 +42,17 @@ public class Matrix4 {
 		return out;
 	}
 
+	public Matrix4 scale( double s ){
+		Matrix4 out = new Matrix4(mBaseMatrix);
+
+		out.setValueAt( 0, 0, s );
+		out.setValueAt( 1, 1, s );
+		out.setValueAt( 2, 2, s );
+		out.setValueAt( 3, 3, s );
+
+		return out;
+	}
+
 	public Matrix4 scale( Vec2 vec ){
 		Matrix4 out = new Matrix4(mBaseMatrix);
 
@@ -97,12 +108,15 @@ public class Matrix4 {
 		);
 	}
 
-	public Vec3 multVec3(Vec3 vec){
+	public Vec3 multVec3(Vec3 vec, Boolean isPoint){
+
+		float w = isPoint ? 1 : 0;
+
 		Vec4 out = new Vec4(
-				vec.x * ( float ) this.getValueAt(0,0) + vec.y * ( float ) this.getValueAt(0,1) + vec.z * ( float ) this.getValueAt(0,2) + ( float ) this.getValueAt(0,3),
-				vec.x * ( float ) this.getValueAt(1,0) + vec.y * ( float ) this.getValueAt(1,1) + vec.z * ( float ) this.getValueAt(1,2) + ( float ) this.getValueAt(1,3),
-				vec.x * ( float ) this.getValueAt(2,0) + vec.y * ( float ) this.getValueAt(2,1) + vec.z * ( float ) this.getValueAt(2,2) + ( float ) this.getValueAt(2,3),
-				vec.x * ( float ) this.getValueAt(3,0) + vec.y * ( float ) this.getValueAt(3,1) + vec.z * ( float ) this.getValueAt(3,2) + ( float ) this.getValueAt(3,3)
+				vec.x * ( float ) this.getValueAt(0,0) + vec.y * ( float ) this.getValueAt(0,1) + vec.z * ( float ) this.getValueAt(0,2) + w * ( float ) this.getValueAt(0,3),
+				vec.x * ( float ) this.getValueAt(1,0) + vec.y * ( float ) this.getValueAt(1,1) + vec.z * ( float ) this.getValueAt(1,2) + w * ( float ) this.getValueAt(1,3),
+				vec.x * ( float ) this.getValueAt(2,0) + vec.y * ( float ) this.getValueAt(2,1) + vec.z * ( float ) this.getValueAt(2,2) + w * ( float ) this.getValueAt(2,3),
+				vec.x * ( float ) this.getValueAt(3,0) + vec.y * ( float ) this.getValueAt(3,1) + vec.z * ( float ) this.getValueAt(3,2) + w * ( float ) this.getValueAt(3,3)
 		);
 
 		return new Vec3(out.x, out.y, out.z);
@@ -524,10 +538,6 @@ public class Matrix4 {
 			return true;
 		}
 
-		/** Return lower triangular factor
-		 @return     L
-		 */
-
 		public Matrix getL () {
 			Matrix X = new Matrix(m,n);
 			double[][] L = X.getArray();
@@ -545,10 +555,6 @@ public class Matrix4 {
 			return X;
 		}
 
-		/** Return upper triangular factor
-		 @return     U
-		 */
-
 		public Matrix getU () {
 			Matrix X = new Matrix(n,n);
 			double[][] U = X.getArray();
@@ -564,10 +570,6 @@ public class Matrix4 {
 			return X;
 		}
 
-		/** Return pivot permutation vector
-		 @return     piv
-		 */
-
 		public int[] getPivot () {
 			int[] p = new int[m];
 			for (int i = 0; i < m; i++) {
@@ -576,10 +578,6 @@ public class Matrix4 {
 			return p;
 		}
 
-		/** Return pivot permutation vector as a one-dimensional double array
-		 @return     (double) piv
-		 */
-
 		public double[] getDoublePivot () {
 			double[] vals = new double[m];
 			for (int i = 0; i < m; i++) {
@@ -587,11 +585,6 @@ public class Matrix4 {
 			}
 			return vals;
 		}
-
-		/** Determinant
-		 @return     det(A)
-		 @exception  IllegalArgumentException  Matrix must be square
-		 */
 
 		public double det () {
 			if (m != n) {
@@ -603,13 +596,6 @@ public class Matrix4 {
 			}
 			return d;
 		}
-
-		/** Solve A*X = B
-		 @param  B   A Matrix with as many rows as A and any number of columns.
-		 @return     X so that L*U*X = B(piv,:)
-		 @exception  IllegalArgumentException Matrix row dimensions must agree.
-		 @exception  RuntimeException  Matrix is singular.
-		 */
 
 		public Matrix solve (Matrix B) {
 			if (B.getRowDimension() != m) {
@@ -650,34 +636,9 @@ public class Matrix4 {
 
 	public static class QRDecomposition implements java.io.Serializable {
 
-/* ------------------------
-   Class variables
- * ------------------------ */
-
-		/** Array for internal storage of decomposition.
-		 @serial internal array storage.
-		 */
 		private double[][] QR;
-
-		/** Row and column dimensions.
-		 @serial column dimension.
-		 @serial row dimension.
-		 */
 		private int m, n;
-
-		/** Array for internal storage of diagonal of R.
-		 @serial diagonal of R.
-		 */
 		private double[] Rdiag;
-
-/* ------------------------
-   Constructor
- * ------------------------ */
-
-		/** QR Decomposition, computed by Householder reflections.
-		 Structure to access R and the Householder vectors and compute Q.
-		 @param A    Rectangular matrix
-		 */
 
 		public QRDecomposition (Matrix A) {
 			// Initialize.
@@ -728,10 +689,6 @@ public class Matrix4 {
 			return true;
 		}
 
-		/** Return the Householder vectors
-		 @return     Lower trapezoidal matrix whose columns define the reflections
-		 */
-
 		public Matrix getH () {
 			Matrix X = new Matrix(m,n);
 			double[][] H = X.getArray();
@@ -746,10 +703,6 @@ public class Matrix4 {
 			}
 			return X;
 		}
-
-		/** Return the upper triangular factor
-		 @return     R
-		 */
 
 		public Matrix getR () {
 			Matrix X = new Matrix(n,n);
@@ -767,10 +720,6 @@ public class Matrix4 {
 			}
 			return X;
 		}
-
-		/** Generate and return the (economy-sized) orthogonal factor
-		 @return     Q
-		 */
 
 		public Matrix getQ () {
 			Matrix X = new Matrix(m,n);
@@ -795,13 +744,6 @@ public class Matrix4 {
 			}
 			return X;
 		}
-
-		/** Least squares solution of A*X = B
-		 @param B    A Matrix with as many rows as A and any number of columns.
-		 @return     X that minimizes the two norm of Q*R*X-B.
-		 @exception  IllegalArgumentException  Matrix row dimensions must agree.
-		 @exception  RuntimeException  Matrix is rank deficient.
-		 */
 
 		public Matrix solve (Matrix B) {
 			if (B.getRowDimension() != m) {
@@ -843,229 +785,4 @@ public class Matrix4 {
 		}
 		private static final long serialVersionUID = 1;
 	}
-//	private static class Matrix {
-//
-//		private int nrows;
-//		private int ncols;
-//		private double[][] data;
-//
-//		public Matrix(double[][] dat) {
-//			this.data = dat;
-//			this.nrows = dat.length;
-//			this.ncols = dat[0].length;
-//		}
-//
-//		public Matrix(int nrow, int ncol) {
-//			this.nrows = nrow;
-//			this.ncols = ncol;
-//			data = new double[nrow][ncol];
-//		}
-//
-//		public int getNrows() {
-//			return nrows;
-//		}
-//
-//		public void setNrows(int nrows) {
-//			this.nrows = nrows;
-//		}
-//
-//		public int getNcols() {
-//			return ncols;
-//		}
-//
-//		public void setNcols(int ncols) {
-//			this.ncols = ncols;
-//		}
-//
-//		public double[][] getValues() {
-//			return data;
-//		}
-//
-//		public void setValues(double[][] values) {
-//			this.data = values;
-//		}
-//
-//		public void setValueAt(int row, int col, double value) {
-//			data[row][col] = value;
-//		}
-//
-//		public double getValueAt(int row, int col) {
-//			return data[row][col];
-//		}
-//
-//		public boolean isSquare() {
-//			return nrows == ncols;
-//		}
-//
-//		public int size() {
-//			if (isSquare())
-//				return nrows;
-//			return -1;
-//		}
-//
-//		public static Matrix initializeUnitMatrix(int rows, int cols) {
-//			Matrix mat = new Matrix(rows, cols);
-//			for (int i = 0; i < rows; i++) {
-//				for (int j = 0; j < cols; j++) {
-//					if(i == j){
-//						mat.setValueAt(i, j, 1);
-//					}
-//					else {
-//						mat.setValueAt(i, j, 0);
-//					}
-//				}
-//			}
-//			return mat;
-//		}
-//
-//		public Matrix multiplyByConstant(double constant) {
-//			Matrix mat = new Matrix(nrows, ncols);
-//			for (int i = 0; i < nrows; i++) {
-//				for (int j = 0; j < ncols; j++) {
-//					mat.setValueAt(i, j, data[i][j] * constant);
-//				}
-//			}
-//			return mat;
-//		}
-//
-//		public Matrix insertColumnWithValue1() {
-//			Matrix X_ = new Matrix(this.getNrows(), this.getNcols()+1);
-//			for (int i=0;i<X_.getNrows();i++) {
-//				for (int j=0;j<X_.getNcols();j++) {
-//					if (j==0)
-//						X_.setValueAt(i, j, 1.0);
-//					else
-//						X_.setValueAt(i, j, this.getValueAt(i, j-1));
-//
-//				}
-//			}
-//			return X_;
-//		}
-//	}
-//
-//	private static class MatrixTransformation {
-//
-//		private MatrixTransformation() {}
-//
-//		public static Matrix transpose(Matrix matrix) {
-//			Matrix transposedMatrix = new Matrix(matrix.getNcols(), matrix.getNrows());
-//			for (int i = 0; i < matrix.getNrows(); i++) {
-//				for (int j = 0; j < matrix.getNcols(); j++) {
-//					transposedMatrix.setValueAt(j, i, matrix.getValueAt(i, j));
-//				}
-//			}
-//			return transposedMatrix;
-//		}
-//		public static Matrix inverse(Matrix matrix) throws NoSquareException {
-//			return transpose(cofactor(matrix));//(transpose(cofactor(matrix)).multiplyByConstant(1.0 / determinant(matrix)));
-//		}
-//
-//		public static double determinant(Matrix matrix) throws NoSquareException {
-//			if (!matrix.isSquare())
-//				throw new NoSquareException("Matrix must be square.");
-//			if (matrix.size() == 1) {
-//				return matrix.getValueAt(0, 0);
-//			}
-//
-//			if (matrix.size() == 2) {
-//				return (matrix.getValueAt(0, 0) * matrix.getValueAt(1, 1)) - (matrix.getValueAt(0, 1) * matrix.getValueAt(1, 0));
-//			}
-//			double sum = 0.0;
-//			for (int i = 0; i < matrix.getNcols(); i++) {
-//				sum += changeSign(i) * matrix.getValueAt(0, i) * determinant(createSubMatrix(matrix, 0, i));
-//			}
-//			return sum;
-//		}
-//
-//		private static int changeSign(int i) {
-//			if (i % 2 == 0)
-//				return 1;
-//			return -1;
-//		}
-//
-//		public static Matrix createSubMatrix(Matrix matrix, int excluding_row, int excluding_col) {
-//			Matrix mat = new Matrix(matrix.getNrows() - 1, matrix.getNcols() - 1);
-//			int r = -1;
-//			for (int i = 0; i < matrix.getNrows(); i++) {
-//				if (i == excluding_row)
-//					continue;
-//				r++;
-//				int c = -1;
-//				for (int j = 0; j < matrix.getNcols(); j++) {
-//					if (j == excluding_col)
-//						continue;
-//					mat.setValueAt(r, ++c, matrix.getValueAt(i, j));
-//				}
-//			}
-//			return mat;
-//		}
-//
-//		public static Matrix cofactor(Matrix matrix) throws NoSquareException {
-//			Matrix mat = new Matrix(matrix.getNrows(), matrix.getNcols());
-//			for (int i = 0; i < matrix.getNrows(); i++) {
-//				for (int j = 0; j < matrix.getNcols(); j++) {
-//					mat.setValueAt(i, j, changeSign(i) * changeSign(j) * determinant(matrix));
-//				}
-//			}
-//
-//			return mat;
-//		}
-//
-//		public static Matrix add(Matrix matrix1, Matrix matrix2) throws IllegalDimensionException {
-//			if (matrix1.getNcols() != matrix2.getNcols() || matrix1.getNrows() != matrix2.getNrows())
-//				throw new IllegalDimensionException("Two matrices should be the same dimension.");
-//			Matrix sumMatrix = new Matrix(matrix1.getNrows(), matrix1.getNcols());
-//			for (int i = 0; i < matrix1.getNrows(); i++) {
-//				for (int j = 0; j < matrix1.getNcols(); j++)
-//					sumMatrix.setValueAt(i, j, matrix1.getValueAt(i, j) + matrix2.getValueAt(i, j));
-//
-//			}
-//			return sumMatrix;
-//		}
-//
-//		public static Matrix subtract(Matrix matrix1, Matrix matrix2) throws IllegalDimensionException {
-//			return add(matrix1, matrix2.multiplyByConstant(-1));
-//		}
-//
-//		public static Matrix multiply(Matrix matrix1, Matrix matrix2) {
-//			Matrix multipliedMatrix = new Matrix(matrix1.getNrows(), matrix2.getNcols());
-//
-//			for (int i = 0; i < multipliedMatrix.getNrows(); i++) {
-//				for (int j = 0; j < multipliedMatrix.getNcols(); j++) {
-//					double sum = 0.0;
-//					for (int k = 0; k < matrix1.getNcols(); k++) {
-//						sum += matrix1.getValueAt(i, k) * matrix2.getValueAt(k, j);
-//					}
-//					multipliedMatrix.setValueAt(i, j, sum);
-//				}
-//			}
-//			return multipliedMatrix;
-//		}
-//	}
-//
-//	public static class IllegalDimensionException extends Exception {
-//		public IllegalDimensionException() {
-//			super();
-//			Log.error(this, "Dimension does not fit!");
-//		}
-//
-//		public IllegalDimensionException(String message) {
-//			super(message);
-//			Log.error(this, "Dimension does not fit: " + message);
-//		}
-//	}
-//
-//	private static class NoSquareException extends Exception {
-//
-//		public NoSquareException() {
-//			super();
-//			Log.error(this, "The input is not square!");
-//		}
-//
-//		public NoSquareException(String message) {
-//			super(message);
-//			Log.error(this, "The input is not square: " + message);
-//		}
-//
-//	}
 }
