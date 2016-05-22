@@ -25,17 +25,16 @@ public class Intersection {
 
     public Ray calculateReflectionRay() {
         // like in Phong, but take vector opposite to incoming direction
-        Vec3 directN = mInRay.getDirection().negate().normalize();
+        Vec3 directN = mInRay.getDirection();//.negate();
         return calculateReflectionRay( directN );
     }
 
     public Ray calculateReflectionRay( Vec3 inDir ) {
-        float angle = mNormal.scalar( inDir );
-        mNormal = mNormal.normalize();
-        Vec3 reflVec = mNormal.multScalar(angle).multScalar(2f);
-        reflVec = reflVec.sub( inDir ).normalize();
+        float normDotIn = mNormal.scalar( inDir.normalize() );
 
-        return new Ray(mIntersectionPoint, reflVec, Float.MAX_VALUE);
+        Vec3 r = inDir.sub(mNormal.multScalar(normDotIn).multScalar(2f));
+
+        return new Ray(mIntersectionPoint, r, Float.MAX_VALUE);
     }
 
     public Ray calculateRefractionRay() {
@@ -53,17 +52,14 @@ public class Intersection {
         float cosBetaDet = 1f - sinBeta2;
 
         if(cosBetaDet > 0) {
-            //float cosBeta = (float) Math.sqrt(cosBetaDet);
-            float cosBeta = (float) Math.sqrt(1.0f - sinBeta2 * (1.0f - normDotIn * normDotIn));
-            //Vec3 refDir = (mNormal.multScalar(normDotIn)).multScalar(n).sub(inRay).sub(mNormal.multScalar(nCosBeta));
+            float cosBeta = inRay.scalar(mNormal);
+            float sinSqrBeta = sinBeta2 * (1 - cosBeta * cosBeta);
 
-            //Ray refRay = new Ray(mIntersectionPoint.add(refDir.multScalar(0.001f)), refDir, Float.MAX_VALUE);
+            float a = n * cosBeta;
+            float b = (float) Math.sqrt(1 - sinSqrBeta);
 
-            Vec3 temp_b = mNormal.multScalar(cosBeta);
-            Vec3 temp_a = temp_b.negate().multScalar(cosBeta).sub(inRay).multScalar(n);
-            Vec3 refRay = temp_a.sub(temp_b);
-            return new Ray(mIntersectionPoint, refRay, Float.MAX_VALUE);
-            //return refRay;
+            Vec3 out = inRay.negate().multScalar(n).add(mNormal.multScalar(a - b));
+            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE);
         }
         // Total internal reflection
         else{

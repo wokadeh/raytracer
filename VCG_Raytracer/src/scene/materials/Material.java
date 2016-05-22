@@ -20,6 +20,7 @@ public abstract class Material {
     public static float MOST_REFLECTION = 0.75f;
     public static float HALF_REFLECTION = 0.5f;
     public static float TINY_REFLECTION = 0.1f;
+    public static float NANO_REFLECTION = 0.05f;
     public static float NO_REFLECTION = 0f;
 
     protected RgbColor ambiCoeff;
@@ -47,8 +48,8 @@ public abstract class Material {
 
     protected void calculateMaterialCoeff(float fractionCoeff){
         if (fractionCoeff != 0) {
-            this.fractionCoeff = fractionCoeff / Material.AIR ;
-            this.switchedFractionCoeff = Material.AIR / fractionCoeff;
+            this.switchedFractionCoeff = fractionCoeff / Material.AIR ;
+            this.fractionCoeff = Material.AIR / fractionCoeff;
         }
     }
 
