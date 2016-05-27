@@ -14,14 +14,16 @@ public abstract class Shape extends SceneObject {
 
     private Material material;
     protected String type;
-    protected Matrix4 transformation;
+    protected Matrix4 orgTransformation;
+    protected Matrix4 invTransformation;
 
     public Shape(Vec3 pos, Material mat, Matrix4 transf, String type) {
         super(pos);
         this.material = mat;
         this.type = type;
-        this.transformation = transf;
-        Log.print(this, "Init");
+        this.orgTransformation = transf;
+        this.invTransformation = transf.invert();
+        Log.print(this, "Init " + this.invTransformation);
     }
 
     public abstract Intersection intersect(Ray ray);
@@ -45,7 +47,7 @@ public abstract class Shape extends SceneObject {
         return this.material;
     }
 
-    public Matrix4 getTransformation() { return this.transformation; };
+    public Matrix4 getTransformation() { return this.orgTransformation; };
 
     public float getSwitchedMaterialCoeff(){
         return this.material.getSwitchedFractionCoeff();

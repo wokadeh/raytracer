@@ -25,16 +25,14 @@ public class Sphere extends Shape {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
         // Translation of the center of the sphere to the origin
-        Vec3 transformation = ray.getStartPoint().sub( this.getPosition() );
-
-        Vec3 localOrigin = this.transformation.multVec3( ray.getStartPoint(), true );
-        Vec3 localDirection = this.transformation.multVec3( ray.getDirection(), false );
+        Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
+        Vec3 localDirection = this.orgTransformation.multVec3( ray.getDirection(), false );
 
         // B = 2(x0xd + y0yd + z0zd)
-        float compB = 2 * transformation.scalar( ray.getDirection() );
+        float compB = 2 * localOrigin.scalar( ray.getDirection() );
 
         // C = x0^2 + y0^2 + z0^2 - r^2
-        float compC = transformation.scalar( transformation ) - mSqrRadius;
+        float compC = localOrigin.scalar( localOrigin ) - mSqrRadius;
 
         // D = B*B - 4C
         float discriminant = (compB * compB) - 4 * compC;
