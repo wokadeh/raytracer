@@ -10,10 +10,7 @@ import scene.shapes.Plane;
 import scene.shapes.Shape;
 import scene.shapes.Sphere;
 import scene.shapes.Square;
-import utils.Log;
-import utils.RgbColor;
-import utils.Vec2;
-import utils.Vec3;
+import utils.*;
 
 import java.util.*;
 

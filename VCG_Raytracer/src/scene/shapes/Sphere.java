@@ -10,13 +10,11 @@ import utils.Vec3;
 public class Sphere extends Shape {
 
     private float mSqrRadius;
-
     private float mRadius;
-
     private final float EPSILON = 0.00001f;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
-        super(pos, mat, "SPHERE_" + pos.toString());
+        super(pos, mat, new Matrix4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
 
         mRadius = radius;
         mSqrRadius = radius * radius;
@@ -26,11 +24,11 @@ public class Sphere extends Shape {
     public Intersection intersect(Ray ray) {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
-        // Translation from ray origin to sphere center, otherwise the sphere is in the origin
+        // Translation of the center of the sphere to the origin
         Vec3 transformation = ray.getStartPoint().sub( this.getPosition() );
 
-        //Vec3 localOrigin = transfMatrix.multVec3( ray.getStartPoint() );
-        //Vec3 localDirection = transfMatrix.multVec3( ray.getDirection() );
+        Vec3 localOrigin = this.transformation.multVec3( ray.getStartPoint(), true );
+        Vec3 localDirection = this.transformation.multVec3( ray.getDirection(), false );
 
         // B = 2(x0xd + y0yd + z0zd)
         float compB = 2 * transformation.scalar( ray.getDirection() );
@@ -73,8 +71,9 @@ public class Sphere extends Shape {
 
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
 
+        // transform the center of the sphere back to the original distance from the origin
         intersectionTest.setIntersectionPoint( ray.getDirection().multScalar( t ).add( ray.getStartPoint() ) );
-        intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( getPosition() ).multScalar( 1f / mRadius) );
+        intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( this.getPosition() ).multScalar( 1f / mRadius) );
         intersectionTest.setDistance( t );
         intersectionTest.setHit( true );
 

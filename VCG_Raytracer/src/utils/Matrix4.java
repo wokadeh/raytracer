@@ -131,7 +131,7 @@ public class Matrix4 {
 				this.getValueAt(3,0) + "\t\t\t\t\t\t" + this.getValueAt(3,1) + "\t\t\t\t\t\t" + this.getValueAt(3,2) + "\t\t\t\t\t\t" + this.getValueAt(3,3) + "\t\t\n" ;
 	}
 
-	public static class Matrix implements Cloneable, java.io.Serializable {
+	private static class Matrix implements Cloneable, java.io.Serializable {
 
 		private double[][] A;
 		private int m, n;

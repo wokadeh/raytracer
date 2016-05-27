@@ -4,6 +4,7 @@ import raytracer.Intersection;
 import raytracer.Ray;
 import scene.materials.Material;
 import utils.Log;
+import utils.Matrix4;
 import utils.Vec3;
 
 public class Plane extends Shape {
@@ -18,14 +19,14 @@ public class Plane extends Shape {
     public static int FACING_BACK = 5;
 
     public Plane(Vec3 pos, Material mat, int facingDirection) {
-        super(pos, mat, "PLANE" + facingDirection);
+        super(pos, mat, new Matrix4().translate(pos), "PLANE" + facingDirection);
 
         // The normal of a plane is always the vector coming from the position showing to the center of the scene
         mNormal = getFacingNormal( facingDirection );
     }
 
-    public Plane(Vec3 pos, Material mat, Vec3 normal) {
-        super(pos, mat, "PLANE");
+    public Plane(Vec3 pos, Material mat, Matrix4 transf, Vec3 normal) {
+        super(pos, mat, transf, "PLANE");
 
         mNormal = normal.normalize();
     }

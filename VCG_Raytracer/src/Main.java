@@ -106,10 +106,11 @@ public class Main {
         float lightHeight = DIMENSION - 0.3f;
         float lightDist = DIMENSION;
 
-        /* Middle Light */
-        //renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.LIGHT_GRAY);
+        /* Point Light */
+        renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.LIGHT_GRAY);
 
-        renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
+        /* Area Light */
+        //renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
     }
 
     private static void setupCameras(Scene renderScene) {

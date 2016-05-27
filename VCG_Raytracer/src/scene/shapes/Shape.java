@@ -6,6 +6,7 @@ import scene.materials.Material;
 import scene.SceneObject;
 import scene.lights.Light;
 import utils.Log;
+import utils.Matrix4;
 import utils.RgbColor;
 import utils.Vec3;
 
@@ -13,11 +14,13 @@ public abstract class Shape extends SceneObject {
 
     private Material material;
     protected String type;
+    protected Matrix4 transformation;
 
-    public Shape(Vec3 pos, Material mat, String type) {
+    public Shape(Vec3 pos, Material mat, Matrix4 transf, String type) {
         super(pos);
         this.material = mat;
         this.type = type;
+        this.transformation = transf;
         Log.print(this, "Init");
     }
 
@@ -41,6 +44,8 @@ public abstract class Shape extends SceneObject {
     public Material getMaterial(){
         return this.material;
     }
+
+    public Matrix4 getTransformation() { return this.transformation; };
 
     public float getSwitchedMaterialCoeff(){
         return this.material.getSwitchedFractionCoeff();
