@@ -26,10 +26,10 @@ public class Sphere extends Shape {
 
         // Translation of the center of the sphere to the origin
         Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
-        Vec3 localDirection = this.orgTransformation.multVec3( ray.getDirection(), false );
+        Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false );
 
         // B = 2(x0xd + y0yd + z0zd)
-        float compB = 2 * localOrigin.scalar( ray.getDirection() );
+        float compB = 2 * localOrigin.scalar( localDirection );
 
         // C = x0^2 + y0^2 + z0^2 - r^2
         float compC = localOrigin.scalar( localOrigin ) - mSqrRadius;
@@ -70,8 +70,12 @@ public class Sphere extends Shape {
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
 
         // transform the center of the sphere back to the original distance from the origin
-        intersectionTest.setIntersectionPoint( ray.getDirection().multScalar( t ).add( ray.getStartPoint() ) );
-        intersectionTest.setNormal( intersectionTest.getIntersectionPoint().sub( this.getPosition() ).multScalar( 1f / mRadius) );
+        Vec3 globalDirection = this.orgTransformation.multVec3(ray.getDirection(), false);
+        Vec3 intersectionPoint = globalDirection.multScalar( t ).add( ray.getStartPoint() );
+        Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius);
+
+        intersectionTest.setIntersectionPoint( intersectionPoint );
+        intersectionTest.setNormal( normal );
         intersectionTest.setDistance( t );
         intersectionTest.setHit( true );
 
