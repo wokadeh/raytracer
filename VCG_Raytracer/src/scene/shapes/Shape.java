@@ -23,7 +23,7 @@ public abstract class Shape extends SceneObject {
         this.type = type;
         this.orgTransformation = transf;
         this.invTransformation = transf.invert();
-        Log.print(this, "Init " + this.invTransformation);
+        Log.print(this, "Init " + this.orgTransformation);
     }
 
     public abstract Intersection intersect(Ray ray);

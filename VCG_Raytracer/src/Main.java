@@ -118,7 +118,7 @@ public class Main {
     }
 
     private static void setupObjects(Scene renderScene) {
-        float sphereRadius = 1;
+        float sphereRadius = 1f;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_CUSTOM, new RgbColor(0.2f, 0.9f, 0.9f), PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
         Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.BLACK, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TINY_REFLECTION, Material.DIAMOND, 1);

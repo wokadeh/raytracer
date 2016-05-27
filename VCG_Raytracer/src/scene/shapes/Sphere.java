@@ -17,7 +17,7 @@ public class Sphere extends Shape {
         super(pos, mat, new Matrix4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
 
         mRadius = radius;
-        mSqrRadius = radius * radius;
+        mSqrRadius = mRadius * mRadius;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class Sphere extends Shape {
 
         // Translation of the center of the sphere to the origin
         Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
-        Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false );
+        Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
 
         // B = 2(x0xd + y0yd + z0zd)
         float compB = 2 * localOrigin.scalar( localDirection );
@@ -34,15 +34,18 @@ public class Sphere extends Shape {
         // C = x0^2 + y0^2 + z0^2 - r^2
         float compC = localOrigin.scalar( localOrigin ) - mSqrRadius;
 
-        // D = B*B - 4C
+    //    float p = compB * invA;
+    //    float q = compB * invA;
+
+        // D = B*B - 4CA
         float discriminant = (compB * compB) - 4 * compC;
 
         if (discriminant < 0.0f)
             return emptyIntersectionTest;
 
         discriminant = (float) Math.sqrt(discriminant);
-        float t1 = ( -compB - discriminant ) / 2f;
-        float t2 = ( -compB + discriminant ) / 2f;
+        float t1 = ( -compB - discriminant ) / (2f);
+        float t2 = ( -compB + discriminant ) / (2f);
 
         float t = EPSILON;
 
@@ -70,9 +73,17 @@ public class Sphere extends Shape {
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
 
         // transform the center of the sphere back to the original distance from the origin
+
+        // transform the direction according to sphere transformation
         Vec3 globalDirection = this.orgTransformation.multVec3(ray.getDirection(), false);
+        //Vec3 globalDirection = ray.getDirection();
+
+        // move the direction to the ray's start to get the correct intersection (the point is somewhere on the ray)
         Vec3 intersectionPoint = globalDirection.multScalar( t ).add( ray.getStartPoint() );
         Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius);
+
+        //intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, true);
+        //normal = this.orgTransformation.multVec3(normal, false);
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
         intersectionTest.setNormal( normal );
