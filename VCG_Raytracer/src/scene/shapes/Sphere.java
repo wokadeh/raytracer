@@ -71,19 +71,12 @@ public class Sphere extends Shape {
     }
 
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
-
-        // transform the center of the sphere back to the original distance from the origin
-
         // transform the direction according to sphere transformation
         Vec3 globalDirection = this.orgTransformation.multVec3(ray.getDirection(), false);
-        //Vec3 globalDirection = ray.getDirection();
 
         // move the direction to the ray's start to get the correct intersection (the point is somewhere on the ray)
         Vec3 intersectionPoint = globalDirection.multScalar( t ).add( ray.getStartPoint() );
         Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius);
-
-        //intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, true);
-        //normal = this.orgTransformation.multVec3(normal, false);
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
         intersectionTest.setNormal( normal );
