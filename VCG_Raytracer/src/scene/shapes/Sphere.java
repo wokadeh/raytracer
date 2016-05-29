@@ -24,7 +24,7 @@ public class Sphere extends Shape {
     public Intersection intersect(Ray ray) {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
-        // Translation of the center of the sphere to the origin
+        // Transformation of the center of the sphere to the origin (to LCS)
         Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
         Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
 
@@ -67,15 +67,19 @@ public class Sphere extends Shape {
 
         emptyIntersectionTest.setIncoming( t > EPSILON );
 
-        return createIntersection(emptyIntersectionTest, t, ray);
+        Ray localRay = new Ray(localOrigin, localDirection, t);
+
+        return createIntersection(emptyIntersectionTest, t, localRay);
     }
 
-    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
-        // transform the direction according to sphere transformation
-        Vec3 globalDirection = this.orgTransformation.multVec3(ray.getDirection(), false);
+    private Intersection createIntersection(Intersection intersectionTest, float t, Ray localRay){
+        // Get intersection point in LCS. The point is somewhere on the ray
+        Vec3 intersectionPoint = localRay.getDirection().multScalar( t ).add( localRay.getStartPoint() );
 
-        // move the direction to the ray's start to get the correct intersection (the point is somewhere on the ray)
-        Vec3 intersectionPoint = globalDirection.multScalar( t ).add( ray.getStartPoint() );
+        // Transform intersection point to WCS
+        intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, true);
+
+        // The normal does not need to be transformed, it is calculated from the WCS intersection directly
         Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius);
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
