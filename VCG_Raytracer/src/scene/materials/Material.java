@@ -33,9 +33,24 @@ public abstract class Material {
     protected float switchedFractionCoeff = 0;
     protected float transparency = 0;
 
+    protected String texturePath;
+
     private String mType;
+    private float mUScale;
+    private float mVScale;
 
     protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
+        init(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, type);
+    }
+
+    protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type, String texturePath, float uScale, float vScale){
+        init(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, type);
+        this.texturePath = texturePath;
+        mUScale = uScale;
+        mVScale = vScale;
+    }
+
+    private void init(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
         Log.print(this, "Init " + type);
 
         this.ambiCoeff = ambientCoefficient;

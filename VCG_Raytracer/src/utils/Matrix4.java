@@ -48,7 +48,6 @@ public class Matrix4 {
 		out.setValueAt( 0, 0, s );
 		out.setValueAt( 1, 1, s );
 		out.setValueAt( 2, 2, s );
-		out.setValueAt( 3, 3, s );
 
 		return out;
 	}

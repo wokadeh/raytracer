@@ -81,10 +81,9 @@ public class Plane extends Shape {
         intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, false);
         intersectionTest.setIntersectionPoint(intersectionPoint);
 
-        Vec3 normal = this.orgTransformation.multVec3(mNormal.normalize(), false);
-        intersectionTest.setNormal(normal);
-
+        intersectionTest.setNormal(mNormal);
         intersectionTest.setDistance(t);
+        
         // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
         intersectionTest.setHit(ray.getDistance() > t);
         intersectionTest.setIncoming(true);

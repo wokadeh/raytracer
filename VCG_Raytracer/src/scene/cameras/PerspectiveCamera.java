@@ -40,7 +40,7 @@ public class PerspectiveCamera extends SceneObject {
         this.viewPlaneHeight = (float) (focalLength * Math.tan(angle));
         this.viewPlaneWidth = this.ratio * this.viewPlaneHeight;
 
-        logParameters(centerOfInterest, pos, upVec, angleOfView);
+        logParameters(centerOfInterest, pos, upVec, angleOfView, angle);
     }
 
     public Vec3 calculateDestPoint(Vec2 pixelPos){
@@ -62,11 +62,12 @@ public class PerspectiveCamera extends SceneObject {
         return destPoint;
     }
 
-    private void logParameters(Vec3 centerOfInterest, Vec3 camPos, Vec3 upVec, float angleOfView) {
-        Log.print(this, "Position: \t" + camPos);
+    private void logParameters(Vec3 centerOfInterest, Vec3 camPos, Vec3 upVec, float angleOfView, float angle) {
+        Log.print(this, "Position: \t\t" + camPos);
         Log.print(this, "Center of Interest: \t" + centerOfInterest);
         Log.print(this, "Up-Vector: \t\t\t" + upVec);
         Log.print(this, "Angle of View: \t\t" + angleOfView);
+        Log.print(this, "Calculated angle: \t" + angle);
         Log.print(this, "Screen Dimensions: \tWidth " + this.screenWidth + ", Height: " + this.screenHeight);
         Log.print(this, "PerspectiveCamera Dimensions: \tWidth " + this.viewPlaneWidth + ", Height: " + this.viewPlaneHeight);
         Log.print(this, "Aspect Ratio: \t\t" + this.ratio);
