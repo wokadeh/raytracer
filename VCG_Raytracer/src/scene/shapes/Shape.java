@@ -16,6 +16,7 @@ public abstract class Shape extends SceneObject {
     protected String type;
     protected Matrix4x4 orgTransformation;
     protected Matrix4x4 invTransformation;
+    protected Matrix4x4 trpTransformation;
 
     public Shape(Vec3 pos, Material mat, Matrix4x4 transf, String type) {
         super(pos);
@@ -23,6 +24,7 @@ public abstract class Shape extends SceneObject {
         this.type = type;
         this.orgTransformation = transf;
         this.invTransformation = transf.invert();
+        this.trpTransformation = transf.transpose();
         Log.print(this, "Init " + this.orgTransformation);
     }
 

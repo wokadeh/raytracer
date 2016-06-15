@@ -120,7 +120,7 @@ public class Main {
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
         Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
-        renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + sphereRadius, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + 1.5f, -DIMENSION/3f+3), sphereMaterial1, 1.5f);
         renderScene.createSphere(new Vec3(DIMENSION/4f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
 
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
