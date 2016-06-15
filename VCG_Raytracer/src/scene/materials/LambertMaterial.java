@@ -2,7 +2,7 @@ package scene.materials;
 
 import scene.lights.Light;
 import utils.RgbColor;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 public class LambertMaterial  extends Material {
     public LambertMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient) {

@@ -11,6 +11,9 @@ import scene.shapes.Shape;
 import scene.shapes.Sphere;
 import scene.shapes.Square;
 import utils.*;
+import utils.algebra.Vec2;
+import utils.algebra.Vec3;
+import utils.io.Log;
 
 import java.util.*;
 

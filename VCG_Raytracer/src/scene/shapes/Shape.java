@@ -5,19 +5,19 @@ import raytracer.Ray;
 import scene.materials.Material;
 import scene.SceneObject;
 import scene.lights.Light;
-import utils.Log;
-import utils.Matrix4;
+import utils.io.Log;
+import utils.algebra.Matrix4x4;
 import utils.RgbColor;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 public abstract class Shape extends SceneObject {
 
     private Material material;
     protected String type;
-    protected Matrix4 orgTransformation;
-    protected Matrix4 invTransformation;
+    protected Matrix4x4 orgTransformation;
+    protected Matrix4x4 invTransformation;
 
-    public Shape(Vec3 pos, Material mat, Matrix4 transf, String type) {
+    public Shape(Vec3 pos, Material mat, Matrix4x4 transf, String type) {
         super(pos);
         this.material = mat;
         this.type = type;
@@ -47,7 +47,7 @@ public abstract class Shape extends SceneObject {
         return this.material;
     }
 
-    public Matrix4 getTransformation() { return this.orgTransformation; };
+    public Matrix4x4 getTransformation() { return this.orgTransformation; };
 
     public float getSwitchedMaterialCoeff(){
         return this.material.getSwitchedFractionCoeff();

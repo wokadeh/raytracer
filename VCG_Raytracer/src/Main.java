@@ -31,12 +31,9 @@ import scene.materials.PhongMaterial;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
-import utils.ModelImporter;
-import utils.Log;
+import utils.io.ModelImporter;
 import utils.RgbColor;
-import utils.Vec3;
-
-import java.io.File;
+import utils.algebra.Vec3;
 
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {

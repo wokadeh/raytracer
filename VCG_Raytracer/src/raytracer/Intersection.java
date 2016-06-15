@@ -1,8 +1,7 @@
 package raytracer;
 
 import scene.shapes.Shape;
-import utils.Log;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 public class Intersection {
 

@@ -1,19 +1,19 @@
-package utils;
+package utils.algebra;
 
-public class Matrix4 {
+public class Matrix4x4 {
 
 	private Matrix mBaseMatrix;
 
-	public Matrix4(){
+	public Matrix4x4(){
 		mBaseMatrix = Matrix.identity(4,4);
 	}
 
-	private Matrix4(Matrix mat){
+	private Matrix4x4(Matrix mat){
 		mBaseMatrix = mat;
 	}
 
-	public Matrix4 translate( Vec2 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 translate(Vec2 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 3, vec.x );
 		out.setValueAt( 1, 3, vec.y );
@@ -21,8 +21,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 translate( Vec3 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 translate(Vec3 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 3, vec.x );
 		out.setValueAt( 1, 3, vec.y );
@@ -31,8 +31,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 translate( Vec4 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 translate(Vec4 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 3, vec.x );
 		out.setValueAt( 1, 3, vec.y );
@@ -42,8 +42,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 scale( double s ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 scale(double s ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, s );
 		out.setValueAt( 1, 1, s );
@@ -52,8 +52,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 scale( Vec2 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 scale(Vec2 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, vec.x );
 		out.setValueAt( 1, 1, vec.y );
@@ -61,8 +61,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 scale( Vec3 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 scale(Vec3 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, vec.x );
 		out.setValueAt( 1, 1, vec.y );
@@ -71,8 +71,8 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 scale( Vec4 vec ){
-		Matrix4 out = new Matrix4(mBaseMatrix);
+	public Matrix4x4 scale(Vec4 vec ){
+		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, vec.x );
 		out.setValueAt( 1, 1, vec.y );
@@ -82,12 +82,12 @@ public class Matrix4 {
 		return out;
 	}
 
-	public Matrix4 transpose(){
-		return new Matrix4( mBaseMatrix.transpose() );
+	public Matrix4x4 transpose(){
+		return new Matrix4x4( mBaseMatrix.transpose() );
 	}
 
-	public Matrix4 invert(){
-		return new Matrix4( mBaseMatrix.inverse() );
+	public Matrix4x4 invert(){
+		return new Matrix4x4( mBaseMatrix.inverse() );
 	}
 
 	public void setValueAt(int row, int col, double value){

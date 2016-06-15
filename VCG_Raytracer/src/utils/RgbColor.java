@@ -1,5 +1,7 @@
 package utils;
 
+import utils.algebra.Vec3;
+
 public class RgbColor {
 
     public Vec3 colors;

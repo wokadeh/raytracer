@@ -1,10 +1,8 @@
 package scene.lights;
 
-import raytracer.Intersection;
-import raytracer.Ray;
 import scene.shapes.Plane;
 import utils.RgbColor;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 import java.util.ArrayList;
 import java.util.Random;

@@ -1,4 +1,4 @@
-package utils;
+package utils.io;
 
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.scene.shape.MeshView;

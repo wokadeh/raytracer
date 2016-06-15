@@ -3,9 +3,9 @@ package scene.shapes;
 import raytracer.Intersection;
 import raytracer.Ray;
 import scene.materials.Material;
-import utils.Log;
-import utils.Matrix4;
-import utils.Vec3;
+import utils.io.Log;
+import utils.algebra.Matrix4x4;
+import utils.algebra.Vec3;
 
 public class Sphere extends Shape {
 
@@ -14,7 +14,7 @@ public class Sphere extends Shape {
     private final float EPSILON = 0.00001f;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
-        super(pos, mat, new Matrix4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
+        super(pos, mat, new Matrix4x4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
 
         mRadius = radius;
         mSqrRadius = mRadius * mRadius;

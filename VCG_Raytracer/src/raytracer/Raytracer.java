@@ -23,6 +23,10 @@ import scene.lights.PointLight;
 import scene.shapes.Shape;
 import ui.Window;
 import utils.*;
+import utils.algebra.Vec2;
+import utils.algebra.Vec3;
+import utils.io.ImageExporter;
+import utils.io.Log;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -79,7 +83,7 @@ public class Raytracer {
             }
         }
 
-        IO.saveImageToPng(mBufferedImage, "raytracing.png");
+        ImageExporter.saveImageToPng(mBufferedImage, "raytracing.png");
     }
 
     private RgbColor calculateAntiAliasedColor(int y, int x) {

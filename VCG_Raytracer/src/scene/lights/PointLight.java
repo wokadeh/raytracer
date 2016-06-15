@@ -1,7 +1,7 @@
 package scene.lights;
 
 import utils.RgbColor;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 public class PointLight extends Light {
 

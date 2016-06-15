@@ -1,7 +1,7 @@
 package ui;
 
 import utils.RgbColor;
-import utils.Vec2;
+import utils.algebra.Vec2;
 
 import javax.swing.*;
 import java.awt.*;

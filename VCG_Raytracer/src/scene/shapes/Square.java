@@ -3,8 +3,8 @@ package scene.shapes;
 import raytracer.Intersection;
 import raytracer.Ray;
 import scene.materials.Material;
-import utils.Matrix4;
-import utils.Vec3;
+import utils.algebra.Matrix4x4;
+import utils.algebra.Vec3;
 
 public class Square extends Shape {
 
@@ -12,7 +12,7 @@ public class Square extends Shape {
 	private float mDim;
 
 	public Square(Vec3 pos, Material mat, float dimension, int facingDirection) {
-		super(pos, mat, new Matrix4().translate(pos), "SQUARE" + facingDirection);
+		super(pos, mat, new Matrix4x4().translate(pos), "SQUARE" + facingDirection);
 
 		mPlane = new Plane(pos, mat, facingDirection);
 		mDim = dimension;

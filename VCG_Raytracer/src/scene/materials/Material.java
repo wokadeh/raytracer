@@ -1,9 +1,9 @@
 package scene.materials;
 
 import scene.lights.Light;
-import utils.Log;
+import utils.io.Log;
 import utils.RgbColor;
-import utils.Vec3;
+import utils.algebra.Vec3;
 
 public abstract class Material {
 

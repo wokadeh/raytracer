@@ -1,4 +1,4 @@
-package utils;
+package utils.algebra;
 
 public class Vec3 {
     public float x;

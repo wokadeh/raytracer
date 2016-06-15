@@ -3,9 +3,9 @@ package scene.shapes;
 import raytracer.Intersection;
 import raytracer.Ray;
 import scene.materials.Material;
-import utils.Log;
-import utils.Matrix4;
-import utils.Vec3;
+import utils.io.Log;
+import utils.algebra.Matrix4x4;
+import utils.algebra.Vec3;
 
 public class Plane extends Shape {
 
@@ -19,13 +19,13 @@ public class Plane extends Shape {
     public static int FACING_BACK = 5;
 
     public Plane(Vec3 pos, Material mat, int facingDirection) {
-        super(pos, mat, new Matrix4().translate(pos), "PLANE" + facingDirection);
+        super(pos, mat, new Matrix4x4().translate(pos), "PLANE" + facingDirection);
 
         // The normal of a plane is always the vector coming from the position showing to the center of the scene
         mNormal = getFacingNormal( facingDirection );
     }
 
-    public Plane(Vec3 pos, Material mat, Matrix4 transf, Vec3 normal) {
+    public Plane(Vec3 pos, Material mat, Matrix4x4 transf, Vec3 normal) {
         super(pos, mat, transf, "PLANE");
 
         mNormal = normal.normalize();
@@ -83,7 +83,7 @@ public class Plane extends Shape {
 
         intersectionTest.setNormal(mNormal);
         intersectionTest.setDistance(t);
-        
+
         // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
         intersectionTest.setHit(ray.getDistance() > t);
         intersectionTest.setIncoming(true);
