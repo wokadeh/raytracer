@@ -23,6 +23,8 @@ public class PerspectiveCamera extends SceneObject {
     private int screenWidth;
     private int screenHeight;
 
+    private float angleRad;
+
     private Vec3 center;
 
     public PerspectiveCamera(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec, float angleOfView, float focalLength, int screenWidth, int screenHeight) {
@@ -36,19 +38,25 @@ public class PerspectiveCamera extends SceneObject {
         this.screenHeight = screenHeight - 1;
 
         this.calculateCameraCoord(pos, centerOfInterest, upVec);
+        this.calculateViewplane(angleOfView);
 
+        logParameters(centerOfInterest, pos, upVec, angleOfView);
+    }
+
+    private void calculateViewplane(float angleOfView){
         this.ratio = (float) screenWidth / (float) screenHeight;
-        float angle = (float) (((angleOfView/2) * Math.PI) / 180f);
-        this.viewPlaneHeight = ((float) (focalLength * Math.tan(angle)));
-        this.viewPlaneWidth = (this.ratio * this.viewPlaneHeight) * 0.5f;
+        this.angleRad = (float) (((angleOfView/2) * Math.PI) / 180f);
+        this.viewPlaneHeight = ((float) (focalLength * Math.tan(angleRad)));
+        this.viewPlaneWidth = (this.ratio * this.viewPlaneHeight);
+
+        // Take the half for the coming adjustment to the viewplane
+        this.viewPlaneWidth  *= 0.5f;
         this.viewPlaneHeight *= 0.5f;
 
         this.viewLengthVec = this.v.multScalar( this.focalLength);
-
-        logParameters(centerOfInterest, pos, upVec, angleOfView, angle);
     }
 
-    public void calculateCameraCoord(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec){
+    private void calculateCameraCoord(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec){
         this.v = centerOfInterest.sub( pos ).normalize();
         this.s = v.cross( upVec ).normalize();
         this.u = s.cross( v ).normalize();
@@ -56,9 +64,8 @@ public class PerspectiveCamera extends SceneObject {
 
     public Vec3 calculateDestPoint(Vec2 pixelPos){
         // Calculate normalized pixel coordinates
-        // Attention: Coordinates are flipped because the positive y axis is going down
         float pNormX = 2f * ( pixelPos.x + 0.5f ) / ( (float) this.screenWidth ) - 1f ;
-        float pNormY = -2f * ( pixelPos.y + 0.5f ) / ( (float) this.screenHeight ) + 1f;
+        float pNormY = 2f * ( pixelPos.y + 0.5f ) / ( (float) this.screenHeight ) - 1f;
 
         // Calculate normalized pixels with world scale and add to camera vectors
         float x = this.viewPlaneWidth * pNormX;
@@ -70,17 +77,18 @@ public class PerspectiveCamera extends SceneObject {
                 .add( this.u.multScalar( y ) )
                 .normalize();
 
-        destPoint.y *= 1;
+        // Attention: Coordinates are flipped because the positive y axis is going down
+        destPoint.y *= -1;
 
         return destPoint;
     }
 
-    private void logParameters(Vec3 centerOfInterest, Vec3 camPos, Vec3 upVec, float angleOfView, float angle) {
+    private void logParameters(Vec3 centerOfInterest, Vec3 camPos, Vec3 upVec, float angleOfView) {
         Log.print(this, "Position: \t\t" + camPos);
         Log.print(this, "Center of Interest: \t" + centerOfInterest);
         Log.print(this, "Up-Vector: \t\t\t" + upVec);
         Log.print(this, "Angle of View: \t\t" + angleOfView);
-        Log.print(this, "Calculated angle: \t" + angle);
+        Log.print(this, "Calculated angle: \t" + this.angleRad);
         Log.print(this, "Screen Dimensions: \tWidth " + this.screenWidth + ", Height: " + this.screenHeight);
         Log.print(this, "PerspectiveCamera Dimensions: \tWidth " + this.viewPlaneWidth + ", Height: " + this.viewPlaneHeight);
         Log.print(this, "Aspect Ratio: \t\t" + this.ratio);
