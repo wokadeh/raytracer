@@ -26,9 +26,15 @@ public class PhongMaterial extends Material {
 
         float angle = this.clampAngle(normalN.scalar(lightVecN));
 
-        RgbColor diffuse = this.calculateDiffuseColor(light.getColor(), angle);
-        RgbColor specular = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
+        RgbColor diffuseColor = this.calculateDiffuseColor(light.getColor(), angle);
+        RgbColor specularColor = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
 
-        return diffuse.add(specular).multScalar( this.reflectionCoeff );
+        RgbColor outputColor = diffuseColor.add(specularColor);
+
+        if(this.reflectionCoeff != 0){
+            outputColor = outputColor.multScalar( this.reflectionCoeff );
+        }
+
+        return outputColor;
     }
 }
