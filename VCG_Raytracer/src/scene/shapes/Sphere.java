@@ -47,32 +47,29 @@ public class Sphere extends Shape {
         float t1 = ( -compB - discriminant ) / (2f);
         float t2 = ( -compB + discriminant ) / (2f);
 
-        float t = EPSILON;
+        float t = -1;
 
-        if(t2 < EPSILON && t1 < EPSILON){
-            t = Math.max(t1, t2);
-        }
         if(t2 > EPSILON && t1 > EPSILON){
             t = Math.min(t1,t2);
         }
-        if(t2 > EPSILON && t1 < EPSILON){
+        else if(t2 > EPSILON && t1 < EPSILON){
             t = t2;
         }
-        if(t2 < EPSILON && t1 > EPSILON){
+        else if(t2 < EPSILON && t1 > EPSILON){
             t = t1;
         }
         if( t < EPSILON ){
             return emptyIntersectionTest;
         }
 
-        emptyIntersectionTest.setIncoming( t > EPSILON );
+        emptyIntersectionTest.setIncoming( true );
 
         Ray localRay = new Ray(localOrigin, localDirection, t);
 
-        return createIntersection(emptyIntersectionTest, t, localRay);
+        return createIntersection(emptyIntersectionTest, t, localRay, ray);
     }
 
-    private Intersection createIntersection(Intersection intersectionTest, float t, Ray localRay){
+    private Intersection createIntersection(Intersection intersectionTest, float t, Ray localRay, Ray inRay){
         // Get intersection point in LCS. The point is somewhere on the ray
         Vec3 intersectionPoint = localRay.getDirection().multScalar( t ).add( localRay.getStartPoint() );
 
@@ -80,11 +77,13 @@ public class Sphere extends Shape {
         intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, true);
 
         // The normal does not need to be transformed, it is calculated from the WCS intersection directly
-        Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius);
+        Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius );
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
         intersectionTest.setNormal( normal );
-        intersectionTest.setDistance( t );
+
+        // t is not correct after transformation, so distance must be recalculated
+        intersectionTest.setDistance( intersectionPoint.sub( inRay.getStartPoint() ).length() );
         intersectionTest.setHit( true );
 
         if(intersectionTest.isIncoming() == false){
