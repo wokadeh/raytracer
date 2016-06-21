@@ -54,9 +54,10 @@ public class Plane extends Shape {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
         Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
+        Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
 
         // Pn * D from slides
-        float angle = mNormal.scalar(ray.getDirection());
+        float angle = mNormal.scalar(localDirection);
 
         // Don't draw a plane facing the same direction as the camera: both have normal (0,0,-1)
         if( angle > 0 ){
@@ -64,7 +65,7 @@ public class Plane extends Shape {
         }
 
         // No transformation needed, since we only check the direction from the center to the ray's start
-        Vec3 vecToRay = this.getPosition().sub(ray.getStartPoint());
+        Vec3 vecToRay = new Vec3(0,0,0).sub(localOrigin);
         float t = vecToRay.scalar( mNormal ) / angle;
 
         // Is from behind
@@ -73,20 +74,25 @@ public class Plane extends Shape {
             return emptyIntersectionTest;
         }
 
-        return createIntersection(emptyIntersectionTest, t, ray);
+        Ray localRay = new Ray(localOrigin, localDirection, t);
+
+        return createIntersection(emptyIntersectionTest, t, ray, localRay);
     }
 
-    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
-        Vec3 intersectionPoint = ray.getDirection().multScalar(t).add(ray.getStartPoint());
-        //intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, false);
-        intersectionTest.setIntersectionPoint(intersectionPoint);
+    private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray, Ray localRay){
+        Vec3 intersectionPoint = localRay.getDirection().multScalar( t ).add( localRay.getStartPoint() );
 
-        intersectionTest.setNormal(mNormal);
-        intersectionTest.setDistance(t);
+        intersectionPoint = this.orgTransformation.multVec3( intersectionPoint, true );
+        intersectionTest.setIntersectionPoint( intersectionPoint );
+
+        intersectionTest.setNormal( mNormal );
+
+        float distance = intersectionPoint.sub( ray.getStartPoint() ).length();
+        intersectionTest.setDistance( distance );
 
         // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
-        intersectionTest.setHit(true);
-        intersectionTest.setIncoming(true);
+        intersectionTest.setHit( true );
+        intersectionTest.setIncoming( true );
 
         return intersectionTest;
     }
