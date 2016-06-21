@@ -31,7 +31,7 @@ import scene.materials.PhongMaterial;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
-import utils.io.ModelImporter;
+import utils.io.DataImporter;
 import utils.RgbColor;
 import utils.algebra.Vec3;
 
