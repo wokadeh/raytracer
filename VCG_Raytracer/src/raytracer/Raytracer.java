@@ -25,7 +25,7 @@ import ui.Window;
 import utils.*;
 import utils.algebra.Vec2;
 import utils.algebra.Vec3;
-import utils.io.ImageExporter;
+import utils.io.DataExporter;
 import utils.io.Log;
 
 import java.awt.image.BufferedImage;
@@ -74,7 +74,7 @@ public class Raytracer {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
-                //if(x == 335 && y ==428) {
+                //if(x == 460 && y == 500) {
 
                     RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
                     screenPosition = new Vec2(x, y);
@@ -83,7 +83,7 @@ public class Raytracer {
             }
         }
 
-        ImageExporter.saveImageToPng(mBufferedImage, "raytracing.png");
+        DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
     }
 
     private RgbColor calculateAntiAliasedColor(int y, int x) {
@@ -94,7 +94,7 @@ public class Raytracer {
             for(float j = y; j < y + 1f; j += mAntiAliasingCounter){
 
                 screenPosition = new Vec2(i, j);
-                antiAlisedColor = antiAlisedColor.add( sendPrimaryRay(screenPosition).multScalar( mAntiAliasingFactor ) );
+                antiAlisedColor = antiAlisedColor.add(sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
             }
         }
         return antiAlisedColor;
@@ -136,7 +136,7 @@ public class Raytracer {
                 outColor = outColor.add(traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency));
             }
 
-            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff());
+            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff().multRGB(this.mAmbientLight));
         }
 
         return outColor;
