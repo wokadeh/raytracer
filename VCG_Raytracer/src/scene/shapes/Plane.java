@@ -56,7 +56,7 @@ public class Plane extends Shape {
         Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
 
         // Pn * D from slides
-        float angle = mNormal.scalar(localDirection);
+        float angle = mNormal.scalar(ray.getDirection());
 
         // Don't draw a plane facing the same direction as the camera: both have normal (0,0,-1)
         if( angle > 0 ){
@@ -78,14 +78,14 @@ public class Plane extends Shape {
 
     private Intersection createIntersection(Intersection intersectionTest, float t, Ray ray){
         Vec3 intersectionPoint = ray.getDirection().multScalar(t).add(ray.getStartPoint());
-        intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, false);
+        //intersectionPoint = this.orgTransformation.multVec3(intersectionPoint, false);
         intersectionTest.setIntersectionPoint(intersectionPoint);
 
         intersectionTest.setNormal(mNormal);
         intersectionTest.setDistance(t);
 
         // Count only as hit, if the distance of the ray is higher than the distance to the intersection point
-        intersectionTest.setHit(ray.getDistance() > t);
+        intersectionTest.setHit(true);
         intersectionTest.setIncoming(true);
 
         return intersectionTest;
