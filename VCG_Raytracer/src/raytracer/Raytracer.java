@@ -74,7 +74,7 @@ public class Raytracer {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
-                //if(x == 460 && y == 500) {
+                //if(x == 451 && y == 521) {
 
                     RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
                     screenPosition = new Vec2(x, y);
@@ -111,10 +111,16 @@ public class Raytracer {
     private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
         RgbColor outColor = localColor;
 
-        // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
-        Intersection intersection = getIntersectionOnShapes(inRay, 10000, prevIntersec);
+        if(prevIntersec != null) {
+            if (prevIntersec.getShape().toString().equals("PLANE3")) {
+                Log.error(this, "lala");
+            }
+        }
 
-        if( intersection.isHit() && intersection.isIncoming() ){
+        // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
+        Intersection intersection = getIntersectionOnShapes(inRay, prevIntersec);
+
+        if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
             if( recursionCounter == 0) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
@@ -191,8 +197,9 @@ public class Raytracer {
         return illuColor;
     }
 
-    private Intersection getIntersectionOnShapes(Ray inRay, float tempDistance, Intersection prevIntersec) {
+    private Intersection getIntersectionOnShapes(Ray inRay, Intersection prevIntersec) {
         Intersection finalIntersection = new Intersection(inRay, null);
+        float tempDistance = Float.MAX_VALUE;
 
         boolean skip = false;
 
@@ -208,10 +215,10 @@ public class Raytracer {
             if(!skip) {
                 Intersection intersection = shape.intersect(inRay);
 
-                // Shape was not hit + the ray is incoming + the distance is adequate
-                if (intersection.isHit() && intersection.isIncoming()       // is Hit and coming from the correct side
-                        && (intersection.getDistance() < tempDistance)      // shortest distance of all
-                        && (intersection.getDistance() > 0.00001))       // minimum distance
+                // Shape was not hit + the distance is adequate
+                if (intersection.isHit()                                  // is Hit and coming from the correct side
+                        && (intersection.getDistance() < tempDistance)    // shortest distance of all
+                        && (intersection.getDistance() > 0.00001))        // minimum distance
                 {
                     tempDistance = intersection.getDistance();
                     finalIntersection = intersection;
@@ -232,7 +239,7 @@ public class Raytracer {
                 Intersection intersection = shape.intersect( inRay );
 
                 // Shape was not hit + the ray is incoming + the distance is adequate
-                if (intersection.isHit() && intersection.isIncoming()) {
+                if( intersection.isHit() && intersection.getDistance() < inRay.getDistance() ) {
                     // There was something in the way, can terminate now
                     return intersection;
                 }

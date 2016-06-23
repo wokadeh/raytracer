@@ -12,14 +12,13 @@ public class Intersection {
     private Shape mShape;
     private float mDistanceToIntersection;
 
-    private boolean mIncoming;
-
     private boolean mHit;
 
     public Intersection(Ray inRay, Shape shape){
         mInRay = inRay;
         mHit = false;
         mShape = shape;
+        mDistanceToIntersection = Float.MAX_VALUE;
     }
 
     public Ray calculateReflectionRay() {
@@ -86,16 +85,8 @@ public class Intersection {
         return (mDistanceToIntersection > distanceToObject);
     }
 
-    public void setIncoming(boolean mIncoming) {
-        this.mIncoming = mIncoming;
-    }
-
     public boolean isHit() {
         return mHit;
-    }
-
-    public boolean isIncoming() {
-        return mIncoming;
     }
 
     public Vec3 getIntersectionPoint() {

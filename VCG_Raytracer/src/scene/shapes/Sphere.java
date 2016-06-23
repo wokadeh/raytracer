@@ -62,8 +62,6 @@ public class Sphere extends Shape {
             return emptyIntersectionTest;
         }
 
-        emptyIntersectionTest.setIncoming( true );
-
         Ray localRay = new Ray(localOrigin, localDirection, t);
 
         return createIntersection(emptyIntersectionTest, t, localRay, ray);
@@ -85,11 +83,6 @@ public class Sphere extends Shape {
         // t is not correct after transformation, so distance must be recalculated
         intersectionTest.setDistance( intersectionPoint.sub( inRay.getStartPoint() ).length() );
         intersectionTest.setHit( true );
-
-        if(intersectionTest.isIncoming() == false){
-            Log.error(this, "normal switch");
-            intersectionTest.setNormal( intersectionTest.getNormal().multScalar( -1f ));
-        }
 
         return intersectionTest;
     }

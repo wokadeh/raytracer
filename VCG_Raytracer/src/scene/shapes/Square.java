@@ -31,12 +31,10 @@ public class Square extends Shape {
 					(intersection.getIntersectionPoint().z < this.getPosition().z + mDim) &&
 					(intersection.getIntersectionPoint().z > this.getPosition().z - mDim)) {
 				intersection.setHit(true);
-				intersection.setIncoming(true);
 				intersection.setNormal(mPlane.getNormal());
 			}
 			else {
 				intersection.setHit(false);
-				intersection.setIncoming(false);
 			}
 		}
 
