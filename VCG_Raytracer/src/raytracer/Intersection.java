@@ -2,6 +2,7 @@ package raytracer;
 
 import scene.shapes.Shape;
 import utils.algebra.Vec3;
+import utils.io.Log;
 
 public class Intersection {
 
@@ -43,6 +44,7 @@ public class Intersection {
         float n = mShape.getMaterial().getFractionCoeff();
 
         if (normDotIn < 0.0f) {
+            //Log.error(this, "coeff switch");
             n = mShape.getSwitchedMaterialCoeff();
         }
 
