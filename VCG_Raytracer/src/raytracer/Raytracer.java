@@ -90,8 +90,8 @@ public class Raytracer {
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
         // Start super sampling
-        for(float i = x; i < x + 1f; i += mAntiAliasingCounter){
-            for(float j = y; j < y + 1f; j += mAntiAliasingCounter){
+        for(float i = x -0.5f; i < x + 0.5f; i += mAntiAliasingCounter){
+            for(float j = y -0.5f; j < y + 0.5f; j += mAntiAliasingCounter){
 
                 screenPosition = new Vec2(i, j);
                 antiAlisedColor = antiAlisedColor.add(sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
@@ -142,7 +142,7 @@ public class Raytracer {
                 outColor = outColor.add(traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency));
             }
 
-            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff().multRGB(this.mAmbientLight));
+            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff().add(this.mAmbientLight));
         }
 
         return outColor;
