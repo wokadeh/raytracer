@@ -49,16 +49,21 @@ public class Sphere extends Shape {
 
         float t = -1;
 
-        if(t2 > EPSILON && t1 > EPSILON){
-            t = Math.min(t1,t2);
+        if( t2 > EPSILON && t1 > EPSILON ){
+            t = Math.min( t1, t2 );
         }
-        else if(t2 > EPSILON && t1 < EPSILON){
+        else if( t2 < EPSILON && t1 < EPSILON ){
+            t = Math.max( t1, t2 );
+        }
+        else if( t2 > EPSILON && t1 < EPSILON ){
             t = t2;
         }
-        else if(t2 < EPSILON && t1 > EPSILON){
+        else if( t2 < EPSILON && t1 > EPSILON ){
             t = t1;
         }
-        if( t < EPSILON ){
+
+        // Inside Sphere: If it's transparent we care about that
+        if( t < EPSILON && !this.getMaterial().isTransparent() ){
             return emptyIntersectionTest;
         }
 
@@ -78,6 +83,12 @@ public class Sphere extends Shape {
         Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius );
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
+
+        if(t < EPSILON){
+           // Log.error(this, "normal switch");
+            intersectionTest.setNormal( normal.multScalar( -1f ));
+        }
+
         intersectionTest.setNormal( normal );
 
         // t is not correct after transformation, so distance must be recalculated
