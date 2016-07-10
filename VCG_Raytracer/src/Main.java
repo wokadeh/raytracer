@@ -61,6 +61,8 @@ public class Main {
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
+    static Vec3 LIGHT_POSITION = new Vec3( 0f, DIMENSION - 0.1f, DIMENSION + 2 );
+
     // Initial method. This is where the show begins.
     public static void main(String[] args){
         importObject("models/Scooter-smgrps.obj");
@@ -100,11 +102,9 @@ public class Main {
     private static void setupLights(Scene renderScene) {
         // Note: Never put the light source inside a plane
 
-        float lightHeight = DIMENSION - 0.3f;
-        float lightDist = DIMENSION;
-
+        Vec3 light_pos = new Vec3(LIGHT_POSITION.x, LIGHT_POSITION.y - 0.001f, LIGHT_POSITION.z);
         /* Point Light */
-        renderScene.createPointLight(new Vec3( 0, lightHeight, lightDist ), RgbColor.GRAY);
+        renderScene.createPointLight(light_pos, RgbColor.GRAY);
 
         /* Area Light */
         //renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
@@ -123,12 +123,12 @@ public class Main {
         float sphereRadius = 1f;
         float smallSphereRadius = 0.3f;
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.TINY_REFLECTION, Material.DIAMOND, 1);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
         Material sphereMaterial3 = new PhongMaterial(RgbColor.DARK_GREEN, RgbColor.GREEN, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.NO_TRANSMISSION, 1);
 
-        renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + 1.1f, -DIMENSION/3f+3), sphereMaterial1, 1.1f);
+        renderScene.createSphere(new Vec3(-DIMENSION/4f, -DIMENSION + 1.1f, -DIMENSION/3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(DIMENSION/4f, -DIMENSION + sphereRadius, DIMENSION/3f+3), sphereMaterial2, sphereRadius);
 
         //renderScene.createSphere(new Vec3(DIMENSION/4f, -DIMENSION + smallSphereRadius, DIMENSION), sphereMaterial3, smallSphereRadius);
@@ -136,7 +136,7 @@ public class Main {
 
     private static void setupLightShapes(Scene renderScene) {
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
-        renderScene.createSquare(new Vec3( 0f, DIMENSION - 0.1f, DIMENSION + 1 ), planeMaterial, 0.6f, Plane.FACING_DOWN);
+        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN);
     }
 
     private static void setupCornellBox(Scene renderScene) {
