@@ -12,6 +12,7 @@ public class AreaLight  extends Light {
 	private Plane mPlane;
 	private float mDim;
 	private short mRes;
+	private float mResHalf;
 	private short mSamples;
 	private float mSteps;
 	private RgbColor mColor;
@@ -27,14 +28,15 @@ public class AreaLight  extends Light {
 		mColor = color;
 		mDim = dimension;
 		mRes = resolution;
+		mResHalf = mRes / 2f;
 		mSamples = samples;
 
 		mCenterLight = new PointLight(getPosition(), mColor);
 
 		mTempPositionList = new ArrayList<>();
 
-		mSteps = mDim / mRes;
-		mStartPoint = new Vec3(pos.x - mDim / 2, pos.y, pos.z - mDim / 2);
+		mSteps = mDim / (float )mRes;
+		mStartPoint = new Vec3(pos.x - mDim / 2f, pos.y, pos.z - mDim / 2f);
 
 		fillTempPointLightList();
 	}
@@ -60,13 +62,13 @@ public class AreaLight  extends Light {
 	private void fillTempPointLightList() {
 		float m, n = 0;
 
-		for( short i = 0; i < mRes; i++ ){
-			for( short j = 0; j < mRes; j++ ){
-				n = mStartPoint.z + j * mSteps;
-			}
+		for( float i = 0; i < mRes; i++ ){
 			m = mStartPoint.x + i * mSteps;
+			for( float j = 0; j < mRes; j++ ){
 
-			mTempPositionList.add( new PointLight( new Vec3(m, getPosition().y, n ), mColor) );
+				n = mStartPoint.z + j * mSteps;
+				mTempPositionList.add( new PointLight( new Vec3(m, getPosition().y, n ), mColor) );
+			}
 		}
 	}
 
