@@ -13,6 +13,8 @@ public class Sphere extends Shape {
     private float mRadius;
     private final float EPSILON = 0.00001f;
 
+    private boolean mIsInside = false;
+
     public Sphere(Vec3 pos, Material mat, float radius) {
         super(pos, mat, new Matrix4x4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
 
@@ -49,21 +51,26 @@ public class Sphere extends Shape {
 
         float t = -1;
 
+        // In front of Sphere: take nearest hit to ray start
         if( t2 > EPSILON && t1 > EPSILON ){
             t = Math.min( t1, t2 );
         }
-        else if( t2 < EPSILON && t1 < EPSILON ){
-            t = Math.max( t1, t2 );
-        }
+
+        // Inside Sphere: take the hit in front of the ray
         else if( t2 > EPSILON && t1 < EPSILON ){
+            Log.warn(this, " should only happen on transparency...");
             t = t2;
+            mIsInside = true;
         }
+
+        // Something is wrong with the ray
         else if( t2 < EPSILON && t1 > EPSILON ){
+            Log.error(this, "this should never happen...");
             t = t1;
         }
 
-        // Inside Sphere: If it's transparent we care about that
-        if( t < EPSILON && !this.getMaterial().isTransparent() ){
+        // Behind Sphere: we don't care about that
+        if( t < EPSILON ){
             return emptyIntersectionTest;
         }
 
@@ -84,7 +91,7 @@ public class Sphere extends Shape {
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
 
-        if(t < EPSILON){
+        if(mIsInside){
            // Log.error(this, "normal switch");
             intersectionTest.setNormal( normal.multScalar( -1f ));
         }

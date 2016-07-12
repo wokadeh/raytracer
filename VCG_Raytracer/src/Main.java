@@ -35,6 +35,23 @@ import utils.io.DataImporter;
 import utils.RgbColor;
 import utils.algebra.Vec3;
 
+/*
+    ISSUES:
+
+    * Fix squareness of area light
+    * Fix correct exit ray from refraction
+    * Fix light normalisation
+    * Fix Phong
+    * Add textures
+    * Add triangles and polygons
+    * Connect importer of OBJ
+    * Add depth of field
+    * Add SSAO
+
+ */
+
+
+
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
@@ -107,7 +124,7 @@ public class Main {
         renderScene.createPointLight(light_pos, RgbColor.GRAY);
 
         /* Area Light */
-        //renderScene.createAreaLight(new Vec3( 0, lightHeight, lightDist ), 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
+        //renderScene.createAreaLight(light_pos, 2, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
     }
 
     private static void setupCameras(Scene renderScene) {

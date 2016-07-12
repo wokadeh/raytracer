@@ -130,6 +130,15 @@ public class Raytracer {
 
             outColor = outColor.add( shade( intersection ) );
 
+//            if( intersection.getShape().isReflective() && intersection.getShape().isTransparent()){
+//                recursionCounter = recursionCounter - 1;
+//                float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+//                RgbColor refColor = traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ).multScalar(reflectivity);
+//                refColor = refColor.square().square();
+//                float transparency = intersection.getShape().getMaterial().getTransparency();
+//                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ).multScalar( transparency )).add(refColor);
+//            }
+
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if (intersection.getShape().isReflective()) {
                 recursionCounter = recursionCounter - 1;
