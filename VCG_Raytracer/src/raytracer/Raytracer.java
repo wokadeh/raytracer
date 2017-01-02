@@ -126,8 +126,8 @@ public class Raytracer {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
-            // Calculate the color of every object, that was hit in between, depending on recursive level
 
+            // Calculate the color of every object, that was hit in between, depending on recursive level
             outColor = outColor.add( shade( intersection ) );
 
 //            if( intersection.getShape().isReflective() && intersection.getShape().isTransparent()){
@@ -143,15 +143,22 @@ public class Raytracer {
             if (intersection.getShape().isReflective()) {
                 recursionCounter = recursionCounter - 1;
                 float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                outColor = outColor.add(traceRay(recursionCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity));
+                RgbColor reflectionColor = traceRay(recursionCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity);
+                outColor = outColor.add( reflectionColor );
             }
             if (intersection.getShape().isTransparent()) {
                 recursionCounter = recursionCounter - 1;
                 float transparency = intersection.getShape().getMaterial().getTransparency();
-                outColor = outColor.add(traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency));
+                RgbColor transmissionColor = traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
+                outColor = outColor.add( transmissionColor );
             }
 
-            outColor = outColor.add(intersection.getShape().getMaterial().getAmbientCoeff().add(this.mAmbientLight));
+            RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
+
+            if (intersection.getShape().toString().equals("PLANE2") && ambientTerm.equals(new RgbColor(0,0,0))){
+                Log.print(this, "lala");
+            }
+            outColor = outColor.add( ambientTerm );
         }
 
         return outColor;

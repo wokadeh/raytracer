@@ -55,7 +55,7 @@ import utils.algebra.Vec3;
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.1f, 0.1f, 0.1f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.2f, 0.2f, 0.2f);
 
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
@@ -139,9 +139,10 @@ public class Main {
     private static void setupSpheres(Scene renderScene) {
         float sphereRadius = 1f;
         float smallSphereRadius = 0.3f;
+
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_CUSTOM, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.BLUE, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.GREEN, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
         Material sphereMaterial3 = new PhongMaterial(RgbColor.DARK_GREEN, RgbColor.GREEN, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.NO_TRANSMISSION, 1);
 
@@ -158,17 +159,22 @@ public class Main {
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE);
+        Material planeMaterial = new LambertMaterial(RgbColor.WHITE, RgbColor.WHITE);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
 
         //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION, 1);
 
+        // Plane 0
         renderScene.createPlane(new Vec3( DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
+        // Plane 1
         renderScene.createPlane(new Vec3( -DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
         //renderScene.createPlane(new Vec3( 0f, 0f, 2 * DIMENSION ), planeMaterial, Plane.FACING_FRONT);
+        // Plane 2
         renderScene.createPlane(new Vec3( 0f, 0f, 0f ), planeMaterial, Plane.FACING_BACK);
+        // Plane 3
         renderScene.createPlane(new Vec3( 0f, -DIMENSION, 0 ), planeMaterial, Plane.FACING_UP);
+        // Plane 4
         renderScene.createPlane(new Vec3( 0f, DIMENSION, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 
