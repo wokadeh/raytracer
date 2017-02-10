@@ -18,6 +18,12 @@ public class Square extends Shape {
 		mDim = dimension;
 	}
 
+	public Square(Vec3 pos, Material mat, float dimension, int facingDirection, boolean raytraced) {
+		this(pos, mat, dimension, facingDirection);
+
+		this.raytraced = raytraced;
+	}
+
 	@Override
 	public Intersection intersect(Ray ray) {
 		Intersection intersection = mPlane.intersect(ray);

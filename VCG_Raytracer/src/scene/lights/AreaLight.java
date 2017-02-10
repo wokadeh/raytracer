@@ -20,9 +20,12 @@ public class AreaLight  extends Light {
 	private PointLight mCenterLight;
 
 	private ArrayList<PointLight> mTempPositionList;
+	private ArrayList<PointLight> mPositionList;
 
 	public AreaLight(Vec3 pos, float dimension, short resolution, short samples, RgbColor color) {
 		super(pos, color, "AreaLight");
+
+		mPositionList = new ArrayList<>();
 
 		mPlane = new Plane(pos, null, Plane.FACING_DOWN);
 		mColor = color;
@@ -42,7 +45,14 @@ public class AreaLight  extends Light {
 	}
 
 	public ArrayList<PointLight> getPositionList() {
+		if (mPositionList.size() == 0){
+			mPositionList = calculatePositionList();
+		}
 
+		return mPositionList;
+	}
+
+	private ArrayList<PointLight> calculatePositionList() {
 		ArrayList<PointLight> positionList = new ArrayList<>();
 		positionList.add( mCenterLight );
 
@@ -77,8 +87,10 @@ public class AreaLight  extends Light {
 
 		ArrayList<Integer> sampleNumberList = new ArrayList<>();
 
+		int dimension = mRes * mRes;
+
 		for(int i = 0; i < mSamples; i++){
-			sampleNumberList.add( rand.nextInt( mRes ) + 1 );
+			sampleNumberList.add( rand.nextInt( dimension ) + 1 );
 			// same multiple values possible!!
 		}
 		return sampleNumberList;

@@ -58,7 +58,7 @@ public class Sphere extends Shape {
 
         // Inside Sphere: take the hit in front of the ray
         else if( t2 > EPSILON && t1 < EPSILON ){
-            Log.warn(this, " should only happen on transparency...");
+            //Log.warn(this, " should only happen on transparency...");
             t = t2;
             mIsInside = true;
         }

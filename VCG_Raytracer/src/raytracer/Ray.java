@@ -8,12 +8,14 @@ public class Ray {
     private Vec3 mEndPoint;
     private Vec3 mDirection;
     private float mDistance;
+    private boolean mIsEntering;
+
+    public Ray(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode){
+        init(startPoint, direction, param, enteringMode);
+    }
 
     public Ray(Vec3 startPoint, Vec3 direction, float param){
-        mStartPoint = startPoint;
-        mDirection = direction.normalize();
-        mDistance = param;
-        mEndPoint = mDirection.multScalar(param).add(mStartPoint);
+        init(startPoint, direction, param, true);
     }
 
     public Ray(Vec3 startPoint, Vec3 endPoint){
@@ -22,6 +24,15 @@ public class Ray {
         mDirection = endPoint.sub(startPoint);
         mDistance = mDirection.length();
         mDirection = mDirection.normalize();
+        mIsEntering = false;
+    }
+
+    private void init(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode){
+        mStartPoint = startPoint;
+        mDirection = direction.normalize();
+        mDistance = param;
+        mEndPoint = mDirection.multScalar(param).add(mStartPoint);
+        mIsEntering = enteringMode;
     }
 
     public Vec3 getStartPoint() {
@@ -38,6 +49,12 @@ public class Ray {
 
     public float getDistance() {
         return mDistance;
+    }
+
+    public boolean isEntering() { return mIsEntering; }
+
+    public void setEnteringMode(boolean isEntering) {
+        mIsEntering = isEntering;
     }
 
     @Override

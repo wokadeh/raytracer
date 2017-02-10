@@ -40,12 +40,23 @@ public class Intersection {
         Vec3 inRay = mInRay.getDirection().negate().normalize();
         mNormal = mNormal.normalize();
 
-        float normDotIn = mNormal.scalar(inRay);
-        float n = mShape.getMaterial().getFractionCoeff();
+        boolean rayIsEnteringMedium = mInRay.isEntering();
 
-        if (normDotIn < 0.0f) {
-            //Log.error(this, "coeff switch");
+        float normDotIn = mNormal.scalar(inRay);
+
+        if(normDotIn < 0.0f){
+            rayIsEnteringMedium = false;
+        }
+
+        float n;
+
+        if (rayIsEnteringMedium == false) {
+            Log.error(this, "coeff switch");
             n = mShape.getSwitchedMaterialCoeff();
+            rayIsEnteringMedium = true;
+        } else {
+            n = mShape.getMaterial().getFractionCoeff();
+            rayIsEnteringMedium = false;
         }
 
         float sinBeta2 = n * n;
@@ -59,7 +70,7 @@ public class Intersection {
             float b = (float) Math.sqrt(1 - sinSqrBeta);
 
             Vec3 out = inRay.negate().multScalar(n).add(mNormal.multScalar(a - b));
-            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE);
+            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium);
         }
         // Total internal reflection
         else{

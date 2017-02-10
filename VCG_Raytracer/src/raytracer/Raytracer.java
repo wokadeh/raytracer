@@ -221,9 +221,9 @@ public class Raytracer {
 
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
-            // Important: Avoid intersection with itself
+            // Important: Avoid intersection with itself as long as it is not transparent
             if(prevIntersec != null) {
-                if (prevIntersec.getShape().equals(shape)) {
+                if (prevIntersec.getShape().equals(shape) && prevIntersec.getShape().isTransparent()) {
                     skip = true;
                 }
             }
@@ -249,7 +249,7 @@ public class Raytracer {
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
             // Important: Avoid intersection with itself
-            if( !prevIntersec.getShape().equals( shape ) ) {
+            if( !prevIntersec.getShape().equals( shape ) && ( shape.isRaytraced() == true ) ) {
 
                 // Find intersection between shape and the light source
                 Intersection intersection = shape.intersect( inRay );

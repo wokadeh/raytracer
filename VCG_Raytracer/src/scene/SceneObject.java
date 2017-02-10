@@ -4,7 +4,8 @@ import utils.algebra.Vec3;
 
 public class SceneObject {
 
-    private Vec3 mPosition;
+    private Vec3 mPosition = new Vec3();
+
 
     public SceneObject(Vec3 pos){
         mPosition = pos;

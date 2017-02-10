@@ -49,6 +49,10 @@ public class Scene {
         mShapeList.add(new Square(pos, mat, dim, facingDirection));
     }
 
+    public void createSquare(Vec3 pos, Material mat, float dim, int facingDirection, boolean raytraced){
+        mShapeList.add(new Square(pos, mat, dim, facingDirection, raytraced));
+    }
+
     public void createPointLight(Vec3 pos, RgbColor color){
         mLightList.add(new PointLight(pos, color));
     }

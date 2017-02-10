@@ -18,19 +18,25 @@ public abstract class Shape extends SceneObject {
     protected Matrix4x4 invTransformation;
     protected Matrix4x4 trpTransformation;
 
+    protected boolean raytraced;
+
     public Shape(Vec3 pos, Material mat, Matrix4x4 transf, String type) {
         super(pos);
         this.material = mat;
         this.type = type;
+        this.raytraced = true;
         this.orgTransformation = transf;
         this.invTransformation = transf.invert();
         this.trpTransformation = transf.transpose();
         Log.print(this, "Init " + this.orgTransformation);
     }
 
-    public abstract Intersection intersect(Ray ray);
+    public Shape(Vec3 pos, Material mat, Matrix4x4 transf, String type, boolean raytraced) {
+        this(pos, mat, transf, type);
+        this.raytraced = raytraced;
+    }
 
-    //public abstract boolean equals(Shape shape);
+    public abstract Intersection intersect(Ray ray);
 
     public String isType() {
         return this.type;
@@ -59,12 +65,20 @@ public abstract class Shape extends SceneObject {
         return this.material.isType("LAMBERT");
     }
 
+    public boolean isRaytraced() {
+        return raytraced;
+    }
+
     public boolean isReflective(){
         return this.material.isReflective();
     }
 
     public boolean isTransparent(){
         return this.material.isTransparent();
+    }
+
+    public void setRaytraced(boolean raytraced) {
+        this.raytraced = raytraced;
     }
 
     @Override
