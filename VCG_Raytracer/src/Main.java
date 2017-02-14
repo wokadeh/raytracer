@@ -86,7 +86,7 @@ public class Main {
 
     static int RECURSIONS = 5;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static boolean USE_SOFT_SHADOWS = false;
 
     /** DEBUG **/
 
@@ -164,18 +164,17 @@ public class Main {
 
     private static void setupSpheres(Scene renderScene) {
         float sphereRadius = 1f;
-        float smallSphereRadius = 0.3f;
+        float smallSphereRadius = 0.6f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
         Material sphereMaterial2 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.DARK_GREEN, RgbColor.GREEN, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.AIR, 1);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION + 1.1f, -BOX_DIMENSION /3f+3), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
-
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/2f, -BOX_DIMENSION + smallSphereRadius, BOX_DIMENSION), sphereMaterial3, smallSphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
     }
 
     private static void setupLightShapes(Scene renderScene) {

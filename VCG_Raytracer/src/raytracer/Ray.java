@@ -1,5 +1,6 @@
 package raytracer;
 
+import scene.materials.Material;
 import utils.algebra.Vec3;
 
 public class Ray {
@@ -10,8 +11,14 @@ public class Ray {
     private float mDistance;
     private boolean mIsEntering;
 
+    private float mCurrentMaterialCoeff;
+
     public Ray(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode){
         init(startPoint, direction, param, enteringMode);
+    }
+
+    public Ray(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode, float materialCoeff){
+        init(startPoint, direction, param, enteringMode, materialCoeff);
     }
 
     public Ray(Vec3 startPoint, Vec3 direction, float param){
@@ -24,7 +31,7 @@ public class Ray {
         mDirection = endPoint.sub(startPoint);
         mDistance = mDirection.length();
         mDirection = mDirection.normalize();
-        mIsEntering = false;
+        mIsEntering = true;
     }
 
     private void init(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode){
@@ -33,6 +40,12 @@ public class Ray {
         mDistance = param;
         mEndPoint = mDirection.multScalar(param).add(mStartPoint);
         mIsEntering = enteringMode;
+        mCurrentMaterialCoeff = Material.AIR;
+    }
+
+    private void init(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode, float materialCoeff){
+        init(startPoint, direction, param, enteringMode);
+        mCurrentMaterialCoeff = materialCoeff;
     }
 
     public Vec3 getStartPoint() {
@@ -51,10 +64,18 @@ public class Ray {
         return mDistance;
     }
 
+    public float getCurrentMaterial() {
+        return mCurrentMaterialCoeff;
+    }
+
     public boolean isEntering() { return mIsEntering; }
 
     public void setEnteringMode(boolean isEntering) {
         mIsEntering = isEntering;
+    }
+
+    public void setCurrentMaterial(float mCurrentMaterial) {
+        this.mCurrentMaterialCoeff = mCurrentMaterial;
     }
 
     @Override

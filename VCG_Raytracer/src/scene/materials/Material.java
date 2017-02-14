@@ -61,13 +61,6 @@ public abstract class Material {
         mType = type;
     }
 
-    protected void calculateMaterialCoeff(float fractionCoeff){
-        if (fractionCoeff != 0) {
-            this.switchedFractionCoeff = fractionCoeff / Material.AIR ;
-            this.fractionCoeff = Material.AIR / fractionCoeff;
-        }
-    }
-
     public boolean isType(String type){
         return mType.equals(type);
     }

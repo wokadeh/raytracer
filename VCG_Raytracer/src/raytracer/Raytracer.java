@@ -114,7 +114,7 @@ public class Raytracer {
 
         if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
-            if( recursionCounter == 0) {
+            if( recursionCounter <= 0) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }

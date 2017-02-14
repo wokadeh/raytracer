@@ -40,6 +40,9 @@ public class Intersection {
         Vec3 inRay = mInRay.getDirection().negate().normalize();
         mNormal = mNormal.normalize();
 
+        float n1 = mInRay.getCurrentMaterial();
+        float n2 = mShape.getMaterial().getFractionCoeff();
+
         boolean rayIsEnteringMedium = mInRay.isEntering();
 
         float normDotIn = mNormal.scalar(inRay);
@@ -48,34 +51,36 @@ public class Intersection {
             rayIsEnteringMedium = false;
         }
 
-        float n;
+        float n = (rayIsEnteringMedium == true) ? calculateMaterialCoeff(n1, n2) : calculateMaterialCoeff(n2, n1);
+        rayIsEnteringMedium = !rayIsEnteringMedium;
 
-        if (rayIsEnteringMedium == false) {
-            Log.error(this, "coeff switch");
-            n = mShape.getSwitchedMaterialCoeff();
-            rayIsEnteringMedium = true;
-        } else {
-            n = mShape.getMaterial().getFractionCoeff();
-            rayIsEnteringMedium = false;
-        }
+        float squareCoeff = n * n;
+        float cosBeta = squareCoeff * (1 - normDotIn * normDotIn);
+        cosBeta = 1 - cosBeta;
 
-        float sinBeta2 = n * n;
-        float cosBetaDet = 1f - sinBeta2;
-
-        if(cosBetaDet > 0) {
-            float cosBeta = inRay.scalar(mNormal);
-            float sinSqrBeta = sinBeta2 * (1 - cosBeta * cosBeta);
-
-            float a = n * cosBeta;
-            float b = (float) Math.sqrt(1 - sinSqrBeta);
-
-            Vec3 out = inRay.negate().multScalar(n).add(mNormal.multScalar(a - b));
-            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium);
+        if(cosBeta > 0) {
+            Vec3 bVec = mNormal.multScalar((float) Math.sqrt(cosBeta));
+            Vec3 aVec = mNormal.multScalar(normDotIn);
+            aVec = aVec.sub(inRay);
+            aVec = aVec.multScalar(n);
+            Vec3 out = aVec.sub(bVec);
+            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
         }
         // Total internal reflection
         else{
+            //Log.error(this, "Total internal reflection");
             return calculateReflectionRay(mInRay.getDirection());
         }
+    }
+
+    protected float calculateMaterialCoeff(float n1, float n2){
+        if (n2 != 0) {
+            return n1 /n2 ;
+        }
+        else{
+            return 0;
+        }
+
     }
 
     public void setHit(boolean mHit) {

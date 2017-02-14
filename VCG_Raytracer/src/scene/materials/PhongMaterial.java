@@ -15,8 +15,7 @@ public class PhongMaterial extends Material {
 
         this.reflectionCoeff = reflectivity;
         this.transparency = transparency;
-
-        this.calculateMaterialCoeff(fractionCoeff);
+        this.fractionCoeff = fractionCoeff;
     }
 
     @Override
