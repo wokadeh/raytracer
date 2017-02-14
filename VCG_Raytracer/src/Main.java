@@ -90,7 +90,7 @@ public class Main {
 
     /** DEBUG **/
 
-    static boolean SHOW_AREA_LIGHT_SAMPLES = true;
+    static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
 

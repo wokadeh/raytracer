@@ -109,12 +109,6 @@ public class Raytracer {
     private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
         RgbColor outColor = localColor;
 
-        if(prevIntersec != null) {
-            if (prevIntersec.getShape().toString().equals("PLANE3")) {
-                Log.error(this, "lala");
-            }
-        }
-
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
         Intersection intersection = getIntersectionOnShapes(inRay, prevIntersec);
 
@@ -128,34 +122,22 @@ public class Raytracer {
             // Calculate the color of every object, that was hit in between, depending on recursive level
             outColor = outColor.add( shade( intersection ) );
 
-//            if( intersection.getShape().isReflective() && intersection.getShape().isTransparent()){
-//                recursionCounter = recursionCounter - 1;
-//                float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-//                RgbColor refColor = traceRay( recursionCounter, intersection.calculateReflectionRay(), outColor, intersection ).multScalar(reflectivity);
-//                refColor = refColor.square().square();
-//                float transparency = intersection.getShape().getMaterial().getTransparency();
-//                outColor = outColor.add( traceRay( recursionCounter, intersection.calculateRefractionRay(), outColor, intersection ).multScalar( transparency )).add(refColor);
-//            }
-
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
-            if (intersection.getShape().isReflective()) {
-                recursionCounter = recursionCounter - 1;
+            if ( intersection.getShape().isReflective() ) {
+                recursionCounter -= 1;
                 float reflectivity = intersection.getShape().getMaterial().getReflectivity();
                 RgbColor reflectionColor = traceRay(recursionCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity);
                 outColor = outColor.add( reflectionColor );
             }
-            if (intersection.getShape().isTransparent()) {
-                recursionCounter = recursionCounter - 1;
+            if ( intersection.getShape().isTransparent() ) {
+                recursionCounter -= 1;
                 float transparency = intersection.getShape().getMaterial().getTransparency();
                 RgbColor transmissionColor = traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
                 outColor = outColor.add( transmissionColor );
             }
 
+            // Add ambient term
             RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
-
-            if (intersection.getShape().toString().equals("PLANE2") && ambientTerm.equals(new RgbColor(0,0,0))){
-                Log.print(this, "lala");
-            }
             outColor = outColor.add( ambientTerm );
         }
 
@@ -220,8 +202,9 @@ public class Raytracer {
         // 2: Intersection test with all shapes
         for( Shape shape : mShapeList ){
             // Important: Avoid intersection with itself as long as it is not transparent
-            if(prevIntersec != null) {
-                if (prevIntersec.getShape().equals(shape) && prevIntersec.getShape().isTransparent()) {
+            if( prevIntersec != null ) {
+                if ( ( prevIntersec.getShape().equals(shape)
+                        && prevIntersec.getShape().isTransparent() )) {
                     skip = true;
                 }
             }
