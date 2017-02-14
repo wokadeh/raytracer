@@ -51,8 +51,6 @@ import utils.algebra.Vec3;
 
  */
 
-
-
 // Main application class. This is the routine called by the JVM to run the program.
 public class Main {
 
@@ -106,7 +104,7 @@ public class Main {
 
         draw(renderWindow);
 
-        renderWindow.setOutputLabel(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING);
+        renderWindow.exportRendering(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING);
     }
 
     private static void importObject(String path){

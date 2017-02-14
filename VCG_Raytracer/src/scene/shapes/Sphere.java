@@ -16,7 +16,7 @@ public class Sphere extends Shape {
     private boolean mIsInside = false;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
-        super(pos, mat, new Matrix4x4().translate(pos).scale(radius), "SPHERE_" + pos.toString());
+        super(pos, mat, new Matrix4x4().translateXYZ(pos).scale(radius), "SPHERE_" + pos.toString());
 
         mRadius = radius;
         mSqrRadius = mRadius * mRadius;

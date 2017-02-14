@@ -82,8 +82,6 @@ public class Raytracer {
                 //}
             }
         }
-
-        DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
     }
 
     private RgbColor calculateAntiAliasedColor(int y, int x) {

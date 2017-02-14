@@ -2,6 +2,7 @@ package ui;
 
 import utils.RgbColor;
 import utils.algebra.Vec2;
+import utils.io.DataExporter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,9 @@ public class Window {
 
     private JFrame mFrame;
 
+    /**
+     Create render window with the given dimensions
+     **/
     public Window(int width, int height){
         mWidth = width;
         mHeight = height;
@@ -30,7 +34,9 @@ public class Window {
         return mBufferedImage;
     }
 
-
+    /**
+     Setup render frame with given parameters
+     **/
     private void createFrame(){
         JFrame frame = new JFrame();
 
@@ -43,16 +49,34 @@ public class Window {
         mFrame = frame;
     }
 
+    /**
+     Draw debug information
+     **/
+    private void setOutputLabel(String text, int recursions, int antiAliasing){
+        Graphics graphic = mBufferedImage.getGraphics();
+        graphic.setColor(Color.black);
+        graphic.fill3DRect(0,mHeight - 30,350,mHeight,true);
+        graphic.setColor(Color.green);
+        graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing, 10, mHeight - 10);
+
+        mFrame.repaint();
+    }
+
+    /**
+     Draw pixel to our render frame
+     **/
     public void setPixel(BufferedImage bufferedImage, RgbColor color, Vec2 screenPosition){
         bufferedImage.setRGB((int)screenPosition.x, (int)screenPosition.y, color.getRGB());
         mFrame.repaint();
     }
 
-    public void setOutputLabel(String text, int recursions, int antiAliasing){
-        Graphics graphic = mBufferedImage.getGraphics();
-        graphic.setColor(Color.black);
-        graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing, 10, mHeight - 10);
-
-        mFrame.repaint();
+    /**
+     Export the rendering to an PNG image with rendering information
+     **/
+    public void exportRendering(String text, int recursions, int antiAliasing){
+        setOutputLabel(text, recursions, antiAliasing);
+        DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
     }
+
+
 }

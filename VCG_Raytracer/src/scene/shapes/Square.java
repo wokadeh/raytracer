@@ -12,7 +12,7 @@ public class Square extends Shape {
 	private float mDim;
 
 	public Square(Vec3 pos, Material mat, float dimension, int facingDirection) {
-		super(pos, mat, new Matrix4x4().translate(pos), "SQUARE" + facingDirection);
+		super(pos, mat, new Matrix4x4().translateXYZ(pos), "SQUARE" + facingDirection);
 
 		mPlane = new Plane(pos, mat, facingDirection);
 		mDim = dimension;

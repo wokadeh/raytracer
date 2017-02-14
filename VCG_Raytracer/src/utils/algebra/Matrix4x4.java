@@ -4,6 +4,9 @@ public class Matrix4x4 {
 
 	private Matrix mBaseMatrix;
 
+	/**
+	 The standard constructor will produce an identity matrix
+	 **/
 	public Matrix4x4(){
 		mBaseMatrix = Matrix.identity(4,4);
 	}
@@ -12,16 +15,10 @@ public class Matrix4x4 {
 		mBaseMatrix = mat;
 	}
 
-	public Matrix4x4 translate(Vec2 vec ){
-		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
-
-		out.setValueAt( 0, 3, vec.x );
-		out.setValueAt( 1, 3, vec.y );
-
-		return out;
-	}
-
-	public Matrix4x4 translate(Vec3 vec ){
+	/**
+	 Translate Matrix in 3D
+	 **/
+	public Matrix4x4 translateXYZ(Vec3 vec){
 		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 3, vec.x );
@@ -31,18 +28,24 @@ public class Matrix4x4 {
 		return out;
 	}
 
-	public Matrix4x4 translate(Vec4 vec ){
+	/**
+	 Translate Matrix in 4D - watch for the homogeneous coordinate
+	 **/
+	public Matrix4x4 translateXYZW(Vec4 vec){
 		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 3, vec.x );
 		out.setValueAt( 1, 3, vec.y );
 		out.setValueAt( 2, 3, vec.z );
-		out.setValueAt( 3, 3, vec.z );
+		out.setValueAt( 3, 3, vec.w );
 
 		return out;
 	}
 
-	public Matrix4x4 scale(double s ){
+	/**
+	 Scale uniform by factor s
+	 **/
+	public Matrix4x4 scale(double s){
 		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, s );
@@ -52,16 +55,10 @@ public class Matrix4x4 {
 		return out;
 	}
 
-	public Matrix4x4 scale(Vec2 vec ){
-		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
-
-		out.setValueAt( 0, 0, vec.x );
-		out.setValueAt( 1, 1, vec.y );
-
-		return out;
-	}
-
-	public Matrix4x4 scale(Vec3 vec ){
+	/**
+	 Scale non-uniform by x, y and z
+	 **/
+	public Matrix4x4 scale(Vec3 vec){
 		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
 
 		out.setValueAt( 0, 0, vec.x );
@@ -71,34 +68,38 @@ public class Matrix4x4 {
 		return out;
 	}
 
-	public Matrix4x4 scale(Vec4 vec ){
-		Matrix4x4 out = new Matrix4x4(mBaseMatrix);
-
-		out.setValueAt( 0, 0, vec.x );
-		out.setValueAt( 1, 1, vec.y );
-		out.setValueAt( 2, 2, vec.z );
-		out.setValueAt( 3, 2, vec.z );
-
-		return out;
-	}
-
+	/**
+	 Transpose matrix
+	 **/
 	public Matrix4x4 transpose(){
 		return new Matrix4x4( mBaseMatrix.transpose() );
 	}
 
+	/**
+	 Invert matrix
+	 **/
 	public Matrix4x4 invert(){
 		return new Matrix4x4( mBaseMatrix.inverse() );
 	}
 
+	/**
+	 Set 'value' in matrix at position row and column
+	 **/
 	public void setValueAt(int row, int col, double value){
 		mBaseMatrix.set( row, col, value );
 	}
 
+	/**
+	 Get 'value' in matrix from position row and column
+	 **/
 	public double getValueAt(int row, int col){
 		return mBaseMatrix.get(row, col);
 	}
 
-	public Vec4 multVec4(Vec4 vec){
+	/**
+	 Multiply a 3D point OR vector with the matrix
+	 **/
+	public Vec4 multVec3(Vec4 vec){
 		return new Vec4(
 				vec.x * ( float ) this.getValueAt(0,0) + vec.y * ( float ) this.getValueAt(0,1) + vec.z * ( float ) this.getValueAt(0,2) + vec.w * ( float ) this.getValueAt(0,3),
 				vec.x * ( float ) this.getValueAt(1,0) + vec.y * ( float ) this.getValueAt(1,1) + vec.z * ( float ) this.getValueAt(1,2) + vec.w * ( float ) this.getValueAt(1,3),
@@ -107,6 +108,9 @@ public class Matrix4x4 {
 		);
 	}
 
+	/**
+	 Multiply a 3D point OR vector with the matrix
+	 **/
 	public Vec3 multVec3(Vec3 vec, Boolean isPoint){
 
 		float w = isPoint ? 1 : 0;
@@ -121,6 +125,9 @@ public class Matrix4x4 {
 		return new Vec3(out.x, out.y, out.z);
 	}
 
+	/**
+	 Print values of matrix
+	 **/
 	@Override
 	public String toString(){
 		return  "\n" +
@@ -130,6 +137,9 @@ public class Matrix4x4 {
 				this.getValueAt(3,0) + "\t\t\t\t\t\t" + this.getValueAt(3,1) + "\t\t\t\t\t\t" + this.getValueAt(3,2) + "\t\t\t\t\t\t" + this.getValueAt(3,3) + "\t\t\n" ;
 	}
 
+	/**
+	 Here's the background calculation...
+	 **/
 	private static class Matrix implements Cloneable, java.io.Serializable {
 
 		private double[][] A;

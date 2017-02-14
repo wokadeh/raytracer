@@ -19,7 +19,7 @@ public class Plane extends Shape {
     public static int FACING_BACK = 5;
 
     public Plane(Vec3 pos, Material mat, int facingDirection) {
-        super(pos, mat, new Matrix4x4().translate(pos), "PLANE" + facingDirection);
+        super(pos, mat, new Matrix4x4().translateXYZ(pos), "PLANE" + facingDirection);
 
         // The normal of a plane is always the vector coming from the position showing to the center of the scene
         mNormal = getFacingNormal( facingDirection );
