@@ -73,8 +73,11 @@ public class Window {
     /**
      Export the rendering to an PNG image with rendering information
      **/
-    public void exportRendering(String text, int recursions, int antiAliasing){
-        setOutputLabel(text, recursions, antiAliasing);
+    public void exportRendering(String text, int recursions, int antiAliasing, boolean showLabel){
+
+        if(showLabel) {
+            setOutputLabel(text, recursions, antiAliasing);
+        }
         DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
     }
 

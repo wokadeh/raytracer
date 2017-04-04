@@ -6,7 +6,7 @@ import utils.algebra.Vec3;
 
 public class LambertMaterial  extends Material {
     public LambertMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient) {
-        super(ambientCoefficient, diffuseCoefficient, null, 0, "LAMBERT");
+        super(ambientCoefficient, diffuseCoefficient, RgbColor.BLACK, 0, "LAMBERT");
     }
 
     @Override
@@ -26,6 +26,16 @@ public class LambertMaterial  extends Material {
         Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
         float angle = clampAngle(normalN.scalar(lightVecN));
 
-        return this.calculateDiffuseColor(light.getColor(), angle);
+        RgbColor diffuseColor = this.calculateDiffuseColor(light.getColor(), angle);
+
+        RgbColor specularColor = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
+
+        RgbColor outputColor = diffuseColor.add(specularColor);
+
+        if(this.reflectionCoeff != 0){
+            outputColor = outputColor.multScalar( this.reflectionCoeff );
+        }
+
+        return outputColor;
     }
 }
