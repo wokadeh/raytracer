@@ -13,12 +13,8 @@ public class PerspectiveCamera extends SceneObject {
 
     private float ratio;
 
-    private float focalLength;
-
     private float viewPlaneWidth;
     private float viewPlaneHeight;
-
-    private Vec3 viewLengthVec;
 
     private int screenWidth;
     private int screenHeight;
@@ -27,10 +23,9 @@ public class PerspectiveCamera extends SceneObject {
 
     private Vec3 center;
 
-    public PerspectiveCamera(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec, float angleOfView, float focalLength, int screenWidth, int screenHeight) {
+    public PerspectiveCamera(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec, float angleOfView, int screenWidth, int screenHeight) {
         super(pos);
         Log.print(this, "Init");
-        this.focalLength = focalLength;
         this.center = centerOfInterest;
 
         // subtract 1 to be in range of 0 - (width - 1)
@@ -46,14 +41,12 @@ public class PerspectiveCamera extends SceneObject {
     private void calculateViewplane(float angleOfView){
         this.ratio = (float) screenWidth / (float) screenHeight;
         this.angleRad = (float) (((angleOfView/2) * Math.PI) / 180f);
-        this.viewPlaneHeight = ((float) (focalLength * Math.tan(angleRad)));
+        this.viewPlaneHeight = (float) Math.tan(angleRad);
         this.viewPlaneWidth = (this.ratio * this.viewPlaneHeight);
 
         // Take the half for the coming adjustment to the viewplane
         this.viewPlaneWidth  *= 0.5f;
         this.viewPlaneHeight *= 0.5f;
-
-        this.viewLengthVec = this.v.multScalar( this.focalLength);
     }
 
     private void calculateCameraCoord(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec){
@@ -72,7 +65,7 @@ public class PerspectiveCamera extends SceneObject {
         float y = this.viewPlaneHeight * pNormY;
 
         Vec3 destPoint = new Vec3()
-                .add( this.viewLengthVec )
+                .add( this.v )
                 .add( this.s.multScalar( x ) )
                 .add( this.u.multScalar( y ) )
                 .normalize();

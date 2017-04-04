@@ -24,12 +24,13 @@ public class Intersection {
 
     public Ray calculateReflectionRay() {
         // like in Phong, but take vector opposite to incoming direction
-        Vec3 directN = mInRay.getDirection();//.negate();
+        Vec3 directN = mInRay.getDirection();
         return calculateReflectionRay( directN );
     }
 
     public Ray calculateReflectionRay( Vec3 inDir ) {
-        float normDotIn = mNormal.scalar( inDir.normalize() );
+        inDir = inDir.normalize();
+        float normDotIn = mNormal.scalar( inDir );
 
         Vec3 r = inDir.sub(mNormal.multScalar(normDotIn).multScalar(2f));
 
@@ -38,7 +39,6 @@ public class Intersection {
 
     public Ray calculateRefractionRay() {
         Vec3 inRay = mInRay.getDirection().negate().normalize();
-        mNormal = mNormal.normalize();
 
         float n1 = mInRay.getCurrentMaterial();
         float n2 = mShape.getMaterial().getFractionCoeff();

@@ -42,7 +42,6 @@ import utils.algebra.Vec3;
 
     * Fix correct exit ray from refraction
     * Fix light normalisation
-    * Fix Phong
     * Add textures
     * Add triangles and polygons
     * Connect importer of OBJ
@@ -59,28 +58,27 @@ public class Main {
     static int IMAGE_WIDTH = 800;
     static int IMAGE_HEIGHT = 600;
 
-    static float BOX_DIMENSION = 3f;
+    static float BOX_DIMENSION = 4f;
 
     /** LIGHT **/
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.2f, 0.2f, 0.2f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.1f, 0.1f, 0.1f);
 
     static short LIGHT_DENSITY = 40;
-    static short LIGHT_SAMPLES = 40;
+    static short LIGHT_SAMPLES = 60;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
-    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION - 0.1f, BOX_DIMENSION + 2 );
-    static short AREA_LIGHT_SIZE = 1;
+    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.1f, BOX_DIMENSION - 1f );
+    static short AREA_LIGHT_SIZE = 2;
 
     /** KAMERA **/
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 15);
+    static Vec3 CAM_POS = new Vec3(0, 0, 17);
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 75;
-    static float FOCAL_LENGTH = 1;
+    static float VIEW_ANGLE = 70;
 
     /** RAYTRACER **/
 
@@ -89,6 +87,7 @@ public class Main {
     static boolean USE_SOFT_SHADOWS = false;
 
     /** DEBUG **/
+
 
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
@@ -132,15 +131,15 @@ public class Main {
 
     private static void setupLights(Scene renderScene) {
         // Note: Never put the light source inside a plane
-        Vec3 light_pos = new Vec3(LIGHT_POSITION.x, LIGHT_POSITION.y - 0.001f, LIGHT_POSITION.z);
+        Vec3 light_pos = new Vec3(LIGHT_POSITION.x, LIGHT_POSITION.y - 0.3f, LIGHT_POSITION.z);
 
         if(!USE_SOFT_SHADOWS) {
         /* Point Light */
-            renderScene.createPointLight(light_pos, RgbColor.GRAY);
+            renderScene.createPointLight(light_pos, RgbColor.SOFT_GRAY);
         }
         else {
         /* Area Light */
-            renderScene.createAreaLight(light_pos, AREA_LIGHT_SIZE, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.LIGHT_GRAY);
+            renderScene.createAreaLight(light_pos, AREA_LIGHT_SIZE, LIGHT_DENSITY, LIGHT_SAMPLES, RgbColor.SOFT_GRAY);
 
             if(SHOW_AREA_LIGHT_SAMPLES) {
                 AreaLight light1 = (AreaLight) renderScene.getLightList().get(0);
@@ -154,7 +153,7 @@ public class Main {
     }
 
     private static void setupCameras(Scene renderScene) {
-        renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, FOCAL_LENGTH, IMAGE_WIDTH, IMAGE_HEIGHT);
+        renderScene.createPerspCamera(CAM_POS, LOOK_AT, UP_VECTOR, VIEW_ANGLE, IMAGE_WIDTH, IMAGE_HEIGHT);
     }
 
     private static void setupObjects(Scene renderScene) {
@@ -167,14 +166,18 @@ public class Main {
         float smallSphereRadius = 0.6f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
 
         Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.AIR, 1);
 
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION + 1.1f, -BOX_DIMENSION /3f+3), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
+
+        Material boringMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+        Material boringMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+3), boringMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
+        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
     }
 
     private static void setupLightShapes(Scene renderScene) {
@@ -184,23 +187,25 @@ public class Main {
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
-        Material planeMaterial = new LambertMaterial(RgbColor.WHITE, RgbColor.WHITE);
+        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
+        Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
 
-        //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REFLECTION, Material.NO_TRANSMISSION, 1);
+        //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REF
+        // LECTION, Material.NO_TRANSMISSION, 1);
 
         // Plane 0
         renderScene.createPlane(new Vec3(BOX_DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         // Plane 1
         renderScene.createPlane(new Vec3( -BOX_DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
-        //renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial, Plane.FACING_FRONT);
+        renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
         // Plane 2
-        renderScene.createPlane(new Vec3( 0f, 0f, 0f ), planeMaterial, Plane.FACING_BACK);
+        renderScene.createPlane(new Vec3( 0f, 0f, -BOX_DIMENSION/2 ), planeMaterial, Plane.FACING_BACK);
         // Plane 3
-        renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION, 0 ), planeMaterial, Plane.FACING_UP);
+        renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_UP);
         // Plane 4
-        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION, 0 ), planeMaterial, Plane.FACING_DOWN);
+        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){

@@ -22,8 +22,8 @@ public class RgbColor {
     public static RgbColor MAGENTA = new RgbColor(1, 0, 1);
     public static RgbColor YELLOW = new RgbColor(1, 1, 0);
     public static RgbColor GRAY = new RgbColor(0.5f, 0.5f, 0.5f);
-    public static RgbColor SOFT_GRAY = new RgbColor(0.20f, 0.20f, 0.20f);
-    public static RgbColor LIGHT_GRAY = new RgbColor(0.25f, 0.25f, 0.25f);
+    public static RgbColor SOFT_GRAY = new RgbColor(0.50f, 0.50f, 0.50f);
+    public static RgbColor LIGHT_GRAY = new RgbColor(0.95f, 0.95f, 0.95f);
     public static RgbColor DARK_GRAY = new RgbColor(0.1f, 0.1f, 0.1f);
 
     public RgbColor(float r, float g, float b){

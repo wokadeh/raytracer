@@ -16,7 +16,7 @@ public class Sphere extends Shape {
     private boolean mIsInside = false;
 
     public Sphere(Vec3 pos, Material mat, float radius) {
-        super(pos, mat, new Matrix4x4().translateXYZ(pos).scale(radius), "SPHERE_" + pos.toString());
+        super(pos, mat, new Matrix4x4().scale(radius).translateXYZ(pos), "SPHERE_" + pos.toString());
 
         mRadius = radius;
         mSqrRadius = mRadius * mRadius;
@@ -35,9 +35,6 @@ public class Sphere extends Shape {
 
         // C = x0^2 + y0^2 + z0^2 - r^2
         float compC = localOrigin.scalar( localOrigin ) - mSqrRadius;
-
-    //    float p = compB * invA;
-    //    float q = compB * invA;
 
         // D = B*B - 4CA
         float discriminant = (compB * compB) - 4 * compC;
@@ -92,7 +89,7 @@ public class Sphere extends Shape {
         intersectionTest.setIntersectionPoint( intersectionPoint );
 
         if(mIsInside){
-           // Log.error(this, "normal switch");
+            Log.error(this, "normal switch");
             intersectionTest.setNormal( normal.multScalar( -1f ));
         }
 

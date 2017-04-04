@@ -6,8 +6,8 @@ import utils.algebra.Vec3;
 
 public class PhongMaterial extends Material {
 
-    public static float SHINY = 10;
-    public static float VERY_SHINY = 100;
+    public static float SHINY = 100;
+    public static float VERY_SHINY = 1000;
     public static float NOT_SHINY = 1;
 
     public PhongMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, float reflectivity, float fractionCoeff, float transparency) {

@@ -61,8 +61,8 @@ public class Scene {
         mLightList.add(new AreaLight(pos, dim, res, samples, color));
     }
 
-    public void createPerspCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, float focalLength, int screenWidth, int screenHeight){
-        mSceneCam = new PerspectiveCamera(camPos, viewPoint, upVec, viewAngle, focalLength, screenWidth, screenHeight);
+    public void createPerspCamera(Vec3 camPos, Vec3 viewPoint, Vec3 upVec, float viewAngle, int screenWidth, int screenHeight){
+        mSceneCam = new PerspectiveCamera(camPos, viewPoint, upVec, viewAngle, screenWidth, screenHeight);
     }
 
     public Vec3 getCamPos(){

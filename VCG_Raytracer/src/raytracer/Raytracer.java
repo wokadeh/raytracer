@@ -203,8 +203,7 @@ public class Raytracer {
         for( Shape shape : mShapeList ){
             // Important: Avoid intersection with itself as long as it is not transparent
             if( prevIntersec != null ) {
-                if ( ( prevIntersec.getShape().equals(shape)
-                        && prevIntersec.getShape().isTransparent() )) {
+                if ( ( prevIntersec.getShape().equals(shape) )) {
                     skip = true;
                 }
             }
