@@ -7,6 +7,8 @@ import utils.algebra.Vec3;
 public class LambertMaterial  extends Material {
     public LambertMaterial(RgbColor ambientCoefficient, RgbColor diffuseCoefficient) {
         super(ambientCoefficient, diffuseCoefficient, RgbColor.BLACK, 0, "LAMBERT");
+
+        this.giOn = true;
     }
 
     @Override

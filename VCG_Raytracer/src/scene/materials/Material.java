@@ -39,8 +39,14 @@ public abstract class Material {
     private float mUScale;
     private float mVScale;
 
+    protected boolean giOn = false;
+
     protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
         init(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, type);
+    }
+
+    protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, boolean giOff, float shininess, String type){
+        init(ambientCoefficient, diffuseCoefficient, specularCoefficient, giOff, shininess, type);
     }
 
     protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type, String texturePath, float uScale, float vScale){
@@ -61,6 +67,12 @@ public abstract class Material {
         mType = type;
     }
 
+    private void init(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, boolean giOff, float shininess, String type){
+       init(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, type);
+
+        this.giOn = giOff;
+    }
+
     public boolean isType(String type){
         return mType.equals(type);
     }
@@ -68,6 +80,8 @@ public abstract class Material {
     public boolean isReflective() {
         return this.reflectionCoeff != 0;
     }
+
+    public boolean isGiOn(){ return this.giOn; };
 
     public boolean isTransparent(){
         return this.fractionCoeff != 0;

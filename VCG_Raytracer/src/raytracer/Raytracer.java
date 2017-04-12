@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 public class Raytracer {
 
+    public static int ANTI_ALIASING_NONE = 1;
     public static int ANTI_ALIASING_LOW = 2;
     public static int ANTI_ALIASING_MEDIUM = 4;
     public static int ANTI_ALIASING_HIGH = 8;
@@ -45,15 +46,20 @@ public class Raytracer {
     private Window mRenderWindow;
 
     private int mMaxRecursions;
+    private int mGiLevel;
+    private int mGiSamples;
+
     private float mAntiAliasingFactor;
     private float mAntiAliasingCounter;
 
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
+        mGiLevel = giLevel;
+        mGiSamples = giSamples;
         mBufferedImage = renderWindow.getBufferedImage();
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;
@@ -73,13 +79,9 @@ public class Raytracer {
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
-
-                //if(x == 451 && y == 521) {
-
-                    RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
-                    screenPosition = new Vec2(x, y);
-                    mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
-                //}
+                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
+                screenPosition = new Vec2(x, y);
+                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
             }
         }
     }
@@ -87,10 +89,10 @@ public class Raytracer {
     private RgbColor calculateAntiAliasedColor(int y, int x) {
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
+
         // Start super sampling
         for(float i = x -0.5f; i < x + 0.5f; i += mAntiAliasingCounter){
             for(float j = y -0.5f; j < y + 0.5f; j += mAntiAliasingCounter){
-
                 screenPosition = new Vec2(i, j);
                 antiAlisedColor = antiAlisedColor.add(sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
             }
@@ -103,10 +105,10 @@ public class Raytracer {
         Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
         Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
 
-        return traceRay(mMaxRecursions, primaryRay, mBackgroundColor, null);
+        return traceRay(mMaxRecursions, mGiLevel, primaryRay, mBackgroundColor, null);
     }
 
-    private RgbColor traceRay(int recursionCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
+    private RgbColor traceRay(int recursionCounter, int giLevelCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
         RgbColor outColor = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
@@ -114,7 +116,7 @@ public class Raytracer {
 
         if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
-            if( recursionCounter <= 0) {
+            if( recursionCounter <= 0 || giLevelCounter <= 0) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
@@ -126,14 +128,33 @@ public class Raytracer {
             if ( intersection.getShape().isReflective() ) {
                 recursionCounter -= 1;
                 float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                RgbColor reflectionColor = traceRay(recursionCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity);
+                RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity);
                 outColor = outColor.add( reflectionColor );
             }
             if ( intersection.getShape().isTransparent() ) {
                 recursionCounter -= 1;
                 float transparency = intersection.getShape().getMaterial().getTransparency();
-                RgbColor transmissionColor = traceRay(recursionCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
+                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
                 outColor = outColor.add( transmissionColor );
+            }
+            if ( intersection.getShape().getMaterial().isGiOn() ){
+
+                //Log.print(this, "GI creation");
+
+                int red = 0, green = 0, blue = 0;
+
+                giLevelCounter -= 1;
+
+                // object is diffuse; send additional rays
+                for(int i = 0; i < mGiSamples; i++){
+
+                    RgbColor giColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRandomRay(), outColor, intersection);
+                    red += giColor.red();
+                    green += giColor.green();
+                    blue += giColor.blue();
+                }
+
+                outColor = outColor.add(new RgbColor(red / (float) mGiSamples, green / (float) mGiSamples, blue / (float) mGiSamples));
             }
 
             // Add ambient term

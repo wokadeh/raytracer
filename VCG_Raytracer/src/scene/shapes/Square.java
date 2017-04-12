@@ -24,6 +24,12 @@ public class Square extends Shape {
 		this.raytraced = raytraced;
 	}
 
+	public Square(Vec3 pos, Material mat, float dimension, int facingDirection, boolean raytraced, boolean giOff) {
+		this(pos, mat, dimension, facingDirection, raytraced);
+
+		this.raytraced = raytraced;
+	}
+
 	@Override
 	public Intersection intersect(Ray ray) {
 		Intersection intersection = mPlane.intersect(ray);

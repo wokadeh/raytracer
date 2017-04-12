@@ -55,8 +55,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 800;
-    static int IMAGE_HEIGHT = 600;
+    static int IMAGE_WIDTH = 320;
+    static int IMAGE_HEIGHT = 240;
 
     static float BOX_DIMENSION = 4f;
 
@@ -84,19 +84,21 @@ public class Main {
     /** RAYTRACER **/
 
     static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_NONE; //Raytracer.ANTI_ALIASING_MEDIUM;
     static boolean USE_SOFT_SHADOWS = false;
+    static int GI_LEVEL = 2;
+    static int GI_SAMPLES = 5;
 
     /** DEBUG **/
 
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = false;
+    static boolean SHOW_PARAM_LABEL = true;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
-        importObject("models/Scooter-smgrps.obj");
+        //importObject("models/Scooter-smgrps.obj");
 
         long tStart = System.currentTimeMillis();
 
@@ -136,9 +138,7 @@ public class Main {
 
         if(!USE_SOFT_SHADOWS) {
         /* Point Light */
-            renderScene.createPointLight(light_pos, RgbColor.BLUE);
-            renderScene.createPointLight(new Vec3(3,2,3), RgbColor.YELLOW);
-            //renderScene.createPointLight(new Vec3(-3,2,7), RgbColor.RED);
+            renderScene.createPointLight(light_pos, LIGHT_COLOR);
         }
         else {
         /* Area Light */
@@ -179,10 +179,9 @@ public class Main {
         Material boringMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
 
         Material lambert1 = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GRAY);
-        Material lambert2 = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.GRAY);
 
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+3), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+3), lambert1, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), lambert1, sphereRadius);
         //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
     }
 
@@ -193,9 +192,6 @@ public class Main {
 
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterialLeft = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.BLUE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterialRight = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.RED, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
 
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
@@ -206,20 +202,20 @@ public class Main {
         // LECTION, Material.NO_TRANSMISSION, 1);
 
         // Plane 0
-        renderScene.createPlane(new Vec3(BOX_DIMENSION, 0f, 0 ), sphereMaterialLeft, Plane.FACING_LEFT);
+        renderScene.createPlane(new Vec3(BOX_DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
         // Plane 1
-        renderScene.createPlane(new Vec3( -BOX_DIMENSION, 0f, 0 ), sphereMaterialRight, Plane.FACING_RIGHT);
-        renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), sphereMaterial1, Plane.FACING_FRONT);
+        renderScene.createPlane(new Vec3( -BOX_DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
+        renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
         // Plane 2
-        renderScene.createPlane(new Vec3( 0f, 0f, -BOX_DIMENSION/2 ), sphereMaterial1, Plane.FACING_BACK);
+        renderScene.createPlane(new Vec3( 0f, 0f, -BOX_DIMENSION/2 ), planeMaterial, Plane.FACING_BACK);
         // Plane 3
-        renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION/1.2f, 0 ), sphereMaterial1, Plane.FACING_UP);
+        renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_UP);
         // Plane 4
-        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), sphereMaterial1, Plane.FACING_DOWN);
+        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
 
         raytracer.renderScene();
     }
