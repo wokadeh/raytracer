@@ -97,6 +97,90 @@ public class Matrix4x4 {
 	}
 
 	/**
+	 Get 'column' in matrix from position index
+	 **/
+	public Vec4 getColumn(int index){
+		Vec4 outVec = new Vec4();
+
+		for(int i = 0; i < 4; i++){
+			outVec.setValue(i, (float) this.getValueAt(i, index));
+		}
+		return outVec;
+	}
+
+	/**
+	 Get 'column' in matrix from position index
+	 **/
+	public Vec4 getRow(int index){
+		Vec4 outVec = new Vec4();
+
+		for(int i = 0; i < 4; i++){
+			outVec.setValue(i, (float) this.getValueAt(index, i));
+		}
+		return outVec;
+	}
+
+	/**
+	 Add another matrix
+	 **/
+	public Matrix4x4 add(Matrix4x4 mat){
+		Matrix4x4 outMat = new Matrix4x4();
+
+		for(int r = 0; r < 4; r++){
+			for(int c = 0; c < 4; c++){
+				outMat.setValueAt(r,c, this.getValueAt(r,c) + mat.getValueAt(r,c));
+			}
+		}
+
+		return outMat;
+	}
+
+	/**
+	 Sub another matrix
+	 **/
+	public Matrix4x4 sub(Matrix4x4 mat){
+		Matrix4x4 outMat = new Matrix4x4();
+
+		for(int r = 0; r < 4; r++){
+			for(int c = 0; c < 4; c++){
+				outMat.setValueAt(r,c, this.getValueAt(r,c) - mat.getValueAt(r,c));
+			}
+		}
+
+		return outMat;
+	}
+
+	/**
+	 Mult a single value
+	 **/
+	public Matrix4x4 multScalar(float scalar){
+		Matrix4x4 outMat = new Matrix4x4();
+
+		for(int r = 0; r < 4; r++){
+			for(int c = 0; c < 4; c++){
+				outMat.setValueAt(r,c, this.getValueAt(r,c) * scalar);
+			}
+		}
+
+		return outMat;
+	}
+
+	/**
+	 Multiply another matrix
+	 **/
+	public Matrix4x4 mult(Matrix4x4 mat){
+		Matrix4x4 outMat = new Matrix4x4();
+
+		for(int r1 = 0; r1 < 4; r1++){
+			for(int c1 = 0; c1 < 4; c1++) {
+				outMat.setValueAt(r1, c1, this.getRow(r1).scalar(mat.getColumn(c1)));
+			}
+		}
+
+		return outMat;
+	}
+
+	/**
 	 Multiply a 3D point OR vector with the matrix
 	 **/
 	public Vec4 multVec3(Vec4 vec){
