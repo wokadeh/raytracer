@@ -26,6 +26,15 @@ public class Vec4 {
         this.w = 0;
     }
 
+    public void setValue(int index, float value){
+        switch (index){
+            case 0: this.x = value; break;
+            case 1: this.y = value; break;
+            case 2: this.z = value; break;
+            case 3: this.w = value; break;
+        }
+    }
+
     /**
      Compare two vectors to check if they are equal
      **/

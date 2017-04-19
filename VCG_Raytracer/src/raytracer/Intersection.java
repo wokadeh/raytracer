@@ -71,36 +71,42 @@ public class Intersection {
         float randZ = (rand2.nextInt(200) - 100) / 200f;
         float randY = rand3.nextInt(100) / 100f;
 
-        Vec4 randomEndDirection = new Vec4(randX, randY, randZ, 0f).normalize();
+        Vec3 randomEndDirection = new Vec3(randX, randY, randZ).normalize();
 
-        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(mNormal, mZVec, mXVec).translateXYZ(mIntersectionPoint);
+        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection).translateXYZ(mIntersectionPoint);
 
-        Vec4 transformedRandomEndDirection = transfMatrix.multVec3(randomEndDirection);
+        Vec4 transformedRandomEndDirection = transfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f)).normalize();
 
-        Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z).normalize());
+        Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z));
 
         // if mNormal x, y, or z are 0 return mNormal
 
         return outRay;
     }
 
-    private Matrix4x4 calculateRandomTransformationMatrix(Vec3 u, Vec3 v, Vec3 s){
+    private Matrix4x4 calculateRandomTransformationMatrix(Vec3 randomEndDirection){
         Matrix4x4 transfMatrix = new Matrix4x4(); // we will multiply the normal with it
 
-        // first row of transformation matrix
-        transfMatrix.setValueAt(0, 0, s.x);
-        transfMatrix.setValueAt(0, 1, s.y);
-        transfMatrix.setValueAt(0, 2, s.z);
+        Vec3 crossVec = mNormal.cross(randomEndDirection);
+        float constVec = mNormal.scalar(randomEndDirection);
+        constVec = 1f / (1f + constVec);
 
-        // second row of transformation matrix
-        transfMatrix.setValueAt(1, 0, u.x);
-        transfMatrix.setValueAt(1, 1, u.y);
-        transfMatrix.setValueAt(1, 2, u.z);
+        Matrix4x4 vecMatrix = new Matrix4x4();
+        vecMatrix.setValueAt(0,0,0);
+        vecMatrix.setValueAt(1,1,0);
+        vecMatrix.setValueAt(2,2,0);
+        vecMatrix.setValueAt(3,3,0);
 
-        // third row of transformation matrix
-        transfMatrix.setValueAt(2, 0, v.x);
-        transfMatrix.setValueAt(2, 1, v.y);
-        transfMatrix.setValueAt(2, 2, v.z);
+        vecMatrix.setValueAt(0,1,-crossVec.z);
+        vecMatrix.setValueAt(0,2, crossVec.y);
+
+        vecMatrix.setValueAt(1,0, crossVec.z);
+        vecMatrix.setValueAt(1,2,-crossVec.x);
+
+        vecMatrix.setValueAt(2,0,-crossVec.y);
+        vecMatrix.setValueAt(2,1, crossVec.x);
+
+        transfMatrix = transfMatrix.add(vecMatrix).add(vecMatrix.mult(vecMatrix)).multScalar(constVec);
 
         return transfMatrix;
     }
