@@ -141,7 +141,7 @@ public class Raytracer {
 
                 //Log.print(this, "GI creation");
 
-                int red = 0, green = 0, blue = 0;
+                float red = 0, green = 0, blue = 0;
 
                 giLevelCounter -= 1;
 
@@ -154,7 +154,9 @@ public class Raytracer {
                     blue += giColor.blue();
                 }
 
-                outColor = outColor.add(new RgbColor(red / (float) mGiSamples, green / (float) mGiSamples, blue / (float) mGiSamples));
+                float factor = (float) mGiSamples*2;
+
+                outColor = outColor.add(new RgbColor(red / factor, green / factor, blue / factor));
             }
 
             // Add ambient term

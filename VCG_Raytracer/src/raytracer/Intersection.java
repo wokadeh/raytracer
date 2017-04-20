@@ -48,16 +48,12 @@ public class Intersection {
 
     public Ray calculateRandomRay(){
         Random rand1 = new Random();
-        Random rand2 = new Random();
-        Random rand3 = new Random();
 
         // calculate random value between 0-90
         // calculate random -1 or 1
         // calculate random rotation between 0-180
 
-        Vec3 startPoint = getIntersectionPoint();
-
-
+        Vec3 startPoint = this.getIntersectionPoint();
 
         // --- new idea ---
         // random x value between 0-200 => -100-100
@@ -68,12 +64,12 @@ public class Intersection {
         // multiply our normal with transformation T
 
         float randX = (rand1.nextInt(200) - 100) / 200f;
-        float randZ = (rand2.nextInt(200) - 100) / 200f;
-        float randY = rand3.nextInt(100) / 100f;
+        float randZ = (rand1.nextInt(200) - 100) / 200f;
+        float randY = rand1.nextInt(100) / 100f;
 
         Vec3 randomEndDirection = new Vec3(randX, randY, randZ).normalize();
 
-        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection).translateXYZ(mIntersectionPoint);
+        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection, mNormal);
 
         Vec4 transformedRandomEndDirection = transfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f)).normalize();
 
@@ -84,11 +80,11 @@ public class Intersection {
         return outRay;
     }
 
-    private Matrix4x4 calculateRandomTransformationMatrix(Vec3 randomEndDirection){
+    private static Matrix4x4 calculateRandomTransformationMatrix(Vec3 vec1, Vec3 vec2){
         Matrix4x4 transfMatrix = new Matrix4x4(); // we will multiply the normal with it
 
-        Vec3 crossVec = mNormal.cross(randomEndDirection);
-        float constVec = mNormal.scalar(randomEndDirection);
+        Vec3 crossVec = vec1.cross(vec2);
+        float constVec = vec1.scalar(vec2);
         constVec = 1f / (1f + constVec);
 
         Matrix4x4 vecMatrix = new Matrix4x4();
@@ -106,7 +102,7 @@ public class Intersection {
         vecMatrix.setValueAt(2,0,-crossVec.y);
         vecMatrix.setValueAt(2,1, crossVec.x);
 
-        transfMatrix = transfMatrix.add(vecMatrix).add(vecMatrix.mult(vecMatrix)).multScalar(constVec);
+        transfMatrix = transfMatrix.add(vecMatrix).add((vecMatrix.mult(vecMatrix)).multScalar(constVec));
 
         return transfMatrix;
     }

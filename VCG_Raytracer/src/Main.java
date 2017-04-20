@@ -86,15 +86,15 @@ public class Main {
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_NONE; //Raytracer.ANTI_ALIASING_MEDIUM;
     static boolean USE_SOFT_SHADOWS = false;
-    static int GI_LEVEL = 2;
-    static int GI_SAMPLES = 5;
+    static int GI_LEVEL = 3;
+    static int GI_SAMPLES = 15;
 
     /** DEBUG **/
 
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = true;
+    static boolean SHOW_PARAM_LABEL = false;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
