@@ -96,6 +96,10 @@ public abstract class Material {
         return this.fractionCoeff;
     }
 
+    public RgbColor getDiffuseCoeff() {
+        return this.diffCoeff;
+    }
+
     public RgbColor getAmbientCoeff() {
         return this.ambiCoeff;
     }

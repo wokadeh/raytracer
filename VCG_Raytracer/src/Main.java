@@ -62,7 +62,7 @@ public class Main {
 
     /** LIGHT **/
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.1f, 0.1f, 0.1f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
 
     static short LIGHT_DENSITY = 40;
     static short LIGHT_SAMPLES = 60;
@@ -86,8 +86,8 @@ public class Main {
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_NONE; //Raytracer.ANTI_ALIASING_MEDIUM;
     static boolean USE_SOFT_SHADOWS = false;
-    static int GI_LEVEL = 3;
-    static int GI_SAMPLES = 15;
+    static int GI_LEVEL = 1;
+    static int GI_SAMPLES = 20;
 
     /** DEBUG **/
 
@@ -193,7 +193,7 @@ public class Main {
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
 
-        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
+        Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);

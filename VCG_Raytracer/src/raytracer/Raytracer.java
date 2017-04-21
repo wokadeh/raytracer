@@ -79,6 +79,10 @@ public class Raytracer {
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
+
+                if(x == 20 && y == 239){
+                    Log.print(this, "lets check");
+                }
                 RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
                 screenPosition = new Vec2(x, y);
                 mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
@@ -116,7 +120,7 @@ public class Raytracer {
 
         if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
-            if( recursionCounter <= 0 || giLevelCounter <= 0) {
+            if( recursionCounter <= 0 ) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
                 return outColor;
             }
@@ -139,29 +143,56 @@ public class Raytracer {
             }
             if ( intersection.getShape().getMaterial().isGiOn() ){
 
+
+
                 //Log.print(this, "GI creation");
+                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection));
 
-                float red = 0, green = 0, blue = 0;
-
-                giLevelCounter -= 1;
-
-                // object is diffuse; send additional rays
-                for(int i = 0; i < mGiSamples; i++){
-
-                    RgbColor giColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRandomRay(), outColor, intersection);
-                    red += giColor.red();
-                    green += giColor.green();
-                    blue += giColor.blue();
-                }
-
-                float factor = (float) mGiSamples*2;
-
-                outColor = outColor.add(new RgbColor(red / factor, green / factor, blue / factor));
             }
 
             // Add ambient term
             RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
             outColor = outColor.add( ambientTerm );
+        }
+
+        return outColor;
+    }
+
+    private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){
+
+        Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
+
+        if(intersection.isHit() && intersection.getShape().getMaterial().isGiOn() ){
+            float distanceOfColor = intersection.getDistance() * intersection.getDistance();
+            distanceOfColor = ( distanceOfColor == 0 ) ? 1 : distanceOfColor;
+
+            RgbColor giColor = intersection.getShape().getMaterial().getDiffuseCoeff().multScalar(1f / distanceOfColor);
+            outColor = this.calculateGiIntersections(giLevelCounter, giColor, intersection);
+        }
+
+        return outColor;
+    }
+
+    private RgbColor calculateGiIntersections(int giLevelCounter, RgbColor outColor, Intersection intersection){
+        if( giLevelCounter > 0 ) {
+            float red = 0, green = 0, blue = 0;
+
+            giLevelCounter -= 1;
+
+            // object is diffuse; send additional rays
+            for (int i = 0; i < mGiSamples; i++) {
+
+                RgbColor giColor = this.giTraceRay(giLevelCounter, outColor, intersection);
+                red += giColor.red();
+                green += giColor.green();
+                blue += giColor.blue();
+            }
+
+            float factor = (float) mGiSamples;
+
+            if(factor != 0) {
+                outColor = new RgbColor(red / factor, green / factor, blue / factor);
+            }
         }
 
         return outColor;
@@ -211,7 +242,7 @@ public class Raytracer {
         if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance(lightRay.getDistance()) ){
 
             // This was the last ray and nothing was hit on the ray from the last object to the light source
-            illuColor = illuColor.add( calculateLocalIllumination(light, finalIntersection.getShape(), finalIntersection ));
+            illuColor = illuColor.add( this.calculateLocalIllumination(light, finalIntersection ));
         }
         return illuColor;
     }
@@ -267,7 +298,7 @@ public class Raytracer {
         return new Intersection(inRay, null);
     }
 
-    private RgbColor calculateLocalIllumination(Light light, Shape shape, Intersection intersection){
-        return shape.getColor(light, mScene.getCamPos(), intersection);
+    private RgbColor calculateLocalIllumination(Light light, Intersection intersection){
+        return intersection.getShape().getColor(light, mScene.getCamPos(), intersection);
     }
 }

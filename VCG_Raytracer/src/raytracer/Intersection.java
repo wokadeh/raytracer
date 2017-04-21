@@ -1,5 +1,6 @@
 package raytracer;
 
+import scene.shapes.Plane;
 import scene.shapes.Shape;
 import utils.algebra.Matrix4x4;
 import utils.algebra.Vec3;
@@ -13,8 +14,6 @@ public class Intersection {
     private Vec3 mIntersectionPoint;
 
     private Vec3 mNormal;
-    private Vec3 mXVec;
-    private Vec3 mZVec;
     private Ray mInRay;
     private Shape mShape;
     private float mDistanceToIntersection;
@@ -32,18 +31,6 @@ public class Intersection {
         // like in Phong, but take vector opposite to incoming direction
         Vec3 directN = mInRay.getDirection();
         return calculateReflectionRay( directN );
-    }
-
-    private void calculateXZVectors(){
-        // xNormalVec must be perpendicular to mNormal
-        if( mNormal.z < mNormal.x ) {
-            mXVec = new Vec3(mNormal.y, -mNormal.x, 0);
-        }
-        else{
-            mXVec = new Vec3(0, -mNormal.z, mNormal.x);
-        }
-
-        mZVec = mXVec.cross(mNormal).normalize();
     }
 
     public Ray calculateRandomRay(){
@@ -69,14 +56,13 @@ public class Intersection {
 
         Vec3 randomEndDirection = new Vec3(randX, randY, randZ).normalize();
 
-        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection, mNormal);
+        Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection, mNormal );
 
         Vec4 transformedRandomEndDirection = transfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f)).normalize();
 
-        Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z));
+        Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z), Float.MAX_VALUE);
 
         // if mNormal x, y, or z are 0 return mNormal
-
         return outRay;
     }
 
@@ -172,7 +158,6 @@ public class Intersection {
 
     public void setNormal(Vec3 mNormal) {
         this.mNormal = mNormal.normalize();
-        this.calculateXZVectors();
     }
 
     public void setDistance(float dist){

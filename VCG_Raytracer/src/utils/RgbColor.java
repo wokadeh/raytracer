@@ -11,7 +11,7 @@ public class RgbColor {
 
     public static RgbColor DARK_CUSTOM = new RgbColor(0.02f, 0.01f, 0.01f);
     public static RgbColor RED = new RgbColor(1, 0, 0);
-    public static RgbColor DARK_RED = new RgbColor(.01f, 0, 0);
+    public static RgbColor DARK_RED = new RgbColor(.2f, 0, 0);
     public static RgbColor GREEN = new RgbColor(0, 1, 0);
     public static RgbColor DARK_GREEN = new RgbColor(0, .01f, 0);
     public static RgbColor BLUE = new RgbColor(0, 0, 1);
@@ -44,6 +44,18 @@ public class RgbColor {
         colors.z += b;
 
         clamp();
+    }
+
+    public void sub(float r, float g, float b){
+        colors.x -= r;
+        colors.y -= g;
+        colors.z -= b;
+
+        clamp();
+    }
+
+    public RgbColor sub(RgbColor color){
+        return new RgbColor( colors.sub(color.colors) );
     }
 
     public RgbColor add(RgbColor color){
