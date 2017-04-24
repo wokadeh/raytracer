@@ -143,8 +143,6 @@ public class Raytracer {
             }
             if ( intersection.getShape().getMaterial().isGiOn() ){
 
-
-
                 //Log.print(this, "GI creation");
                 outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection));
 

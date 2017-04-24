@@ -58,7 +58,9 @@ public class Intersection {
 
         Matrix4x4 transfMatrix = calculateRandomTransformationMatrix(randomEndDirection, mNormal );
 
-        Vec4 transformedRandomEndDirection = transfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f)).normalize();
+        Vec4 transformedRandomEndDirection = transfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f));
+
+        transformedRandomEndDirection = transformedRandomEndDirection.normalize();
 
         Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z), Float.MAX_VALUE);
 
