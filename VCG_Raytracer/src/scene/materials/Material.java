@@ -64,7 +64,7 @@ public abstract class Material {
         this.specCoeff = specularCoefficient;
         this.shininess = shininess;
 
-        mType = type;
+        this.mType = type;
     }
 
     private void init(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, boolean giOff, float shininess, String type){
@@ -90,7 +90,10 @@ public abstract class Material {
     public String getType(){
         return mType;
     }
+
     public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos);
+
+    public abstract RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos);
 
     public float getFractionCoeff() {
         return this.fractionCoeff;

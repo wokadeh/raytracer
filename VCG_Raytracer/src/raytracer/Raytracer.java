@@ -157,15 +157,13 @@ public class Raytracer {
     }
 
     private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){
-
         Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
 
         if(intersection.isHit() && intersection.getShape().getMaterial().isGiOn() ){
-            float distanceOfColor = intersection.getDistance() * intersection.getDistance();
-            distanceOfColor = ( distanceOfColor == 0 ) ? 1 : distanceOfColor;
-
-            RgbColor giColor = intersection.getShape().getMaterial().getDiffuseCoeff().multScalar(1f / distanceOfColor);
-            outColor = this.calculateGiIntersections(giLevelCounter, giColor, intersection);
+            for(Light light : mLightList){
+                RgbColor giColor = intersection.getShape().getColor(light, intersection);
+                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection));
+            }
         }
 
         return outColor;

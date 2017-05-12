@@ -51,6 +51,15 @@ public abstract class Shape extends SceneObject {
         return new RgbColor(0,0,0);
     }
 
+    public RgbColor getColor(Light light, Intersection intersection){
+        if(intersection != null) {
+            if(intersection.getNormal() != null) {
+                return this.material.getColor(light, intersection.getNormal(), intersection.getIntersectionPoint());
+            }
+        }
+        return new RgbColor(0,0,0);
+    }
+
     public Material getMaterial(){
         return this.material;
     }
