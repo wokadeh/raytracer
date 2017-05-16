@@ -17,9 +17,11 @@ public class MultiThreader{
 	public void startMultiThreading(int numberOfThreads){
 		Log.warn(this, "Start Multithreading with " + numberOfThreads + " threads");
 
-		RayThread rayThread = new RayThread("RayThread_" + "0", mRaytracer, 0, 0, mRaytracer.getBufferedImage().getWidth(), mRaytracer.getBufferedImage().getHeight());
+		RayThread rayThread0 = new RayThread("RayThread_" + "0", mRaytracer, 0, 0, mRaytracer.getBufferedImage().getWidth(), (int)(mRaytracer.getBufferedImage().getHeight() / 2f));
+		RayThread rayThread1 = new RayThread("RayThread_" + "1", mRaytracer, 0, (int)(mRaytracer.getBufferedImage().getHeight() / 2f), mRaytracer.getBufferedImage().getWidth(), mRaytracer.getBufferedImage().getHeight());
 
-		rayThread.run();
+		rayThread0.run();
+		rayThread1.run();
 
 //		// Rows
 //		for (int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y++) {
