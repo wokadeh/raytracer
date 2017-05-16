@@ -7,6 +7,8 @@ import utils.algebra.Vec3;
 public class AmbientMaterial extends Material {
 	public AmbientMaterial(RgbColor ambientCoefficient) {
 		super(ambientCoefficient, null, null, 0, "AMBIENT");
+
+		this.giOn = false;
 	}
 
 	@Override

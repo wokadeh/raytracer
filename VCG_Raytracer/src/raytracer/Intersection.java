@@ -50,28 +50,29 @@ public class Intersection {
 
         Random rand1 = new Random();
 
-//        float randX = (rand1.nextInt(200) - 100) / 200f;
-//        float randZ = (rand1.nextInt(200) - 100) / 200f;
-//        float randY = rand1.nextInt(100) / 100f;
-//
-//        return new Vec3(randX, randY, randZ).normalize();
+        // This way is a lot faster
+        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randZ = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randY = rand1.nextInt(1000) / 1000f;
+
+        return new Vec3(randX, randY, randZ).normalize();
 
         // NEW IDEA
 
-        double randNr1 = rand1.nextInt(100) / 100f;
-        double randNr2 = rand1.nextInt(100) / 100f;
-
-        double randNry = rand1.nextInt(100) / 100f;
-
-        double sinTheta = Math.sqrt(1 - randNr1 * randNr1);
-
-        double phi = 2 * Math.PI * randNr2;
-
-        float x = (float) (sinTheta * Math.cos(phi));
-
-        float z = (float) (sinTheta * Math.sin(phi));
-
-        return new Vec3(x, (float) randNry, z);
+//        double randNr1 = rand1.nextInt(100) / 100f;
+//        double randNr2 = rand1.nextInt(100) / 100f;
+//
+//        double randNry = rand1.nextInt(100) / 100f;
+//
+//        double sinTheta = Math.sqrt(1 - randNr1 * randNr1);
+//
+//        double phi = 2 * Math.PI * randNr2;
+//
+//        float x = (float) (sinTheta * Math.cos(phi));
+//
+//        float z = (float) (sinTheta * Math.sin(phi));
+//
+//        return new Vec3(x, (float) randNry, z);
     }
 
     public Ray calculateRandomRay(){

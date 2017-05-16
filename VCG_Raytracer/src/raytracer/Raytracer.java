@@ -74,18 +74,13 @@ public class Raytracer {
     public void renderScene(){
         Log.print(this, "Start rendering");
 
-        Vec2 screenPosition;
         // Rows
         for (int y = 0; y < mBufferedImage.getHeight(); y++) {
             // Columns
             for (int x = 0; x < mBufferedImage.getWidth(); x++) {
 
-                if(x == 20 && y == 239){
-                    Log.print(this, "lets check");
-                }
                 RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
-                screenPosition = new Vec2(x, y);
-                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, screenPosition);
+                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, new Vec2(x, y));
             }
         }
     }
@@ -142,10 +137,12 @@ public class Raytracer {
                 outColor = outColor.add( transmissionColor );
             }
             if ( intersection.getShape().getMaterial().isGiOn() ){
+                // direct illumination + indirect illumination
+                RgbColor indirectLight = this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection);
 
-                //Log.print(this, "GI creation");
-                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection));
+                indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
 
+                outColor = outColor.add(indirectLight);
             }
 
             // Add ambient term
@@ -159,7 +156,7 @@ public class Raytracer {
     private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){
         Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
 
-        if(intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
+        if( intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
             for(Light light : mLightList){
                 RgbColor giColor = intersection.getShape().getColor(light, intersection);
                 outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection));
