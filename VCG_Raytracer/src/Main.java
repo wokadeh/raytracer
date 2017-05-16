@@ -56,8 +56,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 800;
-    static int IMAGE_HEIGHT = 600;
+    static int IMAGE_WIDTH = 320;
+    static int IMAGE_HEIGHT = 200;
 
     static float BOX_DIMENSION = 4f;
 
@@ -86,7 +86,9 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static boolean USE_SOFT_SHADOWS = false;
+
+    static boolean USE_GI = false;
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
 
@@ -215,7 +217,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
 
         raytracer.renderScene();
     }

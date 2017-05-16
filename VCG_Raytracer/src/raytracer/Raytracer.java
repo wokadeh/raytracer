@@ -16,6 +16,7 @@
 
 package raytracer;
 
+import multithreading.MultiThreader;
 import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.Scene;
@@ -43,6 +44,7 @@ public class Raytracer {
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
     private Scene mScene;
+
     private Window mRenderWindow;
 
     private int mMaxRecursions;
@@ -52,12 +54,15 @@ public class Raytracer {
     private float mAntiAliasingFactor;
     private float mAntiAliasingCounter;
 
+    private boolean mUseGI;
+
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
+        mUseGI = useGi;
         mGiLevel = giLevel;
         mGiSamples = giSamples;
         mBufferedImage = renderWindow.getBufferedImage();
@@ -71,21 +76,32 @@ public class Raytracer {
         mAntiAliasingCounter = 1f / antiAliasingSamples;
     }
 
+    public BufferedImage getBufferedImage() {
+        return mBufferedImage;
+    }
+
+    public Window getRenderWindow() {
+        return mRenderWindow;
+    }
+
     public void renderScene(){
         Log.print(this, "Start rendering");
 
-        // Rows
-        for (int y = 0; y < mBufferedImage.getHeight(); y++) {
-            // Columns
-            for (int x = 0; x < mBufferedImage.getWidth(); x++) {
+        MultiThreader rayMultiThreader = new MultiThreader(this);
+        rayMultiThreader.startMultiThreading(2);
 
-                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
-                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, new Vec2(x, y));
-            }
-        }
+//        // Rows
+//        for (int y = 0; y < mBufferedImage.getHeight(); y++) {
+//            // Columns
+//            for (int x = 0; x < mBufferedImage.getWidth(); x++) {
+//
+//                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
+//                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, new Vec2(x, y));
+//            }
+//        }
     }
 
-    private RgbColor calculateAntiAliasedColor(int y, int x) {
+    public RgbColor calculateAntiAliasedColor(int y, int x) {
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
 
@@ -136,7 +152,7 @@ public class Raytracer {
                 RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
                 outColor = outColor.add( transmissionColor );
             }
-            if ( intersection.getShape().getMaterial().isGiOn() ){
+            if ( mUseGI && intersection.getShape().getMaterial().isGiOn() ){
                 // direct illumination + indirect illumination
                 RgbColor indirectLight = this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection);
 
