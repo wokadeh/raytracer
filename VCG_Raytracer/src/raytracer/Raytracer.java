@@ -159,7 +159,7 @@ public class Raytracer {
     private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){
         Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
 
-        if(intersection.isHit() && intersection.getShape().getMaterial().isGiOn() ){
+        if(intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
             for(Light light : mLightList){
                 RgbColor giColor = intersection.getShape().getColor(light, intersection);
                 outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection));

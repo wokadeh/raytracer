@@ -4,6 +4,7 @@ import scene.shapes.Shape;
 import utils.algebra.Matrix4x4;
 import utils.algebra.Vec3;
 import utils.algebra.Vec4;
+import utils.io.Log;
 
 import java.util.Random;
 
@@ -78,10 +79,6 @@ public class Intersection {
         // calculate random -1 or 1
         // calculate random rotation between 0-180
 
-        Vec3 startPoint = this.getIntersectionPoint();
-
-        if(Float.isNaN(mNormalT.x)) this.calculateCoordinateSystem();
-
         Vec3 randomEndDirection = calculateRandomDirection();
 
         //Vec4 transformedRandomEndDirection = mTransfMatrix.multVec3( new Vec4(randomEndDirection.x, randomEndDirection.y, randomEndDirection.z, 0f));
@@ -89,11 +86,9 @@ public class Intersection {
         Vec3 transformedRandomEndDirection = new Vec3(
                 randomEndDirection.x * mNormalB.x + randomEndDirection.y * mNormal.x + randomEndDirection.z * mNormalT.x,
                 randomEndDirection.x * mNormalB.y + randomEndDirection.y * mNormal.y + randomEndDirection.z * mNormalT.y,
-                randomEndDirection.x * mNormalB.z + randomEndDirection.y * mNormal.z + randomEndDirection.z * mNormalT.z);
+                randomEndDirection.x * mNormalB.z + randomEndDirection.y * mNormal.z + randomEndDirection.z * mNormalT.z).normalize();
 
-        transformedRandomEndDirection = transformedRandomEndDirection.normalize();
-
-        Ray outRay = new Ray(startPoint, new Vec3(transformedRandomEndDirection.x, transformedRandomEndDirection.y, transformedRandomEndDirection.z), Float.MAX_VALUE);
+        Ray outRay = new Ray(this.getIntersectionPoint(), transformedRandomEndDirection, Float.MAX_VALUE);
 
         // if mNormal x, y, or z are 0 return mNormal
         return outRay;
@@ -110,25 +105,25 @@ public class Intersection {
         mNormalB = mNormal.cross(mNormalT);
     }
 
-    private Matrix4x4 calculateRandomTransformationMatrix(){
-        Matrix4x4 transfMatrix = new Matrix4x4(); // we will multiply the normal with it
-
-        if(mNormalT == null) this.calculateCoordinateSystem();
-
-        transfMatrix.setValueAt(0,0, mNormalT.x);
-        transfMatrix.setValueAt(0,1, mNormalT.y);
-        transfMatrix.setValueAt(0,2, mNormalT.z);
-
-        transfMatrix.setValueAt(1,0, mNormal.x);
-        transfMatrix.setValueAt(1,1, mNormal.y);
-        transfMatrix.setValueAt(1,2, mNormal.z);
-
-        transfMatrix.setValueAt(2,0, mNormalB.x);
-        transfMatrix.setValueAt(2,1, mNormalB.y);
-        transfMatrix.setValueAt(2,2, mNormalB.z);
-
-        return transfMatrix;
-    }
+//    private Matrix4x4 calculateRandomTransformationMatrix(){
+//        Matrix4x4 transfMatrix = new Matrix4x4(); // we will multiply the normal with it
+//
+//        if(mNormalT == null) this.calculateCoordinateSystem();
+//
+//        transfMatrix.setValueAt(0,0, mNormalT.x);
+//        transfMatrix.setValueAt(0,1, mNormalT.y);
+//        transfMatrix.setValueAt(0,2, mNormalT.z);
+//
+//        transfMatrix.setValueAt(1,0, mNormal.x);
+//        transfMatrix.setValueAt(1,1, mNormal.y);
+//        transfMatrix.setValueAt(1,2, mNormal.z);
+//
+//        transfMatrix.setValueAt(2,0, mNormalB.x);
+//        transfMatrix.setValueAt(2,1, mNormalB.y);
+//        transfMatrix.setValueAt(2,2, mNormalB.z);
+//
+//        return transfMatrix;
+//    }
 
     public Ray calculateReflectionRay( Vec3 inDir ) {
         inDir = inDir.normalize();
@@ -196,7 +191,7 @@ public class Intersection {
     public void setNormal(Vec3 mNormal) {
         this.mNormal = mNormal.normalize();
 
-        this.mTransfMatrix = calculateRandomTransformationMatrix();
+        this.calculateCoordinateSystem();
     }
 
     public void setDistance(float dist){

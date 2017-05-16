@@ -66,7 +66,7 @@ public class Main {
 
     static short LIGHT_DENSITY = 40;
     static short LIGHT_SAMPLES = 60;
-    static RgbColor LIGHT_COLOR = RgbColor.LIGHT_GRAY;
+    static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 

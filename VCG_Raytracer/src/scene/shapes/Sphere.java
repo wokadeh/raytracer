@@ -28,7 +28,9 @@ public class Sphere extends Shape {
 
         // Transformation of the center of the sphere to the origin (to LCS)
         Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
-        Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
+        Vec3 localDirection = ray.getDirection();//this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
+
+        float t = -1;
 
         // B = 2(x0xd + y0yd + z0zd)
         float compB = 2 * localOrigin.scalar( localDirection );
@@ -39,14 +41,13 @@ public class Sphere extends Shape {
         // D = B*B - 4CA
         float discriminant = (compB * compB) - 4 * compC;
 
-        if (discriminant < 0.0f)
+        if (discriminant < 0.0f){
             return emptyIntersectionTest;
+        }
 
         discriminant = (float) Math.sqrt(discriminant);
         float t1 = ( -compB - discriminant ) / (2f);
         float t2 = ( -compB + discriminant ) / (2f);
-
-        float t = -1;
 
         // In front of Sphere: take nearest hit to ray start
         if( t2 > EPSILON && t1 > EPSILON ){
@@ -66,7 +67,13 @@ public class Sphere extends Shape {
             t = t1;
         }
 
-        // Behind Sphere: we don't care about that
+        // Only one hit by touching the Sphere
+        else if( t1 == t2 ){
+            Log.print(this, "fogrot this so far");
+            t = t1;
+        }
+
+        // Behind Sphere
         if( t < EPSILON ){
             return emptyIntersectionTest;
         }
