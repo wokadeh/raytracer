@@ -88,17 +88,7 @@ public class Raytracer {
         Log.print(this, "Start rendering");
 
         MultiThreader rayMultiThreader = new MultiThreader(this);
-        rayMultiThreader.startMultiThreading(2);
-
-//        // Rows
-//        for (int y = 0; y < mBufferedImage.getHeight(); y++) {
-//            // Columns
-//            for (int x = 0; x < mBufferedImage.getWidth(); x++) {
-//
-//                RgbColor antiAlisedColor = calculateAntiAliasedColor(y, x);
-//                mRenderWindow.setPixel(mBufferedImage, antiAlisedColor, new Vec2(x, y));
-//            }
-//        }
+        rayMultiThreader.startMultiThreading(4);
     }
 
     public RgbColor calculateAntiAliasedColor(int y, int x) {

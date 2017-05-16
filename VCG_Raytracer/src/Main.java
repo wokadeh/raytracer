@@ -67,7 +67,7 @@ public class Main {
 
     static short LIGHT_DENSITY = 40;
     static short LIGHT_SAMPLES = 60;
-    static RgbColor LIGHT_COLOR = RgbColor.LIGHT_GRAY;
+    static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -88,7 +88,7 @@ public class Main {
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
     static boolean USE_SOFT_SHADOWS = false;
 
-    static boolean USE_GI = false;
+    static boolean USE_GI = true;
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
 

@@ -9,34 +9,29 @@ public class MultiThreader{
 	private Thread mThread;
 	private String mThreadName;
 	private Raytracer mRaytracer;
+	private int mIntervalX;
+	private int mIntervalY;
 
 	public MultiThreader(Raytracer raytracer){
 		mRaytracer = raytracer;
 	}
 
 	public void startMultiThreading(int numberOfThreads){
-		Log.warn(this, "Start Multithreading with " + numberOfThreads + " threads");
+		Log.warn(this, "Start Multithreading with " + numberOfThreads * numberOfThreads + " threads");
 
-		RayThread rayThread0 = new RayThread("RayThread_" + "0", mRaytracer, 0, 0, mRaytracer.getBufferedImage().getWidth(), (int)(mRaytracer.getBufferedImage().getHeight() / 2f));
-		RayThread rayThread1 = new RayThread("RayThread_" + "1", mRaytracer, 0, (int)(mRaytracer.getBufferedImage().getHeight() / 2f), mRaytracer.getBufferedImage().getWidth(), mRaytracer.getBufferedImage().getHeight());
+		mIntervalX = mRaytracer.getBufferedImage().getWidth() / numberOfThreads;
+		mIntervalY = mRaytracer.getBufferedImage().getHeight() / numberOfThreads;
 
-		rayThread0.run();
-		rayThread1.run();
+		int counter = 0;
 
-//		// Rows
-//		for (int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y++) {
-//			// Columns
-//			for (int x = 0; x < mRaytracer.getBufferedImage().getWidth(); x++) {
-//
-//
-//			}
-//		}
-
-
-//		for(int i = 0; i < numberOfThreads; i++){
-//
-//			}
+		for(int x = 0; x < mRaytracer.getBufferedImage().getWidth(); x += mIntervalX){
+			for(int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y += mIntervalY){
+				counter += 1;
+				RayThread lala = new RayThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY);
+				lala.start();
+			}
 		}
+	}
 }
 
 class RayThread implements Runnable{
