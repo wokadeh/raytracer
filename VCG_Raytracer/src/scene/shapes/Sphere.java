@@ -28,7 +28,7 @@ public class Sphere extends Shape {
 
         // Transformation of the center of the sphere to the origin (to LCS)
         Vec3 localOrigin = this.invTransformation.multVec3( ray.getStartPoint(), true );
-        Vec3 localDirection = ray.getDirection();//this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
+        Vec3 localDirection = ray.getDirection();
 
         float t = -1;
 
@@ -56,7 +56,6 @@ public class Sphere extends Shape {
 
         // Inside Sphere: take the hit in front of the ray
         else if( t2 > EPSILON && t1 < EPSILON ){
-            //Log.warn(this, " should only happen on transparency...");
             t = t2;
             mIsInside = true;
         }
@@ -69,7 +68,6 @@ public class Sphere extends Shape {
 
         // Only one hit by touching the Sphere
         else if( t1 == t2 ){
-            Log.print(this, "fogrot this so far");
             t = t1;
         }
 

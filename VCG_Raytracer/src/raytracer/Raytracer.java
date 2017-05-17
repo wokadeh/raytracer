@@ -163,7 +163,7 @@ public class Raytracer {
                 // direct illumination + indirect illumination
                 RgbColor indirectLight = this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection);
 
-                indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
+                //indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
 
                 outColor = outColor.add(indirectLight);
             }

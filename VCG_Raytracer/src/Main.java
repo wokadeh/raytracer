@@ -65,13 +65,13 @@ public class Main {
 
     static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
 
-    static short LIGHT_DENSITY = 40;
-    static short LIGHT_SAMPLES = 60;
+    static short LIGHT_DENSITY = 20;
+    static short LIGHT_SAMPLES = 20;
     static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
-    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.1f, BOX_DIMENSION - 1f );
+    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.3f, BOX_DIMENSION - 1f );
     static short AREA_LIGHT_SIZE = 2;
 
     /** KAMERA **/
@@ -86,11 +86,11 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_SOFT_SHADOWS = true;
 
     static boolean USE_GI = true;
-    static int GI_LEVEL = 2;
-    static int GI_SAMPLES = 10;
+    static int GI_LEVEL = 3;
+    static int GI_SAMPLES = 20;
 
     /** DEBUG **/
 
@@ -103,13 +103,9 @@ public class Main {
     public static void main(String[] args){
         //importObject("models/Scooter-smgrps.obj");
 
-
-
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
         draw(renderWindow);
-
-        //renderWindow.exportRendering(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING, SHOW_PARAM_LABEL);
     }
 
     private static void importObject(String path){
@@ -187,7 +183,7 @@ public class Main {
     }
 
     private static void setupLightShapes(Scene renderScene) {
-        Material planeMaterial = new AmbientMaterial(LIGHT_COLOR);
+        Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
         renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, false);
     }
 
