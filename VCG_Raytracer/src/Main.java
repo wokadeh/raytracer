@@ -65,8 +65,8 @@ public class Main {
 
     static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
 
-    static short LIGHT_DENSITY = 20;
-    static short LIGHT_SAMPLES = 30;
+    static short LIGHT_DENSITY = 30;
+    static short LIGHT_SAMPLES = 40;
     static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
@@ -181,9 +181,35 @@ public class Main {
 
         Material lambert1 = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
 
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+3), lambert1, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), lambert1, sphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), sphereMaterial1, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
         //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
+
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
+
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), lambert1, smallSphereRadius);
     }
 
     private static void setupLightShapes(Scene renderScene) {
