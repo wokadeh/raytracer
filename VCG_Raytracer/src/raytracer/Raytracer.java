@@ -40,7 +40,7 @@ public class Raytracer {
     public static int ANTI_ALIASING_HIGH = 8;
     public static int ANTI_ALIASING_INSANE = 16;
 
-    private static float GI_FACTOR = (float) (1f / Math.PI);
+    private static float GI_FACTOR = 1;//(float) (1f / Math.PI);
 
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
@@ -58,6 +58,7 @@ public class Raytracer {
     private int mAntiAliasingSamples;
 
     private boolean mUseGI;
+    private float mPDFFactor;
 
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
@@ -83,6 +84,8 @@ public class Raytracer {
         mDebug = debugOn;
         tStart = System.currentTimeMillis();
         mAntiAliasingSamples = antiAliasingSamples;
+
+        mPDFFactor = (float) ((mGiSamples));// * (1f / (2* Math.PI)) ));
     }
 
     public BufferedImage getBufferedImage() {
@@ -198,23 +201,21 @@ public class Raytracer {
 
     private RgbColor calculateGiIntersections(int giLevelCounter, RgbColor outColor, Intersection intersection){
         if( giLevelCounter > 0 ) {
-            float red = 0, green = 0, blue = 0;
+            float giRed = 0, giGreen = 0, giBlue = 0;
 
             giLevelCounter -= 1;
 
             // object is diffuse; send additional rays
             for (int i = 0; i < mGiSamples; i++) {
 
-                RgbColor giColor = this.giTraceRay(giLevelCounter, outColor, intersection);
-                red += giColor.red();
-                green += giColor.green();
-                blue += giColor.blue();
+                RgbColor giColor = this.giTraceRay(giLevelCounter, outColor, intersection).multScalar(1f / (intersection.getDistance() * 0.2f));
+                giRed += giColor.red();
+                giGreen += giColor.green();
+                giBlue += giColor.blue();
             }
 
-            float factor = (float) mGiSamples;
-
-            if(factor != 0) {
-                outColor = new RgbColor(red / factor, green / factor, blue / factor);
+            if(mPDFFactor != 0) {
+                outColor = new RgbColor(giRed / mPDFFactor, giGreen / mPDFFactor, giBlue / mPDFFactor);
             }
         }
 

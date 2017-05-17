@@ -86,7 +86,7 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static boolean USE_SOFT_SHADOWS = false;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
@@ -224,8 +224,8 @@ public class Main {
 
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
-        Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
-        Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
+        Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.BLUE);
+        Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.RED);
 
         //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REF
         // LECTION, Material.NO_TRANSMISSION, 1);
