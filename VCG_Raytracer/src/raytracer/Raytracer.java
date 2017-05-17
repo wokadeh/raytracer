@@ -172,7 +172,7 @@ public class Raytracer {
                 //indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
 
                 //directLight = directLight.add(indirectLight).multScalar(GI_FACTOR);
-                directLight = directLight.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f));
+                directLight = directLight.multScalar(GI_FACTOR).add(indirectLight.multScalar(1f));
             }
 
             // Add ambient term
