@@ -89,8 +89,8 @@ public class Main {
     static boolean USE_SOFT_SHADOWS = true;
 
     static boolean USE_GI = true;
-    static int GI_LEVEL = 3;
-    static int GI_SAMPLES = 20;
+    static int GI_LEVEL = 2;
+    static int GI_SAMPLES = 10;
 
     /** DEBUG **/
 
