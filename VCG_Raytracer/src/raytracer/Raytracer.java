@@ -40,6 +40,8 @@ public class Raytracer {
     public static int ANTI_ALIASING_HIGH = 8;
     public static int ANTI_ALIASING_INSANE = 16;
 
+    private static float GI_FACTOR = (float) (1f / Math.PI);
+
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
@@ -131,7 +133,7 @@ public class Raytracer {
     }
 
     private RgbColor traceRay(int recursionCounter, int giLevelCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
-        RgbColor outColor = localColor;
+        RgbColor directLight = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
         Intersection intersection = getIntersectionOnShapes(inRay, prevIntersec);
@@ -140,26 +142,26 @@ public class Raytracer {
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
             if( recursionCounter <= 0 ) {
                 // If recursion is done and it is not the last ray then trace the ray to all lights to see if any obstacle exists
-                return outColor;
+                return directLight;
             }
 
             RgbColor shadedColor = shade( intersection );
 
             // Calculate the color of every object, that was hit in between, depending on recursive level
-            outColor = outColor.add( shadedColor );
+            directLight = directLight.add( shadedColor );
 
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if ( intersection.getShape().isReflective() ) {
                 recursionCounter -= 1;
                 float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), outColor, intersection).multScalar(reflectivity);
-                outColor = outColor.add( reflectionColor );
+                RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
+                directLight = directLight.add( reflectionColor );
             }
             if ( intersection.getShape().isTransparent() ) {
                 recursionCounter -= 1;
                 float transparency = intersection.getShape().getMaterial().getTransparency();
-                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
-                outColor = outColor.add( transmissionColor );
+                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
+                directLight = directLight.add( transmissionColor );
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
@@ -169,15 +171,16 @@ public class Raytracer {
 
                 //indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
 
-                outColor = outColor.multRGB(indirectLight);
+                //directLight = directLight.add(indirectLight).multScalar(GI_FACTOR);
+                directLight = directLight.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f));
             }
 
             // Add ambient term
             RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
-            outColor = outColor.add( ambientTerm );
+            directLight = directLight.add( ambientTerm );
         }
 
-        return outColor;
+        return directLight;
     }
 
     private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){

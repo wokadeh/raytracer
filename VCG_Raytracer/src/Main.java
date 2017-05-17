@@ -56,8 +56,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 800;
-    static int IMAGE_HEIGHT = 600;
+    static int IMAGE_WIDTH = 320;
+    static int IMAGE_HEIGHT = 240;
 
     static float BOX_DIMENSION = 4f;
 
@@ -67,7 +67,7 @@ public class Main {
 
     static short LIGHT_DENSITY = 30;
     static short LIGHT_SAMPLES = 40;
-    static RgbColor LIGHT_COLOR = RgbColor.LIGHT_GRAY;
+    static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -85,8 +85,8 @@ public class Main {
     /** RAYTRACER **/
 
     static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static boolean USE_SOFT_SHADOWS = true;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
@@ -97,7 +97,7 @@ public class Main {
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = true;
+    static boolean SHOW_PARAM_LABEL = false;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
