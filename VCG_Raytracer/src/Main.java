@@ -56,8 +56,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 320;
-    static int IMAGE_HEIGHT = 200;
+    static int IMAGE_WIDTH = 800;
+    static int IMAGE_HEIGHT = 600;
 
     static float BOX_DIMENSION = 4f;
 
@@ -66,7 +66,7 @@ public class Main {
     static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
 
     static short LIGHT_DENSITY = 20;
-    static short LIGHT_SAMPLES = 20;
+    static short LIGHT_SAMPLES = 30;
     static RgbColor LIGHT_COLOR = RgbColor.GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
@@ -86,7 +86,7 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static boolean USE_SOFT_SHADOWS = false;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
@@ -161,6 +161,10 @@ public class Main {
     private static void setupObjects(Scene renderScene) {
         setupSpheres(renderScene);
         setupLightShapes(renderScene);
+
+
+        Material lambert1 = new LambertMaterial(RgbColor.RED, RgbColor.BLUE);
+        renderScene.createSquare(new Vec3(0, 0, LIGHT_POSITION.z), lambert1, 0.6f, Plane.FACING_UP, true);
     }
 
     private static void setupSpheres(Scene renderScene) {
@@ -184,6 +188,7 @@ public class Main {
 
     private static void setupLightShapes(Scene renderScene) {
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
+        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_UP, false);
         renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, false);
     }
 
@@ -203,7 +208,7 @@ public class Main {
         // Plane 1 RIGHT
         renderScene.createPlane(new Vec3( -BOX_DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
         // Plane 2 FRONT
-        renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
+        //renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
         // Plane 3 BACK
         renderScene.createPlane(new Vec3( 0f, 0f, -BOX_DIMENSION/2 ), planeMaterial, Plane.FACING_BACK);
         // Plane 4 UP
