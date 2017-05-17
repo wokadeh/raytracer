@@ -94,7 +94,6 @@ public class Sphere extends Shape {
         intersectionTest.setIntersectionPoint( intersectionPoint );
 
         if(mIsInside){
-            Log.error(this, "normal switch");
             intersectionTest.setNormal( normal.multScalar( -1f ));
         }
 

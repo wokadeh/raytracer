@@ -48,7 +48,7 @@ import utils.algebra.Vec3;
     * Add depth of field
     * Add SSAO
     * Add GI
-
+    * Add blurry reflections
  */
 
 // Main application class. This is the routine called by the JVM to run the program.
@@ -85,8 +85,8 @@ public class Main {
     /** RAYTRACER **/
 
     static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static boolean USE_SOFT_SHADOWS = false;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
@@ -170,10 +170,11 @@ public class Main {
     private static void setupSpheres(Scene renderScene) {
         float sphereRadius = 1f;
         float smallSphereRadius = 0.6f;
+        float smallSphereRadius2 = 0.9f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR, 1);
         Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.AIR, 1);
 
         Material boringMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
@@ -183,7 +184,7 @@ public class Main {
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
-        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius);
+        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
@@ -222,6 +223,7 @@ public class Main {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
 
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
+        Material darkCeilingMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.BLACK);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
@@ -240,7 +242,7 @@ public class Main {
         // Plane 4 UP
         renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_UP);
         // Plane 5 DOWN
-        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_DOWN);
+        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), darkCeilingMaterial, Plane.FACING_DOWN);
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
