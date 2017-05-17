@@ -97,19 +97,19 @@ public class Main {
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = false;
+    static boolean SHOW_PARAM_LABEL = true;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
         //importObject("models/Scooter-smgrps.obj");
 
-        long tStart = System.currentTimeMillis();
+
 
         Window renderWindow = new Window(IMAGE_WIDTH, IMAGE_HEIGHT);
 
         draw(renderWindow);
 
-        renderWindow.exportRendering(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING, SHOW_PARAM_LABEL);
+        //renderWindow.exportRendering(String.valueOf(stopTime(tStart)), RECURSIONS, ANTI_ALIASING, SHOW_PARAM_LABEL);
     }
 
     private static void importObject(String path){
@@ -217,14 +217,8 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, SHOW_PARAM_LABEL);
 
         raytracer.renderScene();
-    }
-
-    private static double stopTime(long tStart){
-        long tEnd = System.currentTimeMillis();
-        long tDelta = tEnd - tStart;
-        return tDelta / 1000.0;
     }
 }

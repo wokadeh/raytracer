@@ -6,8 +6,6 @@ import utils.algebra.Vec2;
 import utils.io.Log;
 
 public class MultiThreader{
-	private Thread mThread;
-	private String mThreadName;
 	private Raytracer mRaytracer;
 	private int mIntervalX;
 	private int mIntervalY;
@@ -27,8 +25,7 @@ public class MultiThreader{
 		for(int x = 0; x < mRaytracer.getBufferedImage().getWidth(); x += mIntervalX){
 			for(int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y += mIntervalY){
 				counter += 1;
-				RayThread lala = new RayThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY);
-				lala.start();
+				new RayThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY).start();
 			}
 		}
 	}
@@ -58,15 +55,20 @@ class RayThread implements Runnable{
 	public void run() {
 		Log.warn(this, "Running Thread " + mThreadName);
 
-		// Rows
-		for (int y = mYMin; y < mYMax; y++) {
-			// Columns
-			for (int x = mXMin; x < mXMax; x++) {
-				RgbColor antiAlisedColor = mRaytracer.calculateAntiAliasedColor(y, x);
-				mRaytracer.getRenderWindow().setPixel(mRaytracer.getBufferedImage(), antiAlisedColor, new Vec2(x, y));
+		try {
+			// Rows
+			for (int y = mYMin; y < mYMax; y++) {
+				// Columns
+				for (int x = mXMin; x < mXMax; x++) {
+					RgbColor antiAlisedColor = mRaytracer.calculateAntiAliasedColor(y, x);
+					mRaytracer.getRenderWindow().setPixel(mRaytracer.getBufferedImage(), antiAlisedColor, new Vec2(x, y));
+				}
 			}
+		}catch (Exception e) {
+			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
 		}
 
+		mRaytracer.exportRendering();
 		Log.warn(this, mThreadName + " ... finished!");
 	}
 
@@ -77,5 +79,4 @@ class RayThread implements Runnable{
 			mThread.start();
 		}
 	}
-
 }

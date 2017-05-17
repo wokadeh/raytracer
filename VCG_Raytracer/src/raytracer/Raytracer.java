@@ -53,13 +53,17 @@ public class Raytracer {
 
     private float mAntiAliasingFactor;
     private float mAntiAliasingCounter;
+    private int mAntiAliasingSamples;
 
     private boolean mUseGI;
 
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples){
+    private boolean mDebug;
+    private long tStart;
+
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseGI = useGi;
@@ -74,6 +78,9 @@ public class Raytracer {
         mLightList = scene.getLightList();
         mAntiAliasingFactor = 1f / (antiAliasingSamples * antiAliasingSamples);
         mAntiAliasingCounter = 1f / antiAliasingSamples;
+        mDebug = debugOn;
+        tStart = System.currentTimeMillis();
+        mAntiAliasingSamples = antiAliasingSamples;
     }
 
     public BufferedImage getBufferedImage() {
@@ -82,6 +89,16 @@ public class Raytracer {
 
     public Window getRenderWindow() {
         return mRenderWindow;
+    }
+
+    public void exportRendering(){
+        mRenderWindow.exportRendering(String.valueOf(stopTime(tStart)), mMaxRecursions, mAntiAliasingSamples, mDebug);
+    }
+
+    private static double stopTime(long tStart){
+        long tEnd = System.currentTimeMillis();
+        long tDelta = tEnd - tStart;
+        return tDelta / 1000.0;
     }
 
     public void renderScene(){
