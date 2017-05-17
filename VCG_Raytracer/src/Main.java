@@ -86,7 +86,7 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_SOFT_SHADOWS = true;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
