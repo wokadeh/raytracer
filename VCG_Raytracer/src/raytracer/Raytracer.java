@@ -143,8 +143,10 @@ public class Raytracer {
                 return outColor;
             }
 
+            RgbColor shadedColor = shade( intersection );
+
             // Calculate the color of every object, that was hit in between, depending on recursive level
-            outColor = outColor.add( shade( intersection ) );
+            outColor = outColor.add( shadedColor );
 
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if ( intersection.getShape().isReflective() ) {
@@ -159,13 +161,15 @@ public class Raytracer {
                 RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), outColor, intersection).multScalar(transparency);
                 outColor = outColor.add( transmissionColor );
             }
-            if ( mUseGI && intersection.getShape().getMaterial().isGiOn() ){
+            if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
+
                 RgbColor indirectLight = this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection);
+
 
                 //indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
 
-                outColor = outColor.add(indirectLight);
+                outColor = outColor.multRGB(indirectLight);
             }
 
             // Add ambient term

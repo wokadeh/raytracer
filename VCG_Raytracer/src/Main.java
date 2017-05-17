@@ -67,7 +67,7 @@ public class Main {
 
     static short LIGHT_DENSITY = 30;
     static short LIGHT_SAMPLES = 40;
-    static RgbColor LIGHT_COLOR = RgbColor.GRAY;
+    static RgbColor LIGHT_COLOR = RgbColor.LIGHT_GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -223,7 +223,6 @@ public class Main {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
 
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
-        Material darkCeilingMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.BLACK);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_BLUE, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_RED, RgbColor.RED);
@@ -242,7 +241,7 @@ public class Main {
         // Plane 4 UP
         renderScene.createPlane(new Vec3( 0f, -BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_UP);
         // Plane 5 DOWN
-        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), darkCeilingMaterial, Plane.FACING_DOWN);
+        renderScene.createPlane(new Vec3( 0f, BOX_DIMENSION/1.2f, 0 ), planeMaterial, Plane.FACING_DOWN);
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
