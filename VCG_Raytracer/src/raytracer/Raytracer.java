@@ -78,8 +78,12 @@ public class Raytracer {
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseGI = useGi;
-        mGiLevel = giLevel;
-        mGiSamples = giSamples;
+
+        if(mUseGI) {
+            mGiLevel = giLevel;
+            mGiSamples = giSamples;
+        }
+        
         mBufferedImage = renderWindow.getBufferedImage();
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;

@@ -63,7 +63,7 @@ public class Main {
 
     /** LIGHT **/
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
+    static RgbColor AMBIENT_LIGHT = new RgbColor(0.2f, 0.2f, 0.2f);
 
     static boolean USE_GI = false;
     static int GI_LEVEL = 2;
@@ -99,7 +99,7 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int MULTI_THREADING = Raytracer.MULTI_THREADING_NONE;
+    static int MULTI_THREADING = Raytracer.MULTI_THREADING_LOW;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -186,7 +186,7 @@ public class Main {
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), sphereMaterial1, sphereRadius);
         renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
-        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
@@ -217,8 +217,8 @@ public class Main {
 
     private static void setupLightShapes(Scene renderScene) {
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
-        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_UP, false);
-        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, false);
+        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_UP, true);
+        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, true);
     }
 
     private static void setupCornellBox(Scene renderScene) {
