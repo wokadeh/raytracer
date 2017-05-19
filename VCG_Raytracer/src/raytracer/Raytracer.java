@@ -97,7 +97,7 @@ public class Raytracer {
     }
 
     public void exportRendering(){
-        mRenderWindow.exportRendering(String.valueOf(stopTime(tStart)), mMaxRecursions, mAntiAliasingSamples, mDebug);
+        mRenderWindow.exportRendering(String.valueOf(stopTime(tStart)), mMaxRecursions, mAntiAliasingSamples, mDebug, mGiLevel, mGiSamples);
     }
 
     private static double stopTime(long tStart){

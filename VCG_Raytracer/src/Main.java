@@ -56,8 +56,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 320;
-    static int IMAGE_HEIGHT = 240;
+    static int IMAGE_WIDTH = 800;
+    static int IMAGE_HEIGHT = 600;
 
     static float BOX_DIMENSION = 4f;
 
@@ -86,7 +86,7 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_SOFT_SHADOWS = true;
 
     static boolean USE_GI = true;
     static int GI_LEVEL = 2;
@@ -97,7 +97,7 @@ public class Main {
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = false;
+    static boolean SHOW_PARAM_LABEL = true;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -141,7 +141,7 @@ public class Main {
         }
         else {
         /* Area Light */
-            renderScene.createAreaLight(light_pos, AREA_LIGHT_SIZE, LIGHT_DENSITY, LIGHT_SAMPLES, LIGHT_COLOR);
+            renderScene.createAreaLight(light_pos, AREA_LIGHT_SIZE, LIGHT_DENSITY, LIGHT_SAMPLES, LIGHT_COLOR.multScalar(0.75f));
 
             if(SHOW_AREA_LIGHT_SAMPLES) {
                 AreaLight light1 = (AreaLight) renderScene.getLightList().get(0);
@@ -174,7 +174,7 @@ public class Main {
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.AIR, 1);
+        Material sphereMaterial2 = new PhongMaterial(RgbColor.BLACK, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.NO_REFLECTION, Material.DIAMOND, 1);
         Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.NO_REFLECTION, Material.AIR, 1);
 
         Material boringMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
