@@ -171,7 +171,8 @@ public class Raytracer {
 
                 Vec3 indirectLight = this.calculateGiIntersections(giLevelCounter, new Vec3(), intersection);
 
-                Vec3 colorVec = directLight.colors.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f)).multScalar(0.058f);
+                //Vec3 colorVec = directLight.colors.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f)).multScalar(0.058f);
+                Vec3 colorVec = (directLight.colors.add(indirectLight.multScalar(GI_FACTOR * 0.25f)));
 
 
                 directLight = new RgbColor(colorVec);
@@ -214,7 +215,7 @@ public class Raytracer {
             // object is diffuse; send additional rays
             for (int i = 0; i < mGiSamples; i++) {
 
-                Vec3 giColor = this.giTraceRay(giLevelCounter, outColor, intersection).multScalar(1f / mPDFFactor);
+                Vec3 giColor = this.giTraceRay(giLevelCounter, outColor, intersection).multScalar(1f / mPDFFactor).multScalar(intersection.getCosTheta());
                 indirectLight = indirectLight.add(giColor);
             }
 
