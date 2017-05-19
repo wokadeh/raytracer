@@ -40,7 +40,7 @@ public class Raytracer {
     public static int ANTI_ALIASING_HIGH = 8;
     public static int ANTI_ALIASING_INSANE = 16;
 
-    public static int MULTI_THREADING_NONE = 0;
+    public static int MULTI_THREADING_NONE = 1;
     public static int MULTI_THREADING_LOW = 2;
     public static int MULTI_THREADING_MEDIUM = 4;
     public static int MULTI_THREADING_HIGH = 8;

@@ -65,9 +65,13 @@ public class Main {
 
     static RgbColor AMBIENT_LIGHT = new RgbColor(0.01f, 0.01f, 0.01f);
 
+    static boolean USE_GI = false;
+    static int GI_LEVEL = 2;
+    static int GI_SAMPLES = 10;
+
     static short LIGHT_DENSITY = 30;
     static short LIGHT_SAMPLES = 40;
-    static RgbColor LIGHT_COLOR = RgbColor.GRAY;
+    static RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -85,12 +89,8 @@ public class Main {
     /** RAYTRACER **/
 
     static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
-
-    static boolean USE_GI = true;
-    static int GI_LEVEL = 2;
-    static int GI_SAMPLES = 10;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static boolean USE_SOFT_SHADOWS = false;
 
     /** DEBUG **/
 
@@ -99,7 +99,7 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int MULTI_THREADING = Raytracer.MULTI_THREADING_INSANE;
+    static int MULTI_THREADING = Raytracer.MULTI_THREADING_NONE;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
