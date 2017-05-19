@@ -33,21 +33,6 @@ public class LambertMaterial  extends Material {
 
     @Override
     public RgbColor getColor(Light light, Vec3 normal, Vec3 vertexPos, Vec3 camPos) {
-        Vec3 normalN = normal.normalize();
-
-        Vec3 lightVecN = (light.getPosition().sub(vertexPos)).normalize();
-        float angle = clampAngle(normalN.scalar(lightVecN));
-
-        RgbColor diffuseColor = this.calculateDiffuseColor(light.getColor(), angle);
-
-        RgbColor specularColor = this.calculateSpecularColor(normalN, lightVecN, light.getColor(), vertexPos, camPos, angle);
-
-        RgbColor outputColor = diffuseColor.add(specularColor);
-
-        if(this.reflectionCoeff != 0){
-            outputColor = outputColor.multScalar( this.reflectionCoeff );
-        }
-
-        return outputColor;
+        return getColor(light, normal, vertexPos);
     }
 }

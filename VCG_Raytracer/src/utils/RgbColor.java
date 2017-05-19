@@ -10,11 +10,11 @@ public class RgbColor {
     public float blue(){ return colors.z; }
 
     public static RgbColor DARK_CUSTOM = new RgbColor(0.02f, 0.01f, 0.01f);
-    public static RgbColor RED = new RgbColor(1, 0, 0);
+    public static RgbColor RED = new RgbColor(0.5f, 0, 0);
     public static RgbColor DARK_RED = new RgbColor(.01f, 0, 0);
     public static RgbColor GREEN = new RgbColor(0, 1, 0);
     public static RgbColor DARK_GREEN = new RgbColor(0, .01f, 0);
-    public static RgbColor BLUE = new RgbColor(0, 0, 1);
+    public static RgbColor BLUE = new RgbColor(0, 0, 0.5f);
     public static RgbColor DARK_BLUE = new RgbColor(0, 0, .01f);
     public static RgbColor WHITE = new RgbColor(1, 1, 1);
     public static RgbColor BLACK = new RgbColor(0, 0, 0);

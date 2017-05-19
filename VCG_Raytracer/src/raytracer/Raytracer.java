@@ -40,7 +40,7 @@ public class Raytracer {
     public static int ANTI_ALIASING_HIGH = 8;
     public static int ANTI_ALIASING_INSANE = 16;
 
-    private static float GI_FACTOR = 1;//(float) (1f / Math.PI);
+    private static float GI_FACTOR = (float) (1f / Math.PI);
 
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
@@ -85,7 +85,7 @@ public class Raytracer {
         tStart = System.currentTimeMillis();
         mAntiAliasingSamples = antiAliasingSamples;
 
-        mPDFFactor = (float) ((mGiSamples));// * (1f / (2* Math.PI)) ));
+        mPDFFactor = (float) (1f / (2f* Math.PI));
     }
 
     public BufferedImage getBufferedImage() {
@@ -169,13 +169,13 @@ public class Raytracer {
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
 
-                RgbColor indirectLight = this.calculateGiIntersections(giLevelCounter, RgbColor.BLACK, intersection);
+                Vec3 indirectLight = this.calculateGiIntersections(giLevelCounter, new Vec3(), intersection);
+
+                Vec3 colorVec = directLight.colors;
+                colorVec = colorVec.add(indirectLight).multScalar(GI_FACTOR * 0.018f);
 
 
-                //indirectLight = indirectLight.multScalar((float) (1f / Math.PI));
-
-                //directLight = directLight.add(indirectLight).multScalar(GI_FACTOR);
-                directLight = directLight.multScalar(GI_FACTOR).add(indirectLight.multScalar(1f));
+                directLight = new RgbColor(colorVec);
             }
 
             // Add ambient term
@@ -186,36 +186,34 @@ public class Raytracer {
         return directLight;
     }
 
-    private RgbColor giTraceRay(int giLevelCounter, RgbColor outColor, Intersection prevIntersec){
+    private Vec3 giTraceRay(int giLevelCounter, Vec3 outColor, Intersection prevIntersec){
         Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
 
         if( intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
             for(Light light : mLightList){
-                RgbColor giColor = intersection.getShape().getColor(light, intersection);
-                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection));
+                Vec3 giColor = intersection.getShape().getColor(light, intersection).colors;
+                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection)).multScalar(light.getPosition().sub(intersection.getIntersectionPoint()).scalar(intersection.getNormal()));
             }
         }
 
         return outColor;
     }
 
-    private RgbColor calculateGiIntersections(int giLevelCounter, RgbColor outColor, Intersection intersection){
+    private Vec3 calculateGiIntersections(int giLevelCounter, Vec3 outColor, Intersection intersection){
         if( giLevelCounter > 0 ) {
-            float giRed = 0, giGreen = 0, giBlue = 0;
+            Vec3 indirectLight = new Vec3();
 
             giLevelCounter -= 1;
 
             // object is diffuse; send additional rays
             for (int i = 0; i < mGiSamples; i++) {
 
-                RgbColor giColor = this.giTraceRay(giLevelCounter, outColor, intersection).multScalar(1f / (intersection.getDistance() * 0.2f));
-                giRed += giColor.red();
-                giGreen += giColor.green();
-                giBlue += giColor.blue();
+                Vec3 giColor = this.giTraceRay(giLevelCounter, outColor, intersection).multScalar(1f / mPDFFactor);
+                indirectLight = indirectLight.add(giColor);
             }
 
-            if(mPDFFactor != 0) {
-                outColor = new RgbColor(giRed / mPDFFactor, giGreen / mPDFFactor, giBlue / mPDFFactor);
+            if(mGiSamples != 0) {
+                outColor = indirectLight.multScalar( 1f / (float) mGiSamples);
             }
         }
 
