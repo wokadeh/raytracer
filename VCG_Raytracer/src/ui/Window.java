@@ -55,7 +55,7 @@ public class Window {
     private void setOutputLabel(String text, int recursions, int antiAliasing, int giRecursions, int giSamples){
         Graphics graphic = mBufferedImage.getGraphics();
         graphic.setColor(Color.black);
-        graphic.fill3DRect(0,mHeight - 30,350,mHeight,true);
+        graphic.fill3DRect(0,mHeight - 30,mWidth,mHeight,true);
         graphic.setColor(Color.green);
         graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing*2 + ", GI Rec: " + giRecursions + ", GI Samples: " + giSamples, 10, mHeight - 10);
 

@@ -99,6 +99,8 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
+    static int MULTI_THREADING = Raytracer.MULTI_THREADING_HIGH;
+
     // Initial method. This is where the show begins.
     public static void main(String[] args){
         //importObject("models/Scooter-smgrps.obj");
@@ -245,7 +247,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, SHOW_PARAM_LABEL);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, MULTI_THREADING, SHOW_PARAM_LABEL);
 
         raytracer.renderScene();
     }

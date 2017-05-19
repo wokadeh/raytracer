@@ -40,6 +40,12 @@ public class Raytracer {
     public static int ANTI_ALIASING_HIGH = 8;
     public static int ANTI_ALIASING_INSANE = 16;
 
+    public static int MULTI_THREADING_NONE = 0;
+    public static int MULTI_THREADING_LOW = 2;
+    public static int MULTI_THREADING_MEDIUM = 4;
+    public static int MULTI_THREADING_HIGH = 8;
+    public static int MULTI_THREADING_INSANE = 16;
+
     private static float GI_FACTOR = (float) (1f / Math.PI);
 
     private BufferedImage mBufferedImage;
@@ -57,6 +63,8 @@ public class Raytracer {
     private float mAntiAliasingCounter;
     private int mAntiAliasingSamples;
 
+    private int mMultiThreadingLevel;
+
     private boolean mUseGI;
     private float mPDFFactor;
 
@@ -66,7 +74,7 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int multithreading, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseGI = useGi;
@@ -84,6 +92,7 @@ public class Raytracer {
         mDebug = debugOn;
         tStart = System.currentTimeMillis();
         mAntiAliasingSamples = antiAliasingSamples;
+        mMultiThreadingLevel = multithreading;
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
     }
@@ -110,7 +119,7 @@ public class Raytracer {
         Log.print(this, "Start rendering");
 
         MultiThreader rayMultiThreader = new MultiThreader(this);
-        rayMultiThreader.startMultiThreading(4);
+        rayMultiThreader.startMultiThreading(mMultiThreadingLevel);
     }
 
     public RgbColor calculateAntiAliasedColor(int y, int x) {
