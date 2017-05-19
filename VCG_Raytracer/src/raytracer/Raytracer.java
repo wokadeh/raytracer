@@ -171,8 +171,7 @@ public class Raytracer {
 
                 Vec3 indirectLight = this.calculateGiIntersections(giLevelCounter, new Vec3(), intersection);
 
-                Vec3 colorVec = directLight.colors;
-                colorVec = colorVec.add(indirectLight).multScalar(GI_FACTOR * 0.018f);
+                Vec3 colorVec = directLight.colors.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f)).multScalar(0.058f);
 
 
                 directLight = new RgbColor(colorVec);
@@ -187,13 +186,20 @@ public class Raytracer {
     }
 
     private Vec3 giTraceRay(int giLevelCounter, Vec3 outColor, Intersection prevIntersec){
-        Intersection intersection = this.getIntersectionOnShapes(prevIntersec.calculateRandomRay(), prevIntersec);
+        Ray randomRay = prevIntersec.calculateRandomRay();
+
+        Intersection intersection = this.getIntersectionOnShapes(randomRay, prevIntersec);
 
         if( intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
+
+            // calculate the shaded color at one point
             for(Light light : mLightList){
                 Vec3 giColor = intersection.getShape().getColor(light, intersection).colors;
-                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection)).multScalar(light.getPosition().sub(intersection.getIntersectionPoint()).scalar(intersection.getNormal()));
+
+                // start a new GI iteration
+                outColor = outColor.add(this.calculateGiIntersections(giLevelCounter, giColor, intersection));
             }
+            outColor = outColor.multScalar(randomRay.getDirection().scalar(intersection.getNormal()));
         }
 
         return outColor;
