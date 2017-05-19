@@ -99,7 +99,7 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int MULTI_THREADING = Raytracer.MULTI_THREADING_HIGH;
+    static int MULTI_THREADING = Raytracer.MULTI_THREADING_INSANE;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
