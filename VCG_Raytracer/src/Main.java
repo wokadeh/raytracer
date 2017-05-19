@@ -63,8 +63,6 @@ public class Main {
 
     /** LIGHT **/
 
-    static RgbColor AMBIENT_LIGHT = new RgbColor(0.2f, 0.2f, 0.2f);
-
     static boolean USE_GI = false;
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
@@ -72,6 +70,7 @@ public class Main {
     static short LIGHT_DENSITY = 30;
     static short LIGHT_SAMPLES = 40;
     static RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
+    static RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.2f, 0.2f, 0.2f);
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
@@ -218,7 +217,7 @@ public class Main {
     private static void setupLightShapes(Scene renderScene) {
         Material planeMaterial = new AmbientMaterial(RgbColor.WHITE);
         renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_UP, true);
-        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, true);
+        renderScene.createSquare(LIGHT_POSITION, planeMaterial, 0.6f, Plane.FACING_DOWN, false);
     }
 
     private static void setupCornellBox(Scene renderScene) {

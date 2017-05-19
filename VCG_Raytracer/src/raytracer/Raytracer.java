@@ -83,7 +83,7 @@ public class Raytracer {
             mGiLevel = giLevel;
             mGiSamples = giSamples;
         }
-        
+
         mBufferedImage = renderWindow.getBufferedImage();
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;
