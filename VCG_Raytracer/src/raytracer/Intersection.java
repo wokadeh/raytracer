@@ -155,12 +155,10 @@ public class Intersection {
             rayIsEnteringMedium = false;
         }
 
-        float n = (rayIsEnteringMedium == true) ? calculateMaterialCoeff(n1, n2) : calculateMaterialCoeff(n2, n1);
+        float n = (rayIsEnteringMedium == true) ? this.calculateMaterialCoeff(n1, n2) : this.calculateMaterialCoeff(n2, n1);
         rayIsEnteringMedium = !rayIsEnteringMedium;
 
-        float squareCoeff = n * n;
-        float cosBeta = squareCoeff * (1 - normDotIn * normDotIn);
-        cosBeta = 1 - cosBeta;
+        float cosBeta = 1 - ( (n * n) * (1 - normDotIn * normDotIn));
 
         if(cosBeta > 0) {
             Vec3 bVec = mNormal.multScalar((float) Math.sqrt(cosBeta));
@@ -173,7 +171,7 @@ public class Intersection {
         // Total internal reflection
         else{
             //Log.error(this, "Total internal reflection");
-            return calculateReflectionRay(mInRay.getDirection());
+            return this.calculateReflectionRay(inRay);
         }
     }
 
