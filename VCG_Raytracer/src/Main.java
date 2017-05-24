@@ -61,6 +61,14 @@ public class Main {
 
     static float BOX_DIMENSION = 4f;
 
+    /** RAYTRACER **/
+
+    static int RECURSIONS = 8;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_BLURRY_REF = true;
+    static int BLURRY_LEVEL = 30;
+
     /** LIGHT **/
 
     static boolean USE_GI = false;
@@ -74,7 +82,7 @@ public class Main {
 
     static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
-    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.3f, BOX_DIMENSION - 1f );
+    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.1f, BOX_DIMENSION - 1f );
     static short AREA_LIGHT_SIZE = 2;
 
     /** KAMERA **/
@@ -84,12 +92,6 @@ public class Main {
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
     static float VIEW_ANGLE = 70;
-
-    /** RAYTRACER **/
-
-    static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
 
     /** DEBUG **/
 
@@ -223,6 +225,8 @@ public class Main {
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
 
+        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.BLUE);
@@ -236,7 +240,7 @@ public class Main {
         // Plane 1 RIGHT
         renderScene.createPlane(new Vec3( -BOX_DIMENSION, 0f, 0 ), planeMaterialRight, Plane.FACING_RIGHT);
         // Plane 2 FRONT
-        //renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
+        renderScene.createPlane(new Vec3( 0f, 0f, 2 * BOX_DIMENSION ), planeMaterial2, Plane.FACING_FRONT);
         // Plane 3 BACK
         renderScene.createPlane(new Vec3( 0f, 0f, -BOX_DIMENSION/2 ), planeMaterial, Plane.FACING_BACK);
         // Plane 4 UP
@@ -246,7 +250,7 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, MULTI_THREADING, SHOW_PARAM_LABEL);
+        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, USE_BLURRY_REF, BLURRY_LEVEL, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, MULTI_THREADING, SHOW_PARAM_LABEL);
 
         raytracer.renderScene();
     }

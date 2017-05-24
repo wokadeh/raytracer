@@ -65,6 +65,8 @@ public class Raytracer {
 
     private int mMultiThreadingLevel;
 
+    private boolean mUseBlurryRef;
+    private int mBlurryLevel;
     private boolean mUseGI;
     private float mPDFFactor;
 
@@ -74,10 +76,16 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int multithreading, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, boolean useBlurryRefs, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int multithreading, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
+        mUseBlurryRef = useBlurryRefs;
         mUseGI = useGi;
+        mBlurryLevel = blurryLevel;
+
+        if(!mUseBlurryRef){
+            mBlurryLevel = 1;
+        }
 
         if(mUseGI) {
             mGiLevel = giLevel;
@@ -169,9 +177,18 @@ public class Raytracer {
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if ( intersection.getShape().isReflective() ) {
                 recursionCounter -= 1;
-                float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
-                directLight = directLight.add( reflectionColor );
+
+                Vec3 reflectionColorVec = new Vec3();
+
+                for(int i = 0; i < mBlurryLevel; i++) {
+                    float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+                    RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(mUseBlurryRef), directLight, intersection).multScalar(reflectivity);
+                    reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
+                }
+
+                reflectionColorVec = reflectionColorVec.multScalar(1f / mBlurryLevel);
+
+                directLight = directLight.add(new RgbColor(reflectionColorVec));
             }
             if ( intersection.getShape().isTransparent() ) {
                 recursionCounter -= 1;
