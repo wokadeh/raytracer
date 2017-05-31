@@ -39,7 +39,27 @@ public class Intersection {
 
     }
 
-    private static Vec3 calculateRandomDirection(){
+    private static Vec3 calculateRandomValues(){
+        Random rand1 = new Random();
+
+        float randNr1 = rand1.nextInt(100) / 100f;
+        float randNr2 = rand1.nextInt(100) / 100f;
+        float cosTheta = rand1.nextInt(100) / 100f;
+
+        return new Vec3(randNr1, cosTheta, randNr2);
+    }
+
+    private static Vec3 calculateGaussianValues(){
+        Random rand1 = new Random();
+
+        float randNr1 = (float) (rand1.nextGaussian()/2f);
+        float randNr2 = (float) (rand1.nextGaussian()/2f);
+        float cosTheta = (float) Math.abs(rand1.nextGaussian());
+
+        return new Vec3(randNr1, cosTheta, randNr2);
+    }
+
+    private static Vec3 calculateRandomDirection(boolean useGaussian){
         // --- new idea ---
         // random x value between 0-200 => -100-100
         // random z value between 0-200 => -100-100
@@ -47,8 +67,6 @@ public class Intersection {
         // normalise vector
         // calculate transformation T between (0,1,0) and our new vector
         // multiply our normal with transformation T
-
-        Random rand1 = new Random();
 
         // This way is a lot faster
 //        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
@@ -58,29 +76,34 @@ public class Intersection {
 //        return new Vec3(randX, randY, randZ).normalize();
 
         // NEW IDEA
+        Vec3 randomValues;
 
-        double randNr1 = rand1.nextInt(100) / 100f;
-        double randNr2 = rand1.nextInt(100) / 100f;
+        if(useGaussian){
+            randomValues = calculateGaussianValues();
+        }
+        else{
+            randomValues = calculateRandomValues();
+        }
 
-        float mCosTheta = rand1.nextInt(100) / 100f;
+        return randomValues;
 
-        double sinTheta = Math.sqrt(1 - randNr1 * randNr1);
-
-        double phi = 2 * Math.PI/20f * randNr2;
-
-        float x = (float) (sinTheta * Math.cos(phi));
-
-        float z = (float) (sinTheta * Math.sin(phi));
-
-        return new Vec3(x, mCosTheta, z);
+//        double sinTheta = Math.sqrt(1 - randomValues.x * randomValues.x);
+//
+//        double phi = 2 * Math.PI * randomValues.z;
+//
+//        float x = (float) (sinTheta * Math.cos(phi));
+//
+//        float z = (float) (sinTheta * Math.sin(phi));
+//
+//        return new Vec3(x, randomValues.y, z);
     }
 
-    public Vec3 calculateTransformedRandomEndDirection(Vec3 vecA, Vec3 vecB, Vec3 vecC){
+    public Vec3 calculateTransformedRandomEndDirection(Vec3 vecA, Vec3 vecB, Vec3 vecC, boolean useGaussian){
         // calculate random value between 0-90
         // calculate random -1 or 1
         // calculate random rotation between 0-180
 
-        Vec3 randomEndDirection = calculateRandomDirection();
+        Vec3 randomEndDirection = calculateRandomDirection(useGaussian);
 
         Vec3 transformedRandomEndDirection = new Vec3(
                 randomEndDirection.x * vecB.x + randomEndDirection.y * vecA.x + randomEndDirection.z * vecC.x,
@@ -94,7 +117,7 @@ public class Intersection {
 
     public Ray calculateRandomRay(){
 
-        Vec3 transformedRandomEndDirection = calculateTransformedRandomEndDirection(mNormal, mNormalB, mNormalT);
+        Vec3 transformedRandomEndDirection = calculateTransformedRandomEndDirection(mNormal, mNormalB, mNormalT, false);
 
         return new Ray(this.getIntersectionPoint(), transformedRandomEndDirection, Float.MAX_VALUE);
     }
@@ -121,25 +144,6 @@ public class Intersection {
         mNormalB = coordSys.vecC;
     }
 
-//    private Matrix4x4 calculateRandomTransformationMatrix(){
-//        Matrix4x4 transfMatrix = new Matrix4x4(); // we will multiply the normal with it
-//
-//        if(mNormalT == null) this.calculateCoordinateSystem();
-//
-//        transfMatrix.setValueAt(0,0, mNormalT.x);
-//        transfMatrix.setValueAt(0,1, mNormalT.y);
-//        transfMatrix.setValueAt(0,2, mNormalT.z);
-//
-//        transfMatrix.setValueAt(1,0, mNormal.x);
-//        transfMatrix.setValueAt(1,1, mNormal.y);
-//        transfMatrix.setValueAt(1,2, mNormal.z);
-//
-//        transfMatrix.setValueAt(2,0, mNormalB.x);
-//        transfMatrix.setValueAt(2,1, mNormalB.y);
-//        transfMatrix.setValueAt(2,2, mNormalB.z);
-//
-//        return transfMatrix;
-//    }
 
     public Ray calculateReflectionRay(boolean useBlurryRef) {
         // like in Phong, but take vector opposite to incoming direction
@@ -151,7 +155,7 @@ public class Intersection {
             Vec3 directNB = coordSys.vecB;
             Vec3 directNC = coordSys.vecC;
 
-            directN = calculateTransformedRandomEndDirection(directN, directNB, directNC);
+            directN = calculateTransformedRandomEndDirection(directN, directNB, directNC, true);
         }
 
         return calculateReflectionRay(directN );
