@@ -170,15 +170,39 @@ public class Intersection {
         return new Ray(mIntersectionPoint, r, Float.MAX_VALUE);
     }
 
+    public float calculateReflectivity(){
+        float n1 = mInRay.getCurrentMaterial();
+        float n2 = mShape.getMaterial().getFractionCoeff();
+
+        float n = this.calculateMaterialCoeff(n1, n2);
+
+        float normDotIn = -mNormal.scalar(mInRay.getDirection());
+
+        float sinT2 = n * n * (1f - normDotIn * normDotIn);
+
+        if(sinT2 > 1f){
+            //Log.error(this, "Total internal reflection");
+            return 1f;
+        }
+
+        float cosT = (float) Math.sqrt(1f - sinT2);
+
+        float rOrth = (n1 * normDotIn - n2 * cosT) / (n1 * normDotIn + n2 * cosT);
+        float rPara = (n2 * normDotIn - n1 * cosT) / (n2 * normDotIn + n1 * cosT);
+
+        return (rOrth * rOrth + rPara * rPara)/2f;
+    }
+
     public Ray calculateRefractionRay() {
-        Vec3 inRay = mInRay.getDirection().negate().normalize();
 
         float n1 = mInRay.getCurrentMaterial();
         float n2 = mShape.getMaterial().getFractionCoeff();
 
+        //float n = this.calculateMaterialCoeff(n1, n2);
+
         boolean rayIsEnteringMedium = mInRay.isEntering();
 
-        float normDotIn = mNormal.scalar(inRay);
+        float normDotIn = -mNormal.scalar(mInRay.getDirection());
 
         if(normDotIn < 0.0f){
             rayIsEnteringMedium = false;
@@ -187,21 +211,42 @@ public class Intersection {
         float n = (rayIsEnteringMedium == true) ? this.calculateMaterialCoeff(n1, n2) : this.calculateMaterialCoeff(n2, n1);
         rayIsEnteringMedium = !rayIsEnteringMedium;
 
-        float cosBeta = 1 - ( (n * n) * (1 - normDotIn * normDotIn));
 
-        if(cosBeta > 0) {
-            Vec3 bVec = mNormal.multScalar((float) Math.sqrt(cosBeta));
-            Vec3 aVec = mNormal.multScalar(normDotIn);
-            aVec = aVec.sub(inRay);
-            aVec = aVec.multScalar(n);
-            Vec3 out = aVec.sub(bVec);
-            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
-        }
-        // Total internal reflection
-        else{
+
+        float sinT2 = n * n * (1f - normDotIn * normDotIn);
+
+        if(sinT2 > 1f){
             //Log.error(this, "Total internal reflection");
-            return this.calculateReflectionRay(inRay);
+            return this.calculateReflectionRay(mInRay.getDirection());
         }
+
+        float cosT = (float) Math.sqrt(1f - sinT2);
+
+        Vec3 out = mInRay.getDirection().multScalar(n).add(mNormal.multScalar( n * normDotIn - cosT));
+
+        return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
+
+        //if(normDotIn < 0.0f){
+        //    rayIsEnteringMedium = false;
+        //}
+
+
+
+//        float cosBeta = 1 - ( (n * n) * (1 - normDotIn * normDotIn));
+//
+//        if(cosBeta > 0) {
+//            Vec3 bVec = mNormal.multScalar((float) Math.sqrt(cosBeta));
+//            Vec3 aVec = mNormal.multScalar(normDotIn);
+//            aVec = aVec.sub(inRay);
+//            aVec = aVec.multScalar(n);
+//            Vec3 out = aVec.sub(bVec);
+//            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
+//        }
+//        // Total internal reflection
+//        else{
+//            //Log.error(this, "Total internal reflection");
+//            return this.calculateReflectionRay(inRay);
+//        }
     }
 
     protected float calculateMaterialCoeff(float n1, float n2){

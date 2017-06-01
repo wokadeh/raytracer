@@ -82,7 +82,7 @@ public abstract class Shape extends SceneObject {
         return this.material.isReflective();
     }
 
-    public boolean isTransparent(){
+    public boolean isRefractive(){
         return this.material.isTransparent();
     }
 

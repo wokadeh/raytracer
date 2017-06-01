@@ -117,7 +117,7 @@ public abstract class Material {
 
     protected float reflectionCoeff = 0;
 
-    public float getTransparency() {
+    public float getRefractivity() {
         return transparency;
     }
 

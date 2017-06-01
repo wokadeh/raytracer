@@ -26,7 +26,6 @@ import ui.Window;
 import utils.*;
 import utils.algebra.Vec2;
 import utils.algebra.Vec3;
-import utils.io.DataExporter;
 import utils.io.Log;
 
 import java.awt.image.BufferedImage;
@@ -181,7 +180,8 @@ public class Raytracer {
                 Vec3 reflectionColorVec = new Vec3();
 
                 for(int i = 0; i < mBlurryLevel; i++) {
-                    float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+                    //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+                    float reflectivity = intersection.calculateReflectivity();
                     RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(mUseBlurryRef), directLight, intersection).multScalar(reflectivity);
                     reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
                 }
@@ -190,12 +190,12 @@ public class Raytracer {
 
                 directLight = directLight.add(new RgbColor(reflectionColorVec));
             }
-            if ( intersection.getShape().isTransparent() ) {
-                recursionCounter -= 1;
-                float transparency = intersection.getShape().getMaterial().getTransparency();
-                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
-                directLight = directLight.add( transmissionColor );
-            }
+//            if ( intersection.getShape().isRefractive() ) {
+//                recursionCounter -= 1;
+//                float transparency = intersection.getShape().getMaterial().getRefractivity();
+//                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
+//                directLight = directLight.add( transmissionColor );
+//            }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
 
@@ -262,7 +262,7 @@ public class Raytracer {
 
         // Check the ray from the intersection point to any light source
         for( Light light : mLightList ) {
-            illuColor = illuColor.add( traceIllumination( illuColor, light, finalIntersection ) );
+            illuColor = illuColor.add( this.traceIllumination( illuColor, light, finalIntersection ) );
         }
         // If illuColor is BLACK nothing was hit the position is in shadow - do nothing
 
@@ -271,10 +271,10 @@ public class Raytracer {
 
     private RgbColor traceIllumination(RgbColor illuColor, Light light, Intersection finalIntersection){
         if( light.isType().equals("PointLight")){
-            illuColor = getColorFromPointLight(illuColor, light, finalIntersection);
+            illuColor = this.getColorFromPointLight(illuColor, light, finalIntersection);
         }
         if( light.isType().equals("AreaLight")){
-            illuColor = getColorFromAreaLight(illuColor, light, finalIntersection);
+            illuColor = this.getColorFromAreaLight(illuColor, light, finalIntersection);
         }
         return illuColor;
     }
@@ -295,7 +295,7 @@ public class Raytracer {
     private RgbColor getColorFromPointLight(RgbColor illuColor, Light light, Intersection finalIntersection) {
         Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
 
-        Intersection lightIntersection = getIntersectionBetweenLight(lightRay, finalIntersection);
+        Intersection lightIntersection = this.getIntersectionBetweenLight(lightRay, finalIntersection);
 
         // Only if no intersection is happening between the last intersection Point and the light source draw the color
         if(!lightIntersection.isHit() || lightIntersection.isOutOfDistance(lightRay.getDistance()) ){

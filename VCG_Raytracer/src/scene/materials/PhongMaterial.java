@@ -41,10 +41,6 @@ public class PhongMaterial extends Material {
 
         RgbColor outputColor = diffuseColor.add(specularColor);
 
-        if(this.reflectionCoeff != 0){
-            outputColor = outputColor.multScalar( this.reflectionCoeff );
-        }
-
         return outputColor;
     }
 }
