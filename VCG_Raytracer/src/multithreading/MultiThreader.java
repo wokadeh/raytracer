@@ -1,8 +1,6 @@
 package multithreading;
 
 import raytracer.Raytracer;
-import utils.RgbColor;
-import utils.algebra.Vec2;
 import utils.io.Log;
 
 public class MultiThreader{
@@ -25,7 +23,7 @@ public class MultiThreader{
 		for(int x = 0; x < mRaytracer.getBufferedImage().getWidth(); x += mIntervalX){
 			for(int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y += mIntervalY){
 				counter += 1;
-				new RayThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY).start();
+				new RenderThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY).start();
 			}
 		}
 	}

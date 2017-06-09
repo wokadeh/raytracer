@@ -3,13 +3,13 @@ package multithreading;
 import raytracer.Raytracer;
 import utils.io.Log;
 
-class RayThread implements Runnable{
+class RenderThread implements Runnable{
 	private Thread mThread;
 	private String mThreadName;
 	private Raytracer mRaytracer;
 	private RenderBlock mRenderBlock;
 
-	RayThread(String name, Raytracer raytracer, int xMin, int yMin, int xMax, int yMax){
+	RenderThread(String name, Raytracer raytracer, int xMin, int yMin, int xMax, int yMax){
 		mThreadName = name;
 		mRaytracer = raytracer;
 		mRenderBlock = new RenderBlock(xMin, yMin, xMax, yMax);
