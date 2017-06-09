@@ -10,11 +10,10 @@ class RenderThread implements Runnable{
 	private Raytracer mRaytracer;
 	private ArrayList<RenderBlock> mRenderBlockList;
 
-	RenderThread(String name, Raytracer raytracer, int xMin, int yMin, int xMax, int yMax){
+	RenderThread(String name, Raytracer raytracer, ArrayList<RenderBlock> renderBlockArrayList){
 		mThreadName = name;
 		mRaytracer = raytracer;
-		mRenderBlockList = new ArrayList<>();
-		mRenderBlockList.add(new RenderBlock(xMin, yMin, xMax, yMax));
+		mRenderBlockList = renderBlockArrayList;
 
 		Log.warn(this, "Create Thread " + name);
 	}

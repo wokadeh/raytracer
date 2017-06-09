@@ -3,13 +3,18 @@ package multithreading;
 import raytracer.Raytracer;
 import utils.io.Log;
 
+import java.util.ArrayList;
+
 public class MultiThreader{
 	private Raytracer mRaytracer;
 	private int mIntervalX;
 	private int mIntervalY;
+	private ArrayList<RenderBlock> mRenderBlockList;
 
 	public MultiThreader(Raytracer raytracer){
 		mRaytracer = raytracer;
+		//mRenderBlockList = new ArrayList<>();
+		//mRenderBlockList.add(new RenderBlock(xMin, yMin, xMax, yMax));
 	}
 
 	public void startMultiThreading(int numberOfThreads){
@@ -23,7 +28,9 @@ public class MultiThreader{
 		for(int x = 0; x < mRaytracer.getBufferedImage().getWidth(); x += mIntervalX){
 			for(int y = 0; y < mRaytracer.getBufferedImage().getHeight(); y += mIntervalY){
 				counter += 1;
-				new RenderThread("RayThread_" + counter, mRaytracer, x, y, x  + mIntervalX, y + mIntervalY).start();
+				mRenderBlockList = new ArrayList<>();
+				mRenderBlockList.add(new RenderBlock(x, y, x  + mIntervalX, y + mIntervalY));
+				new RenderThread("RayThread_" + counter, mRaytracer, mRenderBlockList).start();
 			}
 		}
 	}
