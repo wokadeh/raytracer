@@ -17,6 +17,7 @@
 package raytracer;
 
 import multithreading.MultiThreader;
+import multithreading.RenderBlock;
 import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.Scene;
@@ -133,6 +134,17 @@ public class Raytracer {
         rayMultiThreader.startMultiThreading(mMultiThreadingLevel);
     }
 
+    public void renderBlock(RenderBlock renderBlock){
+        // Rows
+        for (int y = renderBlock.yMin; y < renderBlock.yMax; y++) {
+            // Columns
+            for (int x = renderBlock.xMin; x < renderBlock.xMax; x++) {
+                RgbColor antiAlisedColor = this.calculateAntiAliasedColor(y, x);
+                this.getRenderWindow().setPixel(this.getBufferedImage(), antiAlisedColor, new Vec2(x, y));
+            }
+        }
+    }
+
     public RgbColor calculateAntiAliasedColor(int y, int x) {
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
@@ -141,7 +153,7 @@ public class Raytracer {
         for(float i = x -0.5f; i < x + 0.5f; i += mAntiAliasingCounter){
             for(float j = y -0.5f; j < y + 0.5f; j += mAntiAliasingCounter){
                 screenPosition = new Vec2(i, j);
-                antiAlisedColor = antiAlisedColor.add(sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
+                antiAlisedColor = antiAlisedColor.add(this.sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
             }
         }
         return antiAlisedColor;
@@ -162,7 +174,7 @@ public class Raytracer {
         RgbColor directLight = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
-        Intersection intersection = getIntersectionOnShapes(inRay, prevIntersec);
+        Intersection intersection = this.getIntersectionOnShapes(inRay, prevIntersec);
 
         if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
@@ -185,7 +197,7 @@ public class Raytracer {
                 for(int i = 0; i < mBlurryLevel; i++) {
                     //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
                     float reflectivity = intersection.calculateReflectivity();
-                    RgbColor reflectionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(mUseBlurryRef), directLight, intersection).multScalar(reflectivity);
+                    RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(mUseBlurryRef), directLight, intersection).multScalar(reflectivity);
                     reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
                 }
 
@@ -196,7 +208,7 @@ public class Raytracer {
             if ( intersection.getShape().isRefractive() ) {
                 recursionCounter -= 1;
                 float transparency = intersection.getShape().getMaterial().getRefractivity();
-                RgbColor transmissionColor = traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
+                RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
                 directLight = directLight.add( transmissionColor.multScalar(0.75f) );
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){

@@ -56,14 +56,7 @@ class RayThread implements Runnable{
 		Log.warn(this, "Running Thread " + mThreadName);
 
 		try {
-			// Rows
-			for (int y = mYMin; y < mYMax; y++) {
-				// Columns
-				for (int x = mXMin; x < mXMax; x++) {
-					RgbColor antiAlisedColor = mRaytracer.calculateAntiAliasedColor(y, x);
-					mRaytracer.getRenderWindow().setPixel(mRaytracer.getBufferedImage(), antiAlisedColor, new Vec2(x, y));
-				}
-			}
+			mRaytracer.renderBlock(new RenderBlock(mXMin, mYMin, mXMax, mYMax));
 		}catch (Exception e) {
 			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
 		}
