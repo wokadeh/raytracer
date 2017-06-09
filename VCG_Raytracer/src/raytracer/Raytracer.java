@@ -34,17 +34,23 @@ import java.util.ArrayList;
 
 public class Raytracer {
 
-    public static int ANTI_ALIASING_NONE = 1;
-    public static int ANTI_ALIASING_LOW = 2;
-    public static int ANTI_ALIASING_MEDIUM = 4;
-    public static int ANTI_ALIASING_HIGH = 8;
-    public static int ANTI_ALIASING_INSANE = 16;
+    public static final int TINY_BLOCK = 5;
+    public static final int MEDIUM_BLOCK = 10;
+    public static final int LARGE_BLOCK = 20;
+    public static final int HUGE_BLOCK = 40;
+    public static final int GIANT_BLOCK = 100;
 
-    public static int MULTI_THREADING_NONE = 1;
-    public static int MULTI_THREADING_LOW = 2;
-    public static int MULTI_THREADING_MEDIUM = 4;
-    public static int MULTI_THREADING_HIGH = 8;
-    public static int MULTI_THREADING_INSANE = 16;
+    public static final int ANTI_ALIASING_NONE = 1;
+    public static final int ANTI_ALIASING_LOW = 2;
+    public static final int ANTI_ALIASING_MEDIUM = 4;
+    public static final int ANTI_ALIASING_HIGH = 8;
+    public static final int ANTI_ALIASING_INSANE = 16;
+
+    public static final int MULTI_THREADING_NONE = 1;
+    public static final int MULTI_THREADING_LOW = 2;
+    public static final int MULTI_THREADING_MEDIUM = 4;
+    public static final int MULTI_THREADING_HIGH = 8;
+    public static final int MULTI_THREADING_INSANE = 16;
 
     private static float GI_FACTOR = (float) (1f / Math.PI);
 
@@ -63,7 +69,8 @@ public class Raytracer {
     private float mAntiAliasingCounter;
     private int mAntiAliasingSamples;
 
-    private int mMultiThreadingLevel;
+    private int mBlockSize;
+    private int mNumberOfThreads;
 
     private boolean mUseBlurryRef;
     private int mBlurryLevel;
@@ -76,7 +83,7 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, boolean useBlurryRefs, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int multithreading, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, boolean useBlurryRefs, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseBlurryRef = useBlurryRefs;
@@ -104,7 +111,8 @@ public class Raytracer {
         mDebug = debugOn;
         tStart = System.currentTimeMillis();
         mAntiAliasingSamples = antiAliasingSamples;
-        mMultiThreadingLevel = multithreading;
+        mBlockSize = blockSize;
+        mNumberOfThreads = numberOfThreads;
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
     }
@@ -128,10 +136,13 @@ public class Raytracer {
     }
 
     public void renderScene(){
-        Log.print(this, "Start rendering");
+        Log.print(this, "Prepare rendering at " + String.valueOf(stopTime(tStart)));
 
-        MultiThreader rayMultiThreader = new MultiThreader(this);
-        rayMultiThreader.startMultiThreading(mMultiThreadingLevel);
+        MultiThreader rayMultiThreader = new MultiThreader(this, mBlockSize, mNumberOfThreads);
+        rayMultiThreader.prepareMultiThreading();
+
+        Log.print(this, "Start rendering at " + String.valueOf(stopTime(tStart)));
+        rayMultiThreader.startMultiThreading();
     }
 
     public void renderBlock(RenderBlock renderBlock){

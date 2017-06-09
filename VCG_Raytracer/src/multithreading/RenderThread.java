@@ -22,8 +22,7 @@ class RenderThread implements Runnable{
 	public void run() {
 		Log.warn(this, "Running Thread " + mThreadName);
 		try {
-			for (RenderBlock renderBlock : mRenderBlockList
-			     ) {
+			for (RenderBlock renderBlock : mRenderBlockList) {
 				mRaytracer.renderBlock(renderBlock);
 			}
 

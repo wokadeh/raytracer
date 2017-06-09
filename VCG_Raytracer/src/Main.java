@@ -100,7 +100,8 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int MULTI_THREADING = Raytracer.MULTI_THREADING_MEDIUM;
+    static int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
+    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_MEDIUM;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -250,7 +251,21 @@ public class Main {
     }
 
     private static void raytraceScene(Window renderWindow, Scene renderScene){
-        Raytracer raytracer = new Raytracer(renderScene, renderWindow, RECURSIONS, USE_GI, GI_LEVEL, GI_SAMPLES, USE_BLURRY_REF, BLURRY_LEVEL, BACKGROUND_COLOR, AMBIENT_LIGHT, ANTI_ALIASING, MULTI_THREADING, SHOW_PARAM_LABEL);
+        Raytracer raytracer = new Raytracer(
+                renderScene,
+                renderWindow,
+                RECURSIONS,
+                USE_GI,
+                GI_LEVEL,
+                GI_SAMPLES,
+                USE_BLURRY_REF,
+                BLURRY_LEVEL,
+                BACKGROUND_COLOR,
+                AMBIENT_LIGHT,
+                ANTI_ALIASING,
+                BLOCK_SIZE,
+                NUMBER_OF_THREADS,
+                SHOW_PARAM_LABEL);
 
         raytracer.renderScene();
     }
