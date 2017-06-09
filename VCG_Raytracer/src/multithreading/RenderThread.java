@@ -2,17 +2,19 @@ package multithreading;
 
 import raytracer.Raytracer;
 import utils.io.Log;
+import java.util.ArrayList;
 
 class RenderThread implements Runnable{
 	private Thread mThread;
 	private String mThreadName;
 	private Raytracer mRaytracer;
-	private RenderBlock mRenderBlock;
+	private ArrayList<RenderBlock> mRenderBlockList;
 
 	RenderThread(String name, Raytracer raytracer, int xMin, int yMin, int xMax, int yMax){
 		mThreadName = name;
 		mRaytracer = raytracer;
-		mRenderBlock = new RenderBlock(xMin, yMin, xMax, yMax);
+		mRenderBlockList = new ArrayList<>();
+		mRenderBlockList.add(new RenderBlock(xMin, yMin, xMax, yMax));
 
 		Log.warn(this, "Create Thread " + name);
 	}
@@ -20,9 +22,12 @@ class RenderThread implements Runnable{
 	@Override
 	public void run() {
 		Log.warn(this, "Running Thread " + mThreadName);
-
 		try {
-			mRaytracer.renderBlock(mRenderBlock);
+			for (RenderBlock renderBlock : mRenderBlockList
+			     ) {
+				mRaytracer.renderBlock(renderBlock);
+			}
+
 		}catch (Exception e) {
 			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
 		}
