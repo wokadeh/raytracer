@@ -101,7 +101,7 @@ public class Main {
     static boolean SHOW_PARAM_LABEL = true;
 
     static int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
-    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_MEDIUM;
+    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_HIGH;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
