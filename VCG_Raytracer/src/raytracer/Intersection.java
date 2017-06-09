@@ -1,5 +1,6 @@
 package raytracer;
 
+import scene.materials.Material;
 import scene.shapes.Shape;
 import utils.algebra.Matrix4x4;
 import utils.algebra.Vec3;
@@ -158,7 +159,14 @@ public class Intersection {
             directN = calculateTransformedRandomEndDirection(directN, directNB, directNC, true);
         }
 
-        return calculateReflectionRay(directN );
+        return calculateReflectionRay(directN);
+    }
+
+    public Ray calculateReflectionRay(Vec3 inDir, float outMat) {
+        Ray refRay = calculateReflectionRay(inDir);
+        refRay.setCurrentMaterial(outMat);
+
+        return refRay;
     }
 
     public Ray calculateReflectionRay(Vec3 inDir ) {
@@ -194,11 +202,8 @@ public class Intersection {
     }
 
     public Ray calculateRefractionRay() {
-
         float n1 = mInRay.getCurrentMaterial();
         float n2 = mShape.getMaterial().getFractionCoeff();
-
-        //float n = this.calculateMaterialCoeff(n1, n2);
 
         boolean rayIsEnteringMedium = mInRay.isEntering();
 
@@ -211,42 +216,18 @@ public class Intersection {
         float n = (rayIsEnteringMedium == true) ? this.calculateMaterialCoeff(n1, n2) : this.calculateMaterialCoeff(n2, n1);
         rayIsEnteringMedium = !rayIsEnteringMedium;
 
-
-
         float sinT2 = n * n * (1f - normDotIn * normDotIn);
 
         if(sinT2 > 1f){
             //Log.error(this, "Total internal reflection");
-            return this.calculateReflectionRay(mInRay.getDirection());
+            return this.calculateReflectionRay(mInRay.getDirection(), n);
         }
 
         float cosT = (float) Math.sqrt(1f - sinT2);
 
         Vec3 out = mInRay.getDirection().multScalar(n).add(mNormal.multScalar( n * normDotIn - cosT));
 
-        return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
-
-        //if(normDotIn < 0.0f){
-        //    rayIsEnteringMedium = false;
-        //}
-
-
-
-//        float cosBeta = 1 - ( (n * n) * (1 - normDotIn * normDotIn));
-//
-//        if(cosBeta > 0) {
-//            Vec3 bVec = mNormal.multScalar((float) Math.sqrt(cosBeta));
-//            Vec3 aVec = mNormal.multScalar(normDotIn);
-//            aVec = aVec.sub(inRay);
-//            aVec = aVec.multScalar(n);
-//            Vec3 out = aVec.sub(bVec);
-//            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n2);
-//        }
-//        // Total internal reflection
-//        else{
-//            //Log.error(this, "Total internal reflection");
-//            return this.calculateReflectionRay(inRay);
-//        }
+        return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringMedium, n);
     }
 
     protected float calculateMaterialCoeff(float n1, float n2){
