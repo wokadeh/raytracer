@@ -31,45 +31,4 @@ public class MultiThreader{
 	}
 }
 
-class RayThread implements Runnable{
-	private Thread mThread;
-	private String mThreadName;
-	private Raytracer mRaytracer;
-	private int mXMin;
-	private int mYMin;
-	private int mXMax;
-	private int mYMax;
 
-	RayThread(String name, Raytracer raytracer, int xMin, int yMin, int xMax, int yMax){
-		mThreadName = name;
-		mRaytracer = raytracer;
-		mXMin = xMin;
-		mYMin = yMin;
-		mXMax = xMax;
-		mYMax = yMax;
-
-		Log.warn(this, "Create Thread " + name);
-	}
-
-	@Override
-	public void run() {
-		Log.warn(this, "Running Thread " + mThreadName);
-
-		try {
-			mRaytracer.renderBlock(new RenderBlock(mXMin, mYMin, mXMax, mYMax));
-		}catch (Exception e) {
-			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
-		}
-
-		mRaytracer.exportRendering();
-		Log.warn(this, mThreadName + " ... finished!");
-	}
-
-	public void start () {
-		Log.warn(this,"Starting " + mThreadName);
-		if (mThread == null) {
-			mThread = new Thread(this, mThreadName);
-			mThread.start();
-		}
-	}
-}
