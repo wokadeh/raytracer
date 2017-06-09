@@ -2,18 +2,19 @@ package multithreading;
 
 import raytracer.Raytracer;
 import utils.io.Log;
-import java.util.ArrayList;
+
+import java.util.List;
 
 class RenderThread implements Runnable{
 	private Thread mThread;
 	private String mThreadName;
 	private Raytracer mRaytracer;
-	private ArrayList<RenderBlock> mRenderBlockList;
+	private List<RenderBlock> mSyncRenderBlockList;
 
-	RenderThread(String name, Raytracer raytracer, ArrayList<RenderBlock> renderBlockArrayList){
+	RenderThread(String name, Raytracer raytracer, List<RenderBlock> renderBlockArrayList){
 		mThreadName = name;
 		mRaytracer = raytracer;
-		mRenderBlockList = renderBlockArrayList;
+		mSyncRenderBlockList = renderBlockArrayList;
 
 		Log.warn(this, "Create Thread " + name);
 	}
@@ -22,8 +23,8 @@ class RenderThread implements Runnable{
 	public void run() {
 		Log.warn(this, "Running Thread " + mThreadName);
 		try {
-			for (RenderBlock renderBlock : mRenderBlockList) {
-				mRaytracer.renderBlock(renderBlock);
+			while (!mSyncRenderBlockList.isEmpty()){
+				mRaytracer.renderBlock(mSyncRenderBlockList.remove(0));
 			}
 
 		}catch (Exception e) {

@@ -5,12 +5,14 @@ import utils.io.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class MultiThreader{
 	private Raytracer mRaytracer;
 	private int mIntervalX;
 	private int mIntervalY;
 	private ArrayList<RenderBlock> mRenderBlockList;
+	private List<RenderBlock> mSyncRenderBlockList;
 	private int mBlockSize;
 	private int mNumberOfThreads;
 
@@ -32,21 +34,13 @@ public class MultiThreader{
 				mRenderBlockList.add(new RenderBlock(x, y, x  + mIntervalX, y + mIntervalY));
 			}
 		}
+
+		mSyncRenderBlockList = Collections.synchronizedList(mRenderBlockList);
 	}
 
 	public void startMultiThreading(){
-		int intervals = mRenderBlockList.size() / mNumberOfThreads;
-		int counter = 0;
-		for(int i = 0; i < mRenderBlockList.size() - intervals + 1; i+= intervals){
-			ArrayList<RenderBlock> renderSubList = new ArrayList<>();
-			counter ++;
-			int start = i;
-
-			for(int j = start; j < start + intervals; j++) {
-				renderSubList.add(mRenderBlockList.get(j));
-			}
-			//Collections.shuffle(renderSubList);
-			new RenderThread("RayThread_" + counter, mRaytracer, renderSubList).start();
+		for(int i = 0; i < mNumberOfThreads; i++){
+			new RenderThread("RayThread_" + i, mRaytracer, mSyncRenderBlockList).start();
 		}
 	}
 }
