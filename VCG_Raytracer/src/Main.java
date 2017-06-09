@@ -100,7 +100,7 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
+    static int BLOCK_SIZE = Raytracer.LARGE_BLOCK;
     static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_HIGH;
 
     // Initial method. This is where the show begins.
