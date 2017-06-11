@@ -51,6 +51,7 @@ public class Raytracer {
     public static final int MULTI_THREADING_MEDIUM = 4;
     public static final int MULTI_THREADING_HIGH = 8;
     public static final int MULTI_THREADING_INSANE = 16;
+    public static final int MULTI_THREADING_GODLIKE = 64;
 
     private static float GI_FACTOR = (float) (1f / Math.PI);
 
@@ -171,9 +172,6 @@ public class Raytracer {
     }
 
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){
-        if(pixelPoint.equals(new Vec2(400.5f, 450f))){
-            Log.print(this, "out");
-        }
         Vec3 startPoint = mScene.getCamPos();
         Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
         Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
@@ -220,7 +218,7 @@ public class Raytracer {
                 recursionCounter -= 1;
                 float transparency = intersection.getShape().getMaterial().getRefractivity();
                 RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
-                directLight = directLight.add( transmissionColor.multScalar(0.75f) );
+                directLight = directLight.add( transmissionColor.multScalar(0.5f) );
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination

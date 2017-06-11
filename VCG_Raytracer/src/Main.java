@@ -65,7 +65,7 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_SOFT_SHADOWS = true;
     static boolean USE_BLURRY_REF = false;
     static int BLURRY_LEVEL = 30;
 
@@ -101,7 +101,7 @@ public class Main {
     static boolean SHOW_PARAM_LABEL = true;
 
     static int BLOCK_SIZE = Raytracer.LARGE_BLOCK;
-    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_HIGH;
+    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_INSANE;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -174,7 +174,7 @@ public class Main {
     private static void setupSpheres(Scene renderScene) {
         float sphereRadius = 1f;
         float smallSphereRadius = 0.6f;
-        float smallSphereRadius2 = 0.7f;
+        float smallSphereRadius2 = 0.8f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.TINY_REFLECTION, Material.NO_TRANSMISSION, 1);
