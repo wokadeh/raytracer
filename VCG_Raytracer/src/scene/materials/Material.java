@@ -16,13 +16,7 @@ public abstract class Material {
     public static float NO_TRANSMISSION = 0f;
     public static float TINY = 0.1f;
 
-    /* REFLECTION INDICES */
-    public static float TOTAL_REFLECTION = 1.0f;
-    public static float MOST_REFLECTION = 0.75f;
-    public static float HALF_REFLECTION = 0.5f;
-    public static float TINY_REFLECTION = 0.1f;
-    public static float NANO_REFLECTION = 0.05f;
-    public static float NO_REFLECTION = 0f;
+
 
     protected RgbColor ambiCoeff;
     protected RgbColor diffCoeff;
@@ -32,9 +26,10 @@ public abstract class Material {
 
     protected float fractionCoeff = 0;
     protected float switchedFractionCoeff = 0;
-    protected float transparency = 0;
 
     protected String texturePath;
+
+    protected Reflection reflection;
 
     private String mType;
     private float mUScale;
@@ -66,6 +61,7 @@ public abstract class Material {
         this.shininess = shininess;
 
         this.mType = type;
+        this.reflection = new Reflection(0,0);
     }
 
     private void init(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, boolean giOff, float shininess, String type){
@@ -79,7 +75,7 @@ public abstract class Material {
     }
 
     public boolean isReflective() {
-        return this.reflectionCoeff != 0;
+        return this.reflection.reflectivity != 0;
     }
 
     public boolean isGiOn(){ return this.giOn; };
@@ -112,16 +108,6 @@ public abstract class Material {
         return this.switchedFractionCoeff;
     }
 
-    public float getReflectivity() {
-        return reflectionCoeff;
-    }
-
-    protected float reflectionCoeff = 0;
-
-    public float getRefractivity() {
-        return transparency;
-    }
-
     protected float clampAngle(float angle){
         if(angle > 1f){
             return 1f;
@@ -150,5 +136,9 @@ public abstract class Material {
         return this.diffCoeff
                 .multRGB(lightColor)
                 .multScalar(angle);
+    }
+
+    public Reflection getReflection() {
+        return this.reflection;
     }
 }

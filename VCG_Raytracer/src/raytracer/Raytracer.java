@@ -216,8 +216,7 @@ public class Raytracer {
             }
             if ( intersection.getShape().isRefractive() ) {
                 recursionCounter -= 1;
-                float transparency = intersection.getShape().getMaterial().getRefractivity();
-                RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection).multScalar(transparency);
+                RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection);
                 directLight = directLight.add( transmissionColor.multScalar(0.5f) );
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){

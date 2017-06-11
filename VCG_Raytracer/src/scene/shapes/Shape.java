@@ -5,6 +5,7 @@ import raytracer.Ray;
 import scene.materials.Material;
 import scene.SceneObject;
 import scene.lights.Light;
+import scene.materials.Reflection;
 import utils.io.Log;
 import utils.algebra.Matrix4x4;
 import utils.RgbColor;
@@ -84,6 +85,10 @@ public abstract class Shape extends SceneObject {
 
     public boolean isRefractive(){
         return this.material.isTransparent();
+    }
+
+    public Reflection getReflection(){
+        return this.material.getReflection();
     }
 
     public void setRaytraced(boolean raytraced) {

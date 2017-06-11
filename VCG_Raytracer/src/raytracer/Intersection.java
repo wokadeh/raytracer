@@ -20,8 +20,6 @@ public class Intersection {
 
     private boolean mHit;
 
-    Matrix4x4 mTransfMatrix;
-
     private Vec3 mNormalT;
     private Vec3 mNormalB;
 
@@ -36,11 +34,9 @@ public class Intersection {
         mHit = false;
         mShape = shape;
         mDistanceToIntersection = Float.MAX_VALUE;
-
-
     }
 
-    private static Vec3 calculateRandomValues(){
+    private Vec3 calculateRandomValues(){
         Random rand1 = new Random();
 
         float randNr1 = rand1.nextInt(100) / 100f;
@@ -50,17 +46,23 @@ public class Intersection {
         return new Vec3(randNr1, cosTheta, randNr2);
     }
 
-    private static Vec3 calculateGaussianValues(){
+    private Vec3 calculateGaussianValues(){
         Random rand1 = new Random();
 
-        float randNr1 = (float) (rand1.nextGaussian()/2f);
-        float randNr2 = (float) (rand1.nextGaussian()/2f);
-        float cosTheta = (float) Math.abs(rand1.nextGaussian());
+        float blurryness = mShape.getReflection().blurryness;
 
-        return new Vec3(randNr1, cosTheta, randNr2);
+        if (blurryness != 0) {
+
+            float randNr1 = (float) (rand1.nextGaussian() / blurryness);
+            float randNr2 = (float) (rand1.nextGaussian() / blurryness);
+            float cosTheta = (float) Math.abs(rand1.nextGaussian());
+
+            return new Vec3(randNr1, cosTheta, randNr2);
+        }
+        return calculateRandomValues();
     }
 
-    private static Vec3 calculateRandomDirection(boolean useGaussian){
+    private Vec3 calculateRandomDirection(boolean useGaussian){
         // --- new idea ---
         // random x value between 0-200 => -100-100
         // random z value between 0-200 => -100-100
@@ -139,7 +141,7 @@ public class Intersection {
     }
 
     private void calculateCoordinateSystem(){
-        CoordinateSystem coordSys = calculateCoordinateSystem(mNormal);
+        CoordinateSystem coordSys = this.calculateCoordinateSystem(mNormal);
 
         mNormalT = coordSys.vecB;
         mNormalB = coordSys.vecC;
@@ -151,12 +153,12 @@ public class Intersection {
         Vec3 directN = mInRay.getDirection();
 
         if(useBlurryRef){
-            CoordinateSystem coordSys = calculateCoordinateSystem(directN);
+            CoordinateSystem coordSys = this.calculateCoordinateSystem(directN);
 
             Vec3 directNB = coordSys.vecB;
             Vec3 directNC = coordSys.vecC;
 
-            directN = calculateTransformedRandomEndDirection(directN, directNB, directNC, true);
+            directN = this.calculateTransformedRandomEndDirection(directN, directNB, directNC, true);
         }
 
         return calculateReflectionRay(directN);

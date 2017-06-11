@@ -26,10 +26,7 @@
 import raytracer.Raytracer;
 import scene.SceneObject;
 import scene.lights.AreaLight;
-import scene.materials.AmbientMaterial;
-import scene.materials.LambertMaterial;
-import scene.materials.Material;
-import scene.materials.PhongMaterial;
+import scene.materials.*;
 import scene.shapes.Plane;
 import ui.Window;
 import scene.Scene;
@@ -65,9 +62,9 @@ public class Main {
 
     static int RECURSIONS = 8;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
-    static boolean USE_BLURRY_REF = false;
-    static int BLURRY_LEVEL = 30;
+    static boolean USE_SOFT_SHADOWS = false;
+    static boolean USE_BLURRY_REF = true;
+    static int BLURRY_LEVEL = 60;
 
     /** LIGHT **/
 
@@ -177,18 +174,25 @@ public class Main {
         float smallSphereRadius2 = 0.8f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.TINY_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material sphereMaterial2 = new PhongMaterial(RgbColor.GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.HALF_REFLECTION, Material.GLASS, 1);
-        Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.NOT_SHINY, Material.NO_REFLECTION, Material.AIR, 1);
+        Material sphereMaterial1 = new PhongMaterial(
+                RgbColor.DARK_GRAY,
+                RgbColor.GRAY,
+                RgbColor.WHITE,
+                PhongMaterial.SHINY,
+                new Reflection(Reflection.HALF_BLURRY, Reflection.MOST_REFLECTION),
+                Material.NO_TRANSMISSION);
 
-        Material boringMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-        Material boringMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
+        //Material sphereMaterial2 = new PhongMaterial(RgbColor.GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.HALF_REFLECTION, Material.GLASS);
+        //Material sphereMaterial3 = new PhongMaterial(RgbColor.GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.NOT_SHINY, Material.NO_REFLECTION, Material.AIR);
+
+        //Material boringMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION);
+        //Material boringMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.GRAY, RgbColor.WHITE, PhongMaterial.SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION);
 
         Material lambert1 = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), sphereMaterial1, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
+        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
+        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
@@ -226,15 +230,11 @@ public class Main {
     private static void setupCornellBox(Scene renderScene) {
         // Materials: AmbientMaterial Color, Diffuse Coeeff
 
-        Material sphereMaterial1 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.DARK_GRAY, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.MOST_REFLECTION, Material.NO_TRANSMISSION, 1);
-
         Material planeMaterial = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.LIGHT_GRAY);
         Material planeMaterial2 = new LambertMaterial(RgbColor.BLACK, RgbColor.BLACK);
         Material planeMaterialLeft = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.BLUE);
         Material planeMaterialRight = new LambertMaterial(RgbColor.DARK_GRAY, RgbColor.RED);
 
-        //Material sphereMaterial2 = new PhongMaterial(RgbColor.DARK_GRAY, RgbColor.WHITE, RgbColor.WHITE, PhongMaterial.VERY_SHINY, Material.TOTAL_REF
-        // LECTION, Material.NO_TRANSMISSION, 1);
 
         // Plane 0 LEFT
         renderScene.createPlane(new Vec3(BOX_DIMENSION, 0f, 0 ), planeMaterialLeft, Plane.FACING_LEFT);
