@@ -18,6 +18,7 @@ public class Reflection {
 	public static float HALF_BLURRY = 10f;
 	public static float TINY_BLURRY = 40f;
 	public static float NANO_BLURRY = 80f;
+	public static float NO_BLURRY = 0.0f;
 
 	public Reflection(float blurryness, float reflectivity){
 		this.blurryness = blurryness;

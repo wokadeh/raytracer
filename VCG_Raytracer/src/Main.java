@@ -191,7 +191,7 @@ public class Main {
         Material lambert1 = new LambertMaterial(RgbColor.LIGHT_GRAY, RgbColor.WHITE);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), sphereMaterial1, sphereRadius);
-        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial2, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial1, sphereRadius);
         //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), lambert1, smallSphereRadius);
@@ -258,7 +258,6 @@ public class Main {
                 USE_GI,
                 GI_LEVEL,
                 GI_SAMPLES,
-                USE_BLURRY_REF,
                 BLURRY_LEVEL,
                 BACKGROUND_COLOR,
                 AMBIENT_LIGHT,

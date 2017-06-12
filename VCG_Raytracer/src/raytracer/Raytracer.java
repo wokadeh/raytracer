@@ -73,7 +73,6 @@ public class Raytracer {
     private int mBlockSize;
     private int mNumberOfThreads;
 
-    private boolean mUseBlurryRef;
     private int mBlurryLevel;
     private boolean mUseGI;
     private float mPDFFactor;
@@ -84,16 +83,11 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, boolean useBlurryRefs, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
-        mUseBlurryRef = useBlurryRefs;
         mUseGI = useGi;
         mBlurryLevel = blurryLevel;
-
-        if(!mUseBlurryRef){
-            mBlurryLevel = 1;
-        }
 
         if(mUseGI) {
             mGiLevel = giLevel;
@@ -206,7 +200,7 @@ public class Raytracer {
                 for(int i = 0; i < mBlurryLevel; i++) {
                     //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
                     float reflectivity = intersection.calculateReflectivity();
-                    RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(mUseBlurryRef), directLight, intersection).multScalar(reflectivity);
+                    RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
                     reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
                 }
 

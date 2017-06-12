@@ -148,11 +148,11 @@ public class Intersection {
     }
 
 
-    public Ray calculateReflectionRay(boolean useBlurryRef) {
+    public Ray calculateReflectionRay() {
         // like in Phong, but take vector opposite to incoming direction
         Vec3 directN = mInRay.getDirection();
 
-        if(useBlurryRef){
+        if(mShape.getReflection().blurryness != 0){
             CoordinateSystem coordSys = this.calculateCoordinateSystem(directN);
 
             Vec3 directNB = coordSys.vecB;
