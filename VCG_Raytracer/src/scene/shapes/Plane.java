@@ -25,6 +25,7 @@ public class Plane extends Shape {
         mNormal = getFacingNormal( facingDirection );
     }
 
+    // TODO: Fix plane generation for planes not along the axis!!
     public Plane(Vec3 pos, Material mat, Matrix4x4 transf, Vec3 normal) {
         super(pos, mat, transf, "PLANE");
 

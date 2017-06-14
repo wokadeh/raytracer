@@ -16,7 +16,25 @@ public abstract class Material {
     public static float NO_TRANSMISSION = 0f;
     public static float TINY = 0.1f;
 
+    public static final Material REFRACTIVE_MATERIAL = new PhongMaterial(
+            RgbColor.DARK_GRAY,
+            RgbColor.GRAY,
+            RgbColor.WHITE,
+            PhongMaterial.SHINY,
+            new Reflection(Reflection.NO_BLURRY, Reflection.NANO_REFLECTION),
+            Material.DIAMOND);
 
+    public static final Material LAMBERT_MATERIAL = new LambertMaterial(
+            RgbColor.LIGHT_GRAY,
+            RgbColor.WHITE);
+
+    public static final Material BLURRY_MATERIAL = new PhongMaterial(
+            RgbColor.DARK_GRAY,
+            RgbColor.GRAY,
+            RgbColor.WHITE,
+            PhongMaterial.SHINY,
+            new Reflection(Reflection.HALF_BLURRY, Reflection.MOST_REFLECTION),
+            Material.NO_TRANSMISSION);
 
     protected RgbColor ambiCoeff;
     protected RgbColor diffCoeff;
@@ -36,6 +54,7 @@ public abstract class Material {
     private float mVScale;
 
     protected boolean giOn = false;
+
 
     protected Material(RgbColor ambientCoefficient, RgbColor diffuseCoefficient, RgbColor specularCoefficient, float shininess, String type){
         init(ambientCoefficient, diffuseCoefficient, specularCoefficient, shininess, type);

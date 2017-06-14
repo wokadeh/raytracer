@@ -10,7 +10,7 @@ public class Reflection {
 	public static float MOST_REFLECTION = 0.75f;
 	public static float HALF_REFLECTION = 0.5f;
 	public static float TINY_REFLECTION = 0.1f;
-	public static float NANO_REFLECTION = 0.05f;
+	public static float NANO_REFLECTION = 0.005f;
 	public static float NO_REFLECTION = 0f;
 
 	public static float TOTAL_BLURRY = 1.0f;
