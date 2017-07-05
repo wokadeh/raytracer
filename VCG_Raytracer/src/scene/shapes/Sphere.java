@@ -33,13 +33,13 @@ public class Sphere extends Shape {
         float t = -1;
 
         // B = 2(x0xd + y0yd + z0zd)
-        float compB = 2 * localOrigin.scalar( localDirection );
+        float compB = 2f * localOrigin.scalar( localDirection );
 
         // C = x0^2 + y0^2 + z0^2 - r^2
         float compC = localOrigin.scalar( localOrigin ) - mSqrRadius;
 
         // D = B*B - 4CA
-        float discriminant = (compB * compB) - 4 * compC;
+        float discriminant = (compB * compB) - 4f * compC;
 
         if (discriminant < 0.0f){
             return emptyIntersectionTest;

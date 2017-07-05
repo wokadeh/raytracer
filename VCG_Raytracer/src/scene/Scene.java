@@ -6,10 +6,7 @@ import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.lights.PointLight;
 import scene.materials.Material;
-import scene.shapes.Plane;
-import scene.shapes.Shape;
-import scene.shapes.Sphere;
-import scene.shapes.Square;
+import scene.shapes.*;
 import utils.*;
 import utils.algebra.Vec2;
 import utils.algebra.Vec3;
@@ -51,6 +48,10 @@ public class Scene {
 
     public void createSquare(Vec3 pos, Material mat, float dim, int facingDirection, boolean raytraced){
         mShapeList.add(new Square(pos, mat, dim, facingDirection, raytraced));
+    }
+
+    public void createCube(Vec3 pos, Material mat, float dim){
+        mShapeList.add(new Cube(pos, mat, dim));
     }
 
     public void createPointLight(Vec3 pos, RgbColor color){

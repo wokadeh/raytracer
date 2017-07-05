@@ -177,7 +177,7 @@ public class Raytracer {
         RgbColor directLight = localColor;
 
         // For each pixel testing each shape to get nearest intersection; the range of the Ray is this time unlimited
-        Intersection intersection = this.getIntersectionOnShapes(inRay, prevIntersec);
+        Intersection intersection = RaytracerMethods.getIntersectionOnShapes(inRay, prevIntersec, mShapeList);
 
         if( intersection.isHit() ){
             // Stop! Enter, if the last recursion level is reached, but it is not the final ray to the light
@@ -195,34 +195,16 @@ public class Raytracer {
             if ( intersection.getShape().isReflective() ) {
                 recursionCounter -= 1;
 
-                Vec3 reflectionColorVec = new Vec3();
-
-                for(int i = 0; i < mBlurryLevel; i++) {
-                    //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
-                    float reflectivity = intersection.calculateReflectivity();
-                    RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
-                    reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
-                }
-
-                reflectionColorVec = reflectionColorVec.multScalar(1f / mBlurryLevel);
-
-                directLight = directLight.add(new RgbColor(reflectionColorVec));
+                directLight = getReflectiveColor(recursionCounter, giLevelCounter, directLight, intersection);
             }
             if ( intersection.getShape().isRefractive() ) {
                 recursionCounter -= 1;
-                RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection);
-                directLight = directLight.add( transmissionColor.multScalar(0.5f) );
+                directLight = getRefractionColor(recursionCounter, giLevelCounter, directLight, intersection);
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
 
-                Vec3 indirectLight = this.calculateGiIntersections(giLevelCounter, new Vec3(), intersection);
-
-                //Vec3 colorVec = directLight.colors.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f)).multScalar(0.058f);
-                Vec3 colorVec = (directLight.colors.add(indirectLight.multScalar(GI_FACTOR * 0.25f)));
-
-
-                directLight = new RgbColor(colorVec);
+                directLight = getGIColor(giLevelCounter, directLight, intersection);
             }
 
             // Add ambient term
@@ -233,10 +215,43 @@ public class Raytracer {
         return directLight;
     }
 
+    private RgbColor getGIColor(int giLevelCounter, RgbColor directLight, Intersection intersection) {
+        Vec3 indirectLight = this.calculateGiIntersections(giLevelCounter, new Vec3(), intersection);
+
+        //Vec3 colorVec = directLight.colors.multScalar(GI_FACTOR).add(indirectLight.multScalar(2f)).multScalar(0.058f);
+        Vec3 colorVec = (directLight.colors.add(indirectLight.multScalar(GI_FACTOR * 0.25f)));
+
+
+        directLight = new RgbColor(colorVec);
+        return directLight;
+    }
+
+    private RgbColor getRefractionColor(int recursionCounter, int giLevelCounter, RgbColor directLight, Intersection intersection) {
+        RgbColor transmissionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateRefractionRay(), directLight, intersection);
+        directLight = directLight.add( transmissionColor.multScalar(0.5f) );
+        return directLight;
+    }
+
+    private RgbColor getReflectiveColor(int recursionCounter, int giLevelCounter, RgbColor directLight, Intersection intersection) {
+        Vec3 reflectionColorVec = new Vec3();
+
+        for(int i = 0; i < mBlurryLevel; i++) {
+            //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+            float reflectivity = intersection.calculateReflectivity();
+            RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
+            reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
+        }
+
+        reflectionColorVec = reflectionColorVec.multScalar(1f / mBlurryLevel);
+
+        directLight = directLight.add(new RgbColor(reflectionColorVec));
+        return directLight;
+    }
+
     private Vec3 giTraceRay(int giLevelCounter, Vec3 outColor, Intersection prevIntersec){
         Ray randomRay = prevIntersec.calculateRandomRay();
 
-        Intersection intersection = this.getIntersectionOnShapes(randomRay, prevIntersec);
+        Intersection intersection = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
 
         if( intersection.isHit() && intersection.getShape().getMaterial().isGiOn()){
 
@@ -323,37 +338,37 @@ public class Raytracer {
         return illuColor;
     }
 
-    private Intersection getIntersectionOnShapes(Ray inRay, Intersection prevIntersec) {
-        Intersection finalIntersection = new Intersection(inRay, null);
-        float tempDistance = Float.MAX_VALUE;
-
-        boolean skip = false;
-
-        // 2: Intersection test with all shapes
-        for( Shape shape : mShapeList ){
-            // Important: Avoid intersection with itself as long as it is not transparent
-            if( prevIntersec != null ) {
-                if ( ( prevIntersec.getShape().equals(shape) )) {
-                    skip = true;
-                }
-            }
-
-            if(!skip) {
-                Intersection intersection = shape.intersect(inRay);
-
-                // Shape was not hit + the distance is adequate
-                if (intersection.isHit()                                  // is Hit and coming from the correct side
-                        && (intersection.getDistance() < tempDistance)    // shortest distance of all
-                        && (intersection.getDistance() > 0.00001))        // minimum distance
-                {
-                    tempDistance = intersection.getDistance();
-                    finalIntersection = intersection;
-                }
-            }
-            skip = false;
-        }
-        return finalIntersection;
-    }
+//    private Intersection getIntersectionOnShapes(Ray inRay, Intersection prevIntersec) {
+//        Intersection finalIntersection = new Intersection(inRay, null);
+//        float tempDistance = Float.MAX_VALUE;
+//
+//        boolean skip = false;
+//
+//        // 2: Intersection test with all shapes
+//        for( Shape shape : mShapeList ){
+//            // Important: Avoid intersection with itself as long as it is not transparent
+//            if( prevIntersec != null ) {
+//                if ( ( prevIntersec.getShape().equals(shape) )) {
+//                    skip = true;
+//                }
+//            }
+//
+//            if(!skip) {
+//                Intersection intersection = shape.intersect(inRay);
+//
+//                // Shape was not hit + the distance is adequate
+//                if (intersection.isHit()                                  // is Hit and coming from the correct side
+//                        && (intersection.getDistance() < tempDistance)    // shortest distance of all
+//                        && (intersection.getDistance() > 0.00001))        // minimum distance
+//                {
+//                    tempDistance = intersection.getDistance();
+//                    finalIntersection = intersection;
+//                }
+//            }
+//            skip = false;
+//        }
+//        return finalIntersection;
+//    }
 
     private Intersection getIntersectionBetweenLight(Ray inRay, Intersection prevIntersec) {
         // 2: Intersection test with all shapes

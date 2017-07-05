@@ -32,24 +32,6 @@ public class Square extends Shape {
 
 	@Override
 	public Intersection intersect(Ray ray) {
-		Intersection intersection = mPlane.intersect(ray);
-
-		boolean hit = intersection.isHit();
-
-		// is within borders?
-		if( hit ) {
-			if ((intersection.getIntersectionPoint().x < this.getPosition().x + mDim) &&
-					(intersection.getIntersectionPoint().x > this.getPosition().x - mDim) &&
-					(intersection.getIntersectionPoint().z < this.getPosition().z + mDim) &&
-					(intersection.getIntersectionPoint().z > this.getPosition().z - mDim)) {
-				intersection.setHit(true);
-				intersection.setNormal(mPlane.getNormal());
-			}
-			else {
-				intersection.setHit(false);
-			}
-		}
-
-		return intersection;
+		return mPlane.intersect(ray, mDim, mDim);
 	}
 }

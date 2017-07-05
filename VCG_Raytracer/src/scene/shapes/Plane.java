@@ -26,8 +26,8 @@ public class Plane extends Shape {
     }
 
     // TODO: Fix plane generation for planes not along the axis!!
-    public Plane(Vec3 pos, Material mat, Matrix4x4 transf, Vec3 normal) {
-        super(pos, mat, transf, "PLANE");
+    public Plane(Vec3 pos, Material mat, Vec3 normal) {
+        super(pos, mat, new Matrix4x4().translateXYZ(pos), "PLANE");
 
         mNormal = normal.normalize();
     }
@@ -52,6 +52,10 @@ public class Plane extends Shape {
 
     @Override
     public Intersection intersect(Ray ray) {
+        return intersect(ray, 0, 0);
+    }
+
+    public Intersection intersect(Ray ray, float width, float height) {
         Intersection emptyIntersectionTest = new Intersection(ray, this);
 
         Vec3 localDirection = this.invTransformation.multVec3( ray.getDirection(), false ).normalize();
@@ -76,11 +80,18 @@ public class Plane extends Shape {
 
         Ray localRay = new Ray( localOrigin, localDirection, t );
 
+
+        if ( !checkOutOfBounce(localRay.getEndPoint(), width, height )) {
+            return emptyIntersectionTest;
+        }
+
         return createIntersection(emptyIntersectionTest, ray, localRay);
     }
 
     private Intersection createIntersection(Intersection intersectionTest, Ray ray, Ray localRay){
         Vec3 intersectionPoint = this.orgTransformation.multVec3( localRay.getEndPoint(), true );
+
+
         intersectionTest.setIntersectionPoint( intersectionPoint );
         intersectionTest.setNormal( mNormal );
 
@@ -92,5 +103,41 @@ public class Plane extends Shape {
         intersectionTest.setHit( true );
 
         return intersectionTest;
+    }
+
+    private boolean checkOutOfBounce(Vec3 intersectionPoint, float width, float height){
+        if(width != 0 && height != 0) {
+
+            if( mNormal.equals(this.getFacingNormal(Plane.FACING_UP)) || mNormal.equals(this.getFacingNormal(Plane.FACING_DOWN))) {
+                if ((intersectionPoint.x < width) &&
+                        (intersectionPoint.x > - width) &&
+                        (intersectionPoint.z < height) &&
+                        (intersectionPoint.z > - height)) {
+                    return true;
+                }
+            }
+
+            if( mNormal.equals(this.getFacingNormal(Plane.FACING_FRONT)) || mNormal.equals(this.getFacingNormal(Plane.FACING_BACK))) {
+                if ((intersectionPoint.x < width) &&
+                        (intersectionPoint.x > - width) &&
+                        (intersectionPoint.y < height) &&
+                        (intersectionPoint.y > - height)) {
+                    return true;
+                }
+            }
+
+            if( mNormal.equals(this.getFacingNormal(Plane.FACING_LEFT)) || mNormal.equals(this.getFacingNormal(Plane.FACING_RIGHT))) {
+                if ((intersectionPoint.y < width) &&
+                        (intersectionPoint.y > - width) &&
+                        (intersectionPoint.z < height) &&
+                        (intersectionPoint.z > - height)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        return true;
+
     }
 }
