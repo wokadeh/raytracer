@@ -194,12 +194,11 @@ public class Raytracer {
             // Further recursions through objects, if the recursion is not finished and object is not diffuse
             if ( intersection.getShape().isReflective() ) {
                 recursionCounter -= 1;
-
-                directLight = getReflectiveColor(recursionCounter, giLevelCounter, directLight, intersection);
+                directLight = this.getReflectiveColor(recursionCounter, giLevelCounter, directLight, intersection);
             }
             if ( intersection.getShape().isRefractive() ) {
                 recursionCounter -= 1;
-                directLight = getRefractionColor(recursionCounter, giLevelCounter, directLight, intersection);
+                directLight = this.getRefractionColor(recursionCounter, giLevelCounter, directLight, intersection);
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
@@ -235,14 +234,14 @@ public class Raytracer {
     private RgbColor getReflectiveColor(int recursionCounter, int giLevelCounter, RgbColor directLight, Intersection intersection) {
         Vec3 reflectionColorVec = new Vec3();
 
-        for(int i = 0; i < mBlurryLevel; i++) {
-            //float reflectivity = intersection.getShape().getMaterial().getReflectivity();
+        for(int i = 0; i < intersection.getShape().getMaterial().getReflection().blurryLevel; i++) {
+            //float reflectivity = intersection.getShape().getMaterial().getReflection().reflectivity;
             float reflectivity = intersection.calculateReflectivity();
             RgbColor reflectionColor = this.traceRay(recursionCounter, giLevelCounter, intersection.calculateReflectionRay(), directLight, intersection).multScalar(reflectivity);
             reflectionColorVec = reflectionColorVec.add(reflectionColor.colors);
         }
 
-        reflectionColorVec = reflectionColorVec.multScalar(1f / mBlurryLevel);
+        reflectionColorVec = reflectionColorVec.multScalar(1f / intersection.getShape().getMaterial().getReflection().blurryLevel);
 
         directLight = directLight.add(new RgbColor(reflectionColorVec));
         return directLight;
