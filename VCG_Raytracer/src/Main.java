@@ -67,7 +67,7 @@ public class Main {
 
     /** LIGHT **/
 
-    static boolean USE_GI = true;
+    static boolean USE_GI = false;
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
 
@@ -169,9 +169,8 @@ public class Main {
         float smallSphereRadius2 = 0.8f;
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
-//        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), Material.LAMBERT_MATERIAL, sphereRadius);
-//        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), Material.LAMBERT_MATERIAL, sphereRadius);
-        //renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), sphereMaterial3, smallSphereRadius2);
+        renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), Material.REFLECTIVE_MATERIAL, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), Material.REFLECTIVE_MATERIAL, sphereRadius);
 
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
@@ -199,9 +198,7 @@ public class Main {
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
         renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
 
-        renderScene.createCube(new Vec3(1.5f,-2.5f,4), Material.LAMBERT_MATERIAL, 1f);
-
-        //renderScene.createSquare(new Vec3(0,-1,0), Material.LAMBERT_MATERIAL, 1f, Plane.FACING_UP, true);
+        //renderScene.createCube(new Vec3(1.5f,-2.5f,4), Material.LAMBERT_MATERIAL, 1f);
     }
 
     private static void setupLightShapes(Scene renderScene) {

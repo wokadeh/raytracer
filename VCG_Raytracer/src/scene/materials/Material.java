@@ -16,6 +16,14 @@ public abstract class Material {
     public static float NO_TRANSMISSION = 0f;
     public static float TINY = 0.1f;
 
+    public static final Material REFLECTIVE_MATERIAL = new PhongMaterial(
+            RgbColor.DARK_GRAY,
+            RgbColor.GRAY,
+            RgbColor.WHITE,
+            PhongMaterial.SHINY,
+            new Reflection(Reflection.NO_BLURRY, Reflection.MOST_REFLECTION),
+            Material.NO_TRANSMISSION);
+
     public static final Material REFRACTIVE_MATERIAL = new PhongMaterial(
             RgbColor.DARK_GRAY,
             RgbColor.GRAY,
