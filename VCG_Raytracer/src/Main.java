@@ -62,8 +62,7 @@ public class Main {
 
     static int RECURSIONS = 4;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = false;
-    static int BLURRY_LEVEL = 60;
+    static boolean USE_SOFT_SHADOWS = true;
 
     /** LIGHT **/
 
@@ -94,7 +93,7 @@ public class Main {
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = false;
+    static boolean SHOW_PARAM_LABEL = true;
 
     static int BLOCK_SIZE = Raytracer.LARGE_BLOCK;
     static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_INSANE;
@@ -236,7 +235,6 @@ public class Main {
                 USE_GI,
                 GI_LEVEL,
                 GI_SAMPLES,
-                BLURRY_LEVEL,
                 BACKGROUND_COLOR,
                 AMBIENT_LIGHT,
                 ANTI_ALIASING,

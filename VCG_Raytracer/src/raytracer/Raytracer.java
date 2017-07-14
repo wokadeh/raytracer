@@ -73,7 +73,6 @@ public class Raytracer {
     private int mBlockSize;
     private int mNumberOfThreads;
 
-    private int mBlurryLevel;
     private boolean mUseGI;
     private float mPDFFactor;
 
@@ -83,11 +82,10 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, int blurryLevel, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseGI = useGi;
-        mBlurryLevel = blurryLevel;
 
         if(mUseGI) {
             mGiLevel = giLevel;
