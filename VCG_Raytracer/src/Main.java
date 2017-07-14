@@ -60,8 +60,8 @@ public class Main {
 
     /** RAYTRACER **/
 
-    static int RECURSIONS = 8;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_LOW; //Raytracer.ANTI_ALIASING_MEDIUM;
+    static int RECURSIONS = 4;
+    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
     static boolean USE_SOFT_SHADOWS = false;
     static int BLURRY_LEVEL = 60;
 
@@ -71,7 +71,7 @@ public class Main {
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
 
-    static short LIGHT_DENSITY = 30;
+    static short LIGHT_DENSITY = 20;
     static short LIGHT_SAMPLES = 40;
     static RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
     static RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.1f, 0.1f, 0.1f);
@@ -87,14 +87,14 @@ public class Main {
     static Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 70;
+    static float VIEW_ANGLE = 35;
 
     /** DEBUG **/
 
     static boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static boolean SHOW_PRIMARY_RAYS = false;
     static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = true;
+    static boolean SHOW_PARAM_LABEL = false;
 
     static int BLOCK_SIZE = Raytracer.LARGE_BLOCK;
     static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_INSANE;
@@ -170,33 +170,33 @@ public class Main {
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), Material.REFLECTIVE_MATERIAL, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f + sphereRadius, BOX_DIMENSION /3f+3), Material.REFLECTIVE_MATERIAL, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f  + 1.1f, BOX_DIMENSION /3f+3), Material.REFRACTIVE_MATERIAL, sphereRadius);
 
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
-
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
-        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+7f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 5), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 4), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 3), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 2), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+3f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+4f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
+//        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
 
         //renderScene.createCube(new Vec3(1.5f,-2.5f,4), Material.LAMBERT_MATERIAL, 1f);
     }

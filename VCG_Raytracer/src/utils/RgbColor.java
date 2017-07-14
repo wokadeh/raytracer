@@ -23,7 +23,7 @@ public class RgbColor {
     public static RgbColor YELLOW = new RgbColor(1, 1, 0);
     public static RgbColor GRAY = new RgbColor(0.5f, 0.5f, 0.5f);
     public static RgbColor SOFT_GRAY = new RgbColor(0.50f, 0.50f, 0.50f);
-    public static RgbColor LIGHT_GRAY = new RgbColor(0.95f, 0.95f, 0.95f);
+    public static RgbColor LIGHT_GRAY = new RgbColor(0.75f, 0.75f, 0.75f);
     public static RgbColor DARK_GRAY = new RgbColor(0.1f, 0.1f, 0.1f);
 
     public RgbColor(float r, float g, float b){

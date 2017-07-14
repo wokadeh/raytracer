@@ -20,6 +20,7 @@ public class Sphere extends Shape {
 
         mRadius = radius;
         mSqrRadius = mRadius * mRadius;
+        Log.print(this, "Radius " + radius);
     }
 
     @Override
@@ -48,6 +49,8 @@ public class Sphere extends Shape {
         discriminant = (float) Math.sqrt(discriminant);
         float t1 = ( -compB - discriminant ) / (2f);
         float t2 = ( -compB + discriminant ) / (2f);
+
+        t = Math.min( t1, t2 );
 
         // In front of Sphere: take nearest hit to ray start
         if( t2 > EPSILON && t1 > EPSILON ){
@@ -92,6 +95,8 @@ public class Sphere extends Shape {
         Vec3 normal = intersectionPoint.sub( this.getPosition() ).multScalar( 1f / mRadius );
 
         intersectionTest.setIntersectionPoint( intersectionPoint );
+        intersectionTest.getInRay().setEnteringMode(!mIsInside);
+
 
         if(mIsInside){
             intersectionTest.setNormal( normal.multScalar( -1f ));

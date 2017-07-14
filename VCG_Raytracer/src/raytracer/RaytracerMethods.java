@@ -11,6 +11,9 @@ import utils.RgbColor;
 import java.util.ArrayList;
 
 public class RaytracerMethods {
+
+	private final static float EPSILON = 0.001f;
+
 	public static Intersection getIntersectionOnShapes(Ray inRay, Intersection prevIntersec, ArrayList<Shape> shapeList) {
 		Intersection finalIntersection = new Intersection(inRay, null);
 		float tempDistance = Float.MAX_VALUE;
@@ -19,9 +22,9 @@ public class RaytracerMethods {
 
 		// 2: Intersection test with all shapes
 		for( Shape shape : shapeList ){
-			// Important: Avoid intersection with itself as long as it is not transparent
+			// Important: Avoid intersection with itself as long as it is not transparent OR it's already inside the object
 			if( prevIntersec != null ) {
-				if ( ( prevIntersec.getShape().equals(shape) )) {
+				if ( ( prevIntersec.getShape().equals(shape) && !prevIntersec.getInRay().isEntering() )) {
 					skip = true;
 				}
 			}
@@ -32,7 +35,7 @@ public class RaytracerMethods {
 				// Shape was not hit + the distance is adequate
 				if (intersection.isHit()                                  // is Hit and coming from the correct side
 						&& (intersection.getDistance() < tempDistance)    // shortest distance of all
-						&& (intersection.getDistance() > 0.00001))        // minimum distance
+						&& (intersection.getDistance() > EPSILON))           // minimum distance
 				{
 					tempDistance = intersection.getDistance();
 					finalIntersection = intersection;
@@ -67,7 +70,7 @@ public class RaytracerMethods {
 	}
 
 	private static RgbColor getColorFromPointLight(RgbColor illuColor, Light light, Intersection finalIntersection, ArrayList<Shape> shapeList, Scene scene) {
-		Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition());
+		Ray lightRay = new Ray(finalIntersection.getIntersectionPoint(), light.getPosition(), true);
 
 		Intersection lightIntersection = RaytracerMethods.getIntersectionBetweenLight(lightRay, finalIntersection, shapeList);
 

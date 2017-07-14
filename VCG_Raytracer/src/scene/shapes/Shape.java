@@ -29,7 +29,7 @@ public abstract class Shape extends SceneObject {
         this.orgTransformation = transf;
         this.invTransformation = transf.invert();
         this.trpTransformation = transf.transpose();
-        Log.print(this, "Init " + this.orgTransformation);
+        Log.print(this, "Init " + pos);
     }
 
     public Shape(Vec3 pos, Material mat, Matrix4x4 transf, String type, boolean raytraced) {

@@ -29,7 +29,7 @@ public abstract class Material {
             RgbColor.GRAY,
             RgbColor.WHITE,
             PhongMaterial.SHINY,
-            new Reflection(Reflection.NO_BLURRY, Reflection.NANO_REFLECTION),
+            new Reflection(Reflection.NO_BLURRY, Reflection.NO_REFLECTION),
             Material.DIAMOND);
 
     public static final Material LAMBERT_MATERIAL = new LambertMaterial(

@@ -25,13 +25,10 @@ public class Ray {
         init(startPoint, direction, param, true);
     }
 
-    public Ray(Vec3 startPoint, Vec3 endPoint){
-        mStartPoint = startPoint;
+    public Ray(Vec3 startPoint, Vec3 endPoint, boolean enteringMode){
         mEndPoint = endPoint;
-        mDirection = endPoint.sub(startPoint);
-        mDistance = mDirection.length();
-        mDirection = mDirection.normalize();
-        mIsEntering = true;
+        mDirection = endPoint.sub(startPoint).normalize();
+        init(startPoint, endPoint.sub(startPoint), mDirection.length(), enteringMode);
     }
 
     private void init(Vec3 startPoint, Vec3 direction, float param, boolean enteringMode){

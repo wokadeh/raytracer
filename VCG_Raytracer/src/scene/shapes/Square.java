@@ -5,6 +5,7 @@ import raytracer.Ray;
 import scene.materials.Material;
 import utils.algebra.Matrix4x4;
 import utils.algebra.Vec3;
+import utils.io.Log;
 
 public class Square extends Shape {
 
@@ -16,6 +17,8 @@ public class Square extends Shape {
 
 		mPlane = new Plane(pos, mat, facingDirection);
 		mDim = dimension;
+
+		Log.print(this, "Dimension " + dimension);
 	}
 
 	public Square(Vec3 pos, Material mat, float dimension, int facingDirection, boolean raytraced) {

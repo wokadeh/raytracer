@@ -14,6 +14,9 @@ public class Intersection {
     private Vec3 mIntersectionPoint;
 
     private Vec3 mNormal;
+
+
+
     private Ray mInRay;
     private Shape mShape;
     private float mDistanceToIntersection;
@@ -25,6 +28,14 @@ public class Intersection {
 
     public float getCosTheta() {
         return mCosTheta;
+    }
+
+    public Ray getInRay() {
+        return mInRay;
+    }
+
+    public void setInRay(Ray mInRay) {
+        this.mInRay = mInRay;
     }
 
     private float mCosTheta = 1;
@@ -203,9 +214,47 @@ public class Intersection {
         return (rOrth * rOrth + rPara * rPara)/2f;
     }
 
+//    public Ray calculateRefractionRay() {
+//        Vec3 inRay = mInRay.getDirection().negate().normalize();
+//        Vec3 normal = mNormal.normalize();
+//
+//        float n1 = mInRay.getCurrentMaterial();
+//        float n2 = mShape.getMaterial().getFractionCoeff();
+//
+//        boolean rayIsEnteringObject = mInRay.isEntering();
+//
+//        float normDotIn = normal.scalar(inRay);
+//
+//        if(normDotIn < 0.0f){
+//            //Log.print(this, "Is minor 0");
+//            rayIsEnteringObject = true;
+//        }
+//
+//        float n = (rayIsEnteringObject == false) ? calculateMaterialCoeff(n1, n2) : calculateMaterialCoeff(n2, n1);
+//        rayIsEnteringObject = !rayIsEnteringObject;
+//
+//        float squareCoeff = n * n;
+//        float cosBeta = squareCoeff * (1 - normDotIn * normDotIn);
+//        cosBeta = 1 - cosBeta;
+//
+//        if(cosBeta > 0) {
+//            Vec3 bVec = normal.multScalar((float) Math.sqrt(cosBeta));
+//            Vec3 aVec = normal.multScalar(normDotIn);
+//            aVec = aVec.sub(inRay);
+//            aVec = aVec.multScalar(n);
+//            Vec3 out = aVec.sub(bVec);
+//            return new Ray(mIntersectionPoint, out, Float.MAX_VALUE, rayIsEnteringObject, n2);
+//        }
+//        // Total internal reflection
+//        else{
+//            //Log.error(this, "Total internal reflection");
+//            return calculateReflectionRay(mInRay.getDirection());
+//        }
+//    }
+
     public Ray calculateRefractionRay() {
-        float n1 = mInRay.getCurrentMaterial();
-        float n2 = mShape.getMaterial().getFractionCoeff();
+        float n1 = mShape.getMaterial().getFractionCoeff();
+        float n2 = mInRay.getCurrentMaterial();
 
         boolean rayIsEnteringMedium = mInRay.isEntering();
 

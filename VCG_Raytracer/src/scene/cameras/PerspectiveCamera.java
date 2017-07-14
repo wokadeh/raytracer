@@ -39,10 +39,10 @@ public class PerspectiveCamera extends SceneObject {
     }
 
     private void calculateViewplane(float angleOfView){
-        this.ratio = (float) screenWidth / (float) screenHeight;
-        this.angleRad = (float) (((angleOfView/2) * Math.PI) / 180f);
-        this.viewPlaneHeight = (float) Math.tan(angleRad);
-        this.viewPlaneWidth = (this.ratio * this.viewPlaneHeight);
+        this.ratio = (float) this.screenWidth / (float) this.screenHeight;
+        this.angleRad = (float) (2f * ((( angleOfView ) * Math.PI) / 380f));
+        this.viewPlaneHeight = (float) Math.tan( this.angleRad );
+        this.viewPlaneWidth = ( this.ratio * this.viewPlaneHeight );
 
         // Take the half for the coming adjustment to the viewplane
         this.viewPlaneWidth  *= 0.5f;
@@ -51,8 +51,8 @@ public class PerspectiveCamera extends SceneObject {
 
     private void calculateCameraCoord(Vec3 pos, Vec3 centerOfInterest, Vec3 upVec){
         this.v = centerOfInterest.sub( pos ).normalize();
-        this.s = v.cross( upVec ).normalize();
-        this.u = s.cross( v ).normalize();
+        this.s = this.v.cross( upVec ).normalize();
+        this.u = this.s.cross( this.v ).normalize();
     }
 
     public Vec3 calculateDestPoint(Vec2 pixelPos){
