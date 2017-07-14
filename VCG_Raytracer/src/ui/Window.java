@@ -57,7 +57,7 @@ public class Window {
         graphic.setColor(Color.black);
         graphic.fill3DRect(0,mHeight - 30,mWidth,mHeight,true);
         graphic.setColor(Color.green);
-        graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing*2 + ", GI Rec: " + giRecursions + ", GI Samples: " + giSamples, 10, mHeight - 10);
+        graphic.drawString("Elapsed rendering time: " + text + " sec, Recursions: " + recursions + ", AA: x" + antiAliasing + ", GI Rec: " + giRecursions + ", GI Samples: " + giSamples, 10, mHeight - 10);
 
         mFrame.repaint();
     }

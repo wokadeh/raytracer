@@ -62,7 +62,7 @@ public class Main {
 
     static int RECURSIONS = 4;
     static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static boolean USE_SOFT_SHADOWS = false;
 
     /** LIGHT **/
 
@@ -95,8 +95,8 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int BLOCK_SIZE = Raytracer.LARGE_BLOCK;
-    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_INSANE;
+    static int BLOCK_SIZE = Raytracer.GIANT_BLOCK;
+    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_GODLIKE;
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){

@@ -18,10 +18,8 @@ package raytracer;
 
 import multithreading.MultiThreader;
 import multithreading.RenderBlock;
-import scene.lights.AreaLight;
 import scene.lights.Light;
 import scene.Scene;
-import scene.lights.PointLight;
 import scene.shapes.Shape;
 import ui.Window;
 import utils.*;
@@ -31,6 +29,7 @@ import utils.io.Log;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Raytracer {
 
@@ -53,20 +52,24 @@ public class Raytracer {
     public static final int MULTI_THREADING_INSANE = 16;
     public static final int MULTI_THREADING_GODLIKE = 64;
 
-    private static float GI_FACTOR = (float) (1f / Math.PI);
+    private static final float AA_THRESHOLD = 0.015f;
 
+    private static float GI_FACTOR = (float) (1f / Math.PI);
     private BufferedImage mBufferedImage;
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
-    private Scene mScene;
 
+    private Scene mScene;
     private Window mRenderWindow;
+    private Vec3[][] mPrimaryColorMap;
+    private Vec3[][] mAntiAliasingMap;
+
+    private Ray[][] mPrimaryRayMap;
 
     private int mMaxRecursions;
     private int mGiLevel;
     private int mGiSamples;
 
-    private float mAntiAliasingFactor;
     private float mAntiAliasingCounter;
     private int mAntiAliasingSamples;
 
@@ -93,13 +96,15 @@ public class Raytracer {
         }
 
         mBufferedImage = renderWindow.getBufferedImage();
+        mPrimaryColorMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+        mAntiAliasingMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+        mPrimaryRayMap = new Ray[mBufferedImage.getHeight()][mBufferedImage.getWidth()];
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;
         mScene = scene;
         mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
-        mAntiAliasingFactor = 1f / (antiAliasingSamples * antiAliasingSamples);
         mAntiAliasingCounter = 1f / antiAliasingSamples;
         mDebug = debugOn;
         tStart = System.currentTimeMillis();
@@ -107,7 +112,12 @@ public class Raytracer {
         mBlockSize = blockSize;
         mNumberOfThreads = numberOfThreads;
 
+        this.exportRendering();
+
         mPDFFactor = (float) (1f / (2f* Math.PI));
+
+        this.createPrimaryColorMap();
+        this.createAntiAliasingMap();
     }
 
     public BufferedImage getBufferedImage() {
@@ -143,32 +153,90 @@ public class Raytracer {
         for (int y = renderBlock.yMin; y < renderBlock.yMax; y++) {
             // Columns
             for (int x = renderBlock.xMin; x < renderBlock.xMax; x++) {
-                RgbColor antiAlisedColor = this.calculateAntiAliasedColor(y, x);
-                this.getRenderWindow().setPixel(this.getBufferedImage(), antiAlisedColor, new Vec2(x, y));
+
+                RgbColor renderColor;
+
+//                if(mAntiAliasingMap[x][y].equals(RgbColor.WHITE.colors)){
+//                    renderColor = this.calculateAntiAliasedColor(y, x);
+//                }
+//                else{
+//                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
+//                }
+
+                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAntiAliasingMap[x][y]), new Vec2(x, y));
             }
         }
     }
 
     public RgbColor calculateAntiAliasedColor(int y, int x) {
+
         Vec2 screenPosition;
         RgbColor antiAlisedColor = RgbColor.BLACK;
 
+        Random antiAliasingRandom = new Random();
+
         // Start super sampling
-        for(float i = x -0.5f; i < x + 0.5f; i += mAntiAliasingCounter){
-            for(float j = y -0.5f; j < y + 0.5f; j += mAntiAliasingCounter){
-                screenPosition = new Vec2(i, j);
-                antiAlisedColor = antiAlisedColor.add(this.sendPrimaryRay(screenPosition).multScalar(mAntiAliasingFactor));
-            }
+        for(float i = 0; i < mAntiAliasingSamples; i ++){
+                float m = antiAliasingRandom.nextFloat();
+                float n = antiAliasingRandom.nextFloat();
+
+                screenPosition = new Vec2(x + m, y + n);
+                antiAlisedColor = antiAlisedColor.add(this.sendPrimaryRay(screenPosition).multScalar(mAntiAliasingCounter));
         }
+
         return antiAlisedColor;
     }
 
-    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
-        Vec3 startPoint = mScene.getCamPos();
-        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
-        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
+    private void createPrimaryColorMap(){
+        Log.print(this, "Create Primary Color Map");
+        for(int x = 0; x < mBufferedImage.getWidth(); x++){
+            for(int y = 0; y < mBufferedImage.getHeight(); y++) {
+                mPrimaryRayMap[y][x] = createPrimaryRay(x,y);
+                mAntiAliasingMap[x][y] = new Vec3();
 
-        return traceRay(mMaxRecursions, mGiLevel, primaryRay, mBackgroundColor, null);
+                Intersection intersection = RaytracerMethods.getIntersectionOnShapes(mPrimaryRayMap[y][x], null, mShapeList);
+
+                if (intersection.isHit()) {
+                    mPrimaryColorMap[x][y] = shade(intersection).colors;
+                }
+            }
+        }
+        Log.print(this, "Primary Color Map finished!");
+    }
+
+    private Ray createPrimaryRay(float x, float y){
+        Vec3 startPoint = mScene.getCamPos();
+        Vec3 destinationDir = mScene.getCamPixelDirection(new Vec2(x, y));
+        return new Ray(startPoint, destinationDir, 1f);
+    }
+
+    private void createAntiAliasingMap() {
+        Log.print(this, "Create AntiAliased Map");
+        for(int x = 1; x < mBufferedImage.getWidth() - 1; x++){
+            for(int y = 1; y < mBufferedImage.getHeight() - 1; y++) {
+                if(this.hasToBeAntiAliased(x,y)){
+                    mAntiAliasingMap[x][y] = RgbColor.WHITE.colors;
+                }
+            }
+        }
+        Log.print(this, "AntiAliased Map finished!");
+    }
+
+    private boolean hasToBeAntiAliased(int x, int y){
+
+        float value = mPrimaryColorMap[x][y].length();
+
+        if ((value - mPrimaryColorMap[x+1][y].length()) > AA_THRESHOLD ||
+            (value - mPrimaryColorMap[x-1][y].length()) > AA_THRESHOLD ||
+            (value - mPrimaryColorMap[x][y+1].length()) > AA_THRESHOLD ||
+            (value - mPrimaryColorMap[x][y-1].length()) > AA_THRESHOLD) {
+            return true;
+        }
+        return false;
+    }
+
+    private RgbColor sendPrimaryRay(Vec2 pixelPoint){
+        return traceRay(mMaxRecursions, mGiLevel, createPrimaryRay(pixelPoint.x, pixelPoint.y), mBackgroundColor, null);
     }
 
     private RgbColor traceRay(int recursionCounter, int giLevelCounter, Ray inRay, RgbColor localColor, Intersection prevIntersec){
