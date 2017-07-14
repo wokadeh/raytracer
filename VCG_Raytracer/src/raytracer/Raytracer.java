@@ -61,8 +61,8 @@ public class Raytracer {
 
     private Scene mScene;
     private Window mRenderWindow;
-    private Vec3[][] mPrimaryColorMap;
-    private Vec3[][] mAntiAliasingMap;
+    private Vec3[][] mAliasedColorMap;
+    private Vec3[][] mEdgesMap;
 
     private Ray[][] mPrimaryRayMap;
 
@@ -96,8 +96,8 @@ public class Raytracer {
         }
 
         mBufferedImage = renderWindow.getBufferedImage();
-        mPrimaryColorMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
-        mAntiAliasingMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+        mAliasedColorMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+        mEdgesMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
         mPrimaryRayMap = new Ray[mBufferedImage.getHeight()][mBufferedImage.getWidth()];
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;
@@ -116,8 +116,8 @@ public class Raytracer {
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
 
-        this.createPrimaryColorMap();
-        this.createAntiAliasingMap();
+        this.createAliasedColorMap();
+        this.createEdgesMap();
     }
 
     public BufferedImage getBufferedImage() {
@@ -156,14 +156,14 @@ public class Raytracer {
 
                 RgbColor renderColor;
 
-//                if(mAntiAliasingMap[x][y].equals(RgbColor.WHITE.colors)){
-//                    renderColor = this.calculateAntiAliasedColor(y, x);
-//                }
-//                else{
-//                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
-//                }
+                if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
+                    renderColor = this.calculateAntiAliasedColor(y, x);
+                }
+                else{
+                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
+                }
 
-                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAntiAliasingMap[x][y]), new Vec2(x, y));
+                this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
             }
         }
     }
@@ -187,18 +187,16 @@ public class Raytracer {
         return antiAlisedColor;
     }
 
-    private void createPrimaryColorMap(){
+    private void createAliasedColorMap(){
         Log.print(this, "Create Primary Color Map");
         for(int x = 0; x < mBufferedImage.getWidth(); x++){
             for(int y = 0; y < mBufferedImage.getHeight(); y++) {
                 mPrimaryRayMap[y][x] = createPrimaryRay(x,y);
-                mAntiAliasingMap[x][y] = new Vec3();
+                mEdgesMap[x][y] = new Vec3();
 
-                Intersection intersection = RaytracerMethods.getIntersectionOnShapes(mPrimaryRayMap[y][x], null, mShapeList);
+                mAliasedColorMap[x][y] = this.sendPrimaryRay(new Vec2(x, y)).colors;
 
-                if (intersection.isHit()) {
-                    mPrimaryColorMap[x][y] = shade(intersection).colors;
-                }
+                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
             }
         }
         Log.print(this, "Primary Color Map finished!");
@@ -210,13 +208,18 @@ public class Raytracer {
         return new Ray(startPoint, destinationDir, 1f);
     }
 
-    private void createAntiAliasingMap() {
+    private void createEdgesMap() {
         Log.print(this, "Create AntiAliased Map");
         for(int x = 1; x < mBufferedImage.getWidth() - 1; x++){
             for(int y = 1; y < mBufferedImage.getHeight() - 1; y++) {
                 if(this.hasToBeAntiAliased(x,y)){
-                    mAntiAliasingMap[x][y] = RgbColor.WHITE.colors;
+                    mEdgesMap[x][y] = RgbColor.WHITE.colors;
+                    mEdgesMap[x+1][y] = RgbColor.WHITE.colors;
+                    mEdgesMap[x-1][y] = RgbColor.WHITE.colors;
+                    mEdgesMap[x][y+1] = RgbColor.WHITE.colors;
+                    mEdgesMap[x][y-1] = RgbColor.WHITE.colors;
                 }
+                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mEdgesMap[x][y]), new Vec2(x, y));
             }
         }
         Log.print(this, "AntiAliased Map finished!");
@@ -224,12 +227,12 @@ public class Raytracer {
 
     private boolean hasToBeAntiAliased(int x, int y){
 
-        float value = mPrimaryColorMap[x][y].length();
+        float value = mAliasedColorMap[x][y].length();
 
-        if ((value - mPrimaryColorMap[x+1][y].length()) > AA_THRESHOLD ||
-            (value - mPrimaryColorMap[x-1][y].length()) > AA_THRESHOLD ||
-            (value - mPrimaryColorMap[x][y+1].length()) > AA_THRESHOLD ||
-            (value - mPrimaryColorMap[x][y-1].length()) > AA_THRESHOLD) {
+        if ((value - mAliasedColorMap[x+1][y].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[x-1][y].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[x][y+1].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[x][y-1].length()) > AA_THRESHOLD) {
             return true;
         }
         return false;
