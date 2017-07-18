@@ -53,8 +53,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 800;
-    static int IMAGE_HEIGHT = 600;
+    static int IMAGE_WIDTH = 1200;
+    static int IMAGE_HEIGHT = 800;
 
     static float BOX_DIMENSION = 4f;
 
@@ -95,8 +95,8 @@ public class Main {
     static boolean SHOW_SECONDARY_RAYS = false;
     static boolean SHOW_PARAM_LABEL = true;
 
-    static int BLOCK_SIZE = Raytracer.GIANT_BLOCK;
-    static int NUMBER_OF_THREADS = Raytracer.MULTI_THREADING_GODLIKE;
+    static int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
+    static int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){

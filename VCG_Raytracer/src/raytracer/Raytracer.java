@@ -52,7 +52,7 @@ public class Raytracer {
     public static final int MULTI_THREADING_INSANE = 16;
     public static final int MULTI_THREADING_GODLIKE = 64;
 
-    private static final float AA_THRESHOLD = 0.015f;
+    private static final float AA_THRESHOLD = 0.15f;
 
     private static float GI_FACTOR = (float) (1f / Math.PI);
     private BufferedImage mBufferedImage;
@@ -85,6 +85,8 @@ public class Raytracer {
     private boolean mDebug;
     private long tStart;
 
+    private int mThreadsRendered = 0;
+
     public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
@@ -116,8 +118,20 @@ public class Raytracer {
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
 
-        this.createAliasedColorMap();
-        this.createEdgesMap();
+        //this.createAliasedColorMap();
+        //this.createEdgesMap();
+    }
+
+    public void callback(){
+        mThreadsRendered++;
+
+        Log.print(this, "Thread rendered " + mThreadsRendered);
+
+        if(mThreadsRendered == mNumberOfThreads) {
+            Log.print(this, "Finished rendering!");
+
+            this.createEdgeMap();
+        }
     }
 
     public BufferedImage getBufferedImage() {
@@ -148,7 +162,7 @@ public class Raytracer {
         rayMultiThreader.startMultiThreading();
     }
 
-    public void renderBlock(RenderBlock renderBlock){
+    public void renderBlock(RenderBlock renderBlock, boolean withAA){
         // Rows
         for (int y = renderBlock.yMin; y < renderBlock.yMax; y++) {
             // Columns
@@ -156,17 +170,45 @@ public class Raytracer {
 
                 RgbColor renderColor;
 
-                if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
-                    renderColor = this.calculateAntiAliasedColor(y, x);
-                }
-                else{
-                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
+                if(!withAA) {
+                    mAliasedColorMap[x][y] = this.sendPrimaryRay(new Vec2(x, y)).colors;
+
+                    // Fill already Edges Map black
+                    mEdgesMap[x][y] = new Vec3(0, 0, 0);
+
+                    this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
                 }
 
-                this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
+//                if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
+//                    renderColor = this.calculateAntiAliasedColor(y, x);
+//                }
+//                else{
+//                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
+//                }
+//
+//                this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
             }
         }
     }
+
+        private void createEdgeMap() {
+            Log.print(this, "Create Edge Map");
+
+            for (int x = 1; x < mBufferedImage.getWidth() - 1; x++) {
+                for (int y = 1; y < mBufferedImage.getHeight() - 1; y++) {
+                    if (this.hasToBeAntiAliased(x, y)) {
+                        mEdgesMap[x][y] = RgbColor.WHITE.colors;
+                        mEdgesMap[x + 1][y] = RgbColor.WHITE.colors;
+                        mEdgesMap[x - 1][y] = RgbColor.WHITE.colors;
+                        mEdgesMap[x][y + 1] = RgbColor.WHITE.colors;
+                        mEdgesMap[x][y - 1] = RgbColor.WHITE.colors;
+                    }
+                    this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mEdgesMap[x][y]), new Vec2(x, y));
+                }
+            }
+            Log.print(this, "Edge Map finished!");
+    }
+
 
     public RgbColor calculateAntiAliasedColor(int y, int x) {
 
@@ -187,20 +229,20 @@ public class Raytracer {
         return antiAlisedColor;
     }
 
-    private void createAliasedColorMap(){
-        Log.print(this, "Create Primary Color Map");
-        for(int x = 0; x < mBufferedImage.getWidth(); x++){
-            for(int y = 0; y < mBufferedImage.getHeight(); y++) {
-                mPrimaryRayMap[y][x] = createPrimaryRay(x,y);
-                mEdgesMap[x][y] = new Vec3();
-
-                mAliasedColorMap[x][y] = this.sendPrimaryRay(new Vec2(x, y)).colors;
-
-                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
-            }
-        }
-        Log.print(this, "Primary Color Map finished!");
-    }
+//    private void createAliasedColorMap(){
+//        Log.print(this, "Create Primary Color Map");
+//        for(int x = 0; x < mBufferedImage.getWidth(); x++){
+//            for(int y = 0; y < mBufferedImage.getHeight(); y++) {
+//                mPrimaryRayMap[y][x] = createPrimaryRay(x,y);
+//                mEdgesMap[x][y] = new Vec3();
+//
+//                mAliasedColorMap[x][y] = this.sendPrimaryRay(new Vec2(x, y)).colors;
+//
+//                this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
+//            }
+//        }
+//        Log.print(this, "Primary Color Map finished!");
+//    }
 
     private Ray createPrimaryRay(float x, float y){
         Vec3 startPoint = mScene.getCamPos();

@@ -24,8 +24,9 @@ class RenderThread implements Runnable{
 		Log.warn(this, "Running Thread " + mThreadName);
 		try {
 			while (!mSyncRenderBlockList.isEmpty()){
-				mRaytracer.renderBlock(mSyncRenderBlockList.remove(0));
+				mRaytracer.renderBlock(mSyncRenderBlockList.remove(0), false);
 			}
+
 
 		}catch (Exception e) {
 			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
@@ -33,6 +34,10 @@ class RenderThread implements Runnable{
 
 		mRaytracer.exportRendering();
 		Log.warn(this, mThreadName + " ... finished!");
+
+		if(mSyncRenderBlockList.isEmpty()){
+			mRaytracer.callback();
+		}
 	}
 
 	public void start () {

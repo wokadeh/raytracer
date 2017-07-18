@@ -29,13 +29,13 @@ public class RgbColor {
     public RgbColor(float r, float g, float b){
         colors = new Vec3(r, g, b);
 
-        clamp();
+        this.clamp();
     }
 
     public RgbColor(Vec3 color){
         colors = color;
 
-        clamp();
+        this.clamp();
     }
 
     public void add(float r, float g, float b){
@@ -43,7 +43,7 @@ public class RgbColor {
         colors.y += g;
         colors.z += b;
 
-        clamp();
+        this.clamp();
     }
 
     public void sub(float r, float g, float b){
@@ -51,7 +51,7 @@ public class RgbColor {
         colors.y -= g;
         colors.z -= b;
 
-        clamp();
+        this.clamp();
     }
 
     public RgbColor sub(RgbColor color){

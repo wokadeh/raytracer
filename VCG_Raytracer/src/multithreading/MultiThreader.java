@@ -34,7 +34,7 @@ public class MultiThreader{
 				mRenderBlockList.add(new RenderBlock(x, y, x  + mIntervalX, y + mIntervalY));
 			}
 		}
-		//Collections.shuffle(mRenderBlockList);
+		Collections.shuffle(mRenderBlockList);
 		mSyncRenderBlockList = Collections.synchronizedList(mRenderBlockList);
 	}
 
