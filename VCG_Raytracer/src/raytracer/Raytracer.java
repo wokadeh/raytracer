@@ -66,6 +66,8 @@ public class Raytracer {
 
     private Ray[][] mPrimaryRayMap;
 
+    private MultiThreader mRayMultiThreader;
+
     private int mMaxRecursions;
     private int mGiLevel;
     private int mGiSamples;
@@ -117,9 +119,6 @@ public class Raytracer {
         this.exportRendering();
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
-
-        //this.createAliasedColorMap();
-        //this.createEdgesMap();
     }
 
     public void callback(){
@@ -131,6 +130,10 @@ public class Raytracer {
             Log.print(this, "Finished rendering!");
 
             this.createEdgeMap();
+
+            Log.print(this, "Start SECOND rendering at " + String.valueOf(stopTime(tStart)));
+            mRayMultiThreader.startMultiThreading(true);
+
         }
     }
 
@@ -155,11 +158,11 @@ public class Raytracer {
     public void renderScene(){
         Log.print(this, "Prepare rendering at " + String.valueOf(stopTime(tStart)));
 
-        MultiThreader rayMultiThreader = new MultiThreader(this, mBlockSize, mNumberOfThreads);
-        rayMultiThreader.prepareMultiThreading();
+        mRayMultiThreader = new MultiThreader(this, mBlockSize, mNumberOfThreads);
+        mRayMultiThreader.prepareMultiThreading();
 
-        Log.print(this, "Start rendering at " + String.valueOf(stopTime(tStart)));
-        rayMultiThreader.startMultiThreading();
+        Log.print(this, "Start FIRST rendering at " + String.valueOf(stopTime(tStart)));
+        mRayMultiThreader.startMultiThreading(false);
     }
 
     public void renderBlock(RenderBlock renderBlock, boolean withAA){
@@ -178,15 +181,16 @@ public class Raytracer {
 
                     this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
                 }
+                else {
+                    if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
+                        renderColor = this.calculateAntiAliasedColor(y, x);
+                    }
+                    else{
+                        renderColor = new RgbColor( mAliasedColorMap[x][y] );
+                    }
 
-//                if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
-//                    renderColor = this.calculateAntiAliasedColor(y, x);
-//                }
-//                else{
-//                    renderColor = this.sendPrimaryRay( new Vec2( x, y ) );
-//                }
-//
-//                this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
+                    this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
+                }
             }
         }
     }
@@ -198,10 +202,10 @@ public class Raytracer {
                 for (int y = 1; y < mBufferedImage.getHeight() - 1; y++) {
                     if (this.hasToBeAntiAliased(x, y)) {
                         mEdgesMap[x][y] = RgbColor.WHITE.colors;
-                        mEdgesMap[x + 1][y] = RgbColor.WHITE.colors;
-                        mEdgesMap[x - 1][y] = RgbColor.WHITE.colors;
-                        mEdgesMap[x][y + 1] = RgbColor.WHITE.colors;
-                        mEdgesMap[x][y - 1] = RgbColor.WHITE.colors;
+                        mEdgesMap[x + 1][y + 1] = RgbColor.WHITE.colors;
+                        mEdgesMap[x - 1][y - 1] = RgbColor.WHITE.colors;
+                        mEdgesMap[x + 1][y - 1] = RgbColor.WHITE.colors;
+                        mEdgesMap[x - 1][y + 1] = RgbColor.WHITE.colors;
                     }
                     this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mEdgesMap[x][y]), new Vec2(x, y));
                 }

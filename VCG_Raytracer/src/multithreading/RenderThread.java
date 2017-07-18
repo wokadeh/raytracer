@@ -10,23 +10,24 @@ class RenderThread implements Runnable{
 	private String mThreadName;
 	private Raytracer mRaytracer;
 	private List<RenderBlock> mSyncRenderBlockList;
+	private boolean mWithAA = false;
 
-	RenderThread(String name, Raytracer raytracer, List<RenderBlock> renderBlockArrayList){
+	RenderThread(String name, Raytracer raytracer, List<RenderBlock> renderBlockArrayList, boolean withAA){
 		mThreadName = name;
 		mRaytracer = raytracer;
 		mSyncRenderBlockList = renderBlockArrayList;
+		mWithAA = withAA;
 
 		Log.warn(this, "Create Thread " + name);
 	}
 
 	@Override
 	public void run() {
-		Log.warn(this, "Running Thread " + mThreadName);
+		Log.warn(this, "Running Thread " + mThreadName + " with " + mSyncRenderBlockList.size() + " items ");
 		try {
 			while (!mSyncRenderBlockList.isEmpty()){
-				mRaytracer.renderBlock(mSyncRenderBlockList.remove(0), false);
+				mRaytracer.renderBlock(mSyncRenderBlockList.remove(0), mWithAA);
 			}
-
 
 		}catch (Exception e) {
 			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
