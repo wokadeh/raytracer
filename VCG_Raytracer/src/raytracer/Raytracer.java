@@ -52,7 +52,7 @@ public class Raytracer {
     public static final int MULTI_THREADING_INSANE = 16;
     public static final int MULTI_THREADING_GODLIKE = 64;
 
-    private static final float AA_THRESHOLD = 0.15f;
+    private static final float AA_THRESHOLD = 0.05f;
 
     private static float GI_FACTOR = (float) (1f / Math.PI);
     private BufferedImage mBufferedImage;
