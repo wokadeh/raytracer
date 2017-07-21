@@ -72,6 +72,7 @@ public class Raytracer {
 
     private float mAntiAliasingCounter;
     private float mAntiAliasingSamples;
+    private int mAntiAliasingDim;
 
     private int mBlockSize;
     private int mNumberOfThreads;
@@ -97,17 +98,20 @@ public class Raytracer {
             mGiSamples = giSamples;
         }
 
+        mAntiAliasingSamples = antiAliasingSamples;
+        mAntiAliasingDim = (int) Math.sqrt(mAntiAliasingSamples);
+        mAntiAliasingCounter = 1f / (mAntiAliasingDim);
+
         mBufferedImage = renderWindow.getBufferedImage();
-        mAliasedColorMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+        mAliasedColorMap = new Vec3[mBufferedImage.getWidth() * mAntiAliasingDim][mBufferedImage.getHeight() * mAntiAliasingDim];
         mEdgesMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
+
         mBackgroundColor = backColor;
         mAmbientLight = ambientLight;
         mScene = scene;
         mRenderWindow = renderWindow;
         mShapeList = scene.getShapeList();
         mLightList = scene.getLightList();
-        mAntiAliasingSamples = antiAliasingSamples;
-        mAntiAliasingCounter = 1f / (mAntiAliasingSamples / 2f);
         mDebug = debugOn;
         tStart = System.currentTimeMillis();
         mBlockSize = blockSize;
@@ -171,7 +175,7 @@ public class Raytracer {
                 RgbColor renderColor;
 
                 if(!withAA) {
-                    mAliasedColorMap[x][y] = this.sendPrimaryRay(new Vec2(x, y)).colors;
+                    mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] = this.sendPrimaryRay(new Vec2(x, y)).colors;
 
                     // Fill already Edges Map black
                     mEdgesMap[x][y] = new Vec3(0, 0, 0);
@@ -184,7 +188,7 @@ public class Raytracer {
                         renderColor = this.calculateAntiAliasedColor(y, x);
                     }
                     else{
-                        renderColor = new RgbColor( mAliasedColorMap[x][y] );
+                        renderColor = new RgbColor( mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] );
                     }
 
                     this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
@@ -220,8 +224,8 @@ public class Raytracer {
 
         // Don't use random, because it produces artifacts!
 
-        for(float n = 0; n < 1; n += mAntiAliasingCounter){
-            for(float m = 0; m < 1; m += mAntiAliasingCounter){
+        for(float n = -0.5f; n < 0.5f; n += mAntiAliasingCounter){
+            for(float m = -0.5f; m < 0.5f; m += mAntiAliasingCounter){
                 float xc = (x + m);
                 float yc = (y + n);
 
@@ -241,12 +245,15 @@ public class Raytracer {
 
     private boolean hasToBeAntiAliased(int x, int y){
 
-        float value = mAliasedColorMap[x][y].length();
+        int xA = x * mAntiAliasingDim;
+        int yA = y * mAntiAliasingDim;
 
-        if ((value - mAliasedColorMap[x+1][y+1].length()) > AA_THRESHOLD ||
-            (value - mAliasedColorMap[x-1][y-1].length()) > AA_THRESHOLD ||
-            (value - mAliasedColorMap[x-1][y+1].length()) > AA_THRESHOLD ||
-            (value - mAliasedColorMap[x+1][y-1].length()) > AA_THRESHOLD) {
+        float value = mAliasedColorMap[xA][yA].length();
+
+        if ((value - mAliasedColorMap[xA+mAntiAliasingDim][yA+mAntiAliasingDim].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[xA-mAntiAliasingDim][yA-mAntiAliasingDim].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[xA-mAntiAliasingDim][yA+mAntiAliasingDim].length()) > AA_THRESHOLD ||
+            (value - mAliasedColorMap[xA+mAntiAliasingDim][yA-mAntiAliasingDim].length()) > AA_THRESHOLD) {
             return true;
         }
         return false;
