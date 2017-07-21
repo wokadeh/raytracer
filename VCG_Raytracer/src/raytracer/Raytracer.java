@@ -79,6 +79,9 @@ public class Raytracer {
 
     private boolean mUseGI;
     private float mPDFFactor;
+    private boolean mUseAO;
+    private int mNumberOfAOSamples;
+    private float mAoMaxDistance;
 
     private RgbColor mBackgroundColor;
     private RgbColor mAmbientLight;
@@ -88,10 +91,13 @@ public class Raytracer {
 
     private int mThreadsRendered = 0;
 
-    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
+    public Raytracer(Scene scene, Window renderWindow, int recursions, boolean useGi, int giLevel, int giSamples, boolean useAo, int numberOfAoSamples, float maxDistance, RgbColor backColor, RgbColor ambientLight, int antiAliasingSamples, int blockSize, int numberOfThreads, boolean debugOn){
         Log.print(this, "Init");
         mMaxRecursions = recursions;
         mUseGI = useGi;
+        mUseAO = useAo;
+        mNumberOfAOSamples = numberOfAoSamples;
+        mAoMaxDistance = maxDistance;
 
         if(mUseGI) {
             mGiLevel = giLevel;
@@ -134,7 +140,6 @@ public class Raytracer {
 
             Log.print(this, "Start SECOND rendering at " + String.valueOf(stopTime(tStart)));
             mRayMultiThreader.startMultiThreading(true);
-
         }
     }
 
@@ -167,46 +172,48 @@ public class Raytracer {
     }
 
     public void renderBlock(RenderBlock renderBlock, boolean withAA){
-        //Log.warn(this, "Render Block " + renderBlock.yMin + "to" + renderBlock.yMax + " and " + renderBlock.xMin + " to " + renderBlock.xMax);
-
-
-            // Rows
-            for (int y = renderBlock.yMin; y < renderBlock.yMax; y++) {
-                // Columns
-                for (int x = renderBlock.xMin; x < renderBlock.xMax; x++) {
-
-                    RgbColor renderColor;
-
-                    if(!withAA) {
-                        mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] = this.sendPrimaryRay(new Vec2(x, y)).colors;
-
-                        // Fill already Edges Map black
-                        mEdgesMap[x][y] = new Vec3(0, 0, 0);
-
-                        // DEBUG ONLY
-                        //this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
-                    }
-                    else {
-                        try {
-                            if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
-                                renderColor = this.calculateAntiAliasedColor(y, x);
-                            }
-                            else{
-                                renderColor = new RgbColor( mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] );
-                            }
-
-                            this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
-
-                        }catch (Exception e){
-                            Log.error(this, e.getMessage());
-                        }
-                    }
+     // Rows
+        for (int y = renderBlock.yMin; y < renderBlock.yMax; y++) {
+            // Columns
+            for (int x = renderBlock.xMin; x < renderBlock.xMax; x++) {
+                if(!withAA) {
+                    this.renderAliased(y, x);
+                }
+                else {
+                    this.renderAntiAliased(y, x);
                 }
             }
-
+        }
     }
 
-        private void createEdgeMap() {
+    private void renderAntiAliased(int y, int x) {
+        RgbColor renderColor;
+        try {
+            if(mEdgesMap[x][y].equals(RgbColor.WHITE.colors)){
+                renderColor = this.calculateAntiAliasedColor(y, x);
+            }
+            else{
+                renderColor = new RgbColor( mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] );
+            }
+
+            this.getRenderWindow().setPixel(this.getBufferedImage(), renderColor, new Vec2(x, y));
+
+        }catch (Exception e){
+            Log.error(this, e.getMessage());
+        }
+    }
+
+    private void renderAliased(int y, int x) {
+        mAliasedColorMap[x * mAntiAliasingDim][y * mAntiAliasingDim] = this.sendPrimaryRay(new Vec2(x, y)).colors;
+
+        // Fill already Edges Map black
+        mEdgesMap[x][y] = new Vec3(0, 0, 0);
+
+        // DEBUG ONLY
+        //this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mAliasedColorMap[x][y]), new Vec2(x, y));
+    }
+
+    private void createEdgeMap() {
             Log.print(this, "Create Edge Map");
 
             for (int x = 1; x < mBufferedImage.getWidth() - 1; x++) {
@@ -310,8 +317,12 @@ public class Raytracer {
             }
             if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
-
-                directLight = getGIColor(giLevelCounter, directLight, intersection);
+                directLight = this.getGIColor(giLevelCounter, directLight, intersection);
+            }
+            if ( mUseAO && intersection.getShape().getMaterial().isGiOn()){
+                // direct illumination + indirect illumination
+                // directLight = directLight.add( this.getAmbientOcclusionColor(intersection) );
+                directLight = this.getAmbientOcclusionColor(directLight, intersection);
             }
 
             // Add ambient term
@@ -320,6 +331,30 @@ public class Raytracer {
         }
 
         return directLight;
+    }
+
+    private RgbColor getAmbientOcclusionColor(RgbColor directLight, Intersection intersection){
+        Vec3 aoColor = RgbColor.BLACK.colors;
+
+        for(int i = 0; i < mNumberOfAOSamples; i++){
+            aoColor = aoColor.add(aoTraceRay(intersection));
+        }
+        aoColor = aoColor.multScalar(1f / mNumberOfAOSamples);
+
+        return new RgbColor(aoColor);
+        //return directLight.add(new RgbColor(aoColor));
+    }
+
+    private Vec3 aoTraceRay(Intersection prevIntersec){
+        Ray randomRay = prevIntersec.calculateRandomRay(true);
+
+        Intersection intersection = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
+
+        if( intersection.isHit() && intersection.isOutOfDistance(mAoMaxDistance) ){
+            return RgbColor.DARK_GRAY.colors;
+        }
+
+        return RgbColor.BLACK.colors;
     }
 
     private RgbColor getGIColor(int giLevelCounter, RgbColor directLight, Intersection intersection) {

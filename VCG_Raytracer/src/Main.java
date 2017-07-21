@@ -53,50 +53,55 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static int IMAGE_WIDTH = 1200;
-    static int IMAGE_HEIGHT = 800;
+    static final int IMAGE_WIDTH = 1200;
+    static final int IMAGE_HEIGHT = 800;
 
-    static float BOX_DIMENSION = 4f;
+    static final float BOX_DIMENSION = 4f;
 
     /** RAYTRACER **/
 
-    static int RECURSIONS = 4;
-    static int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
-    static boolean USE_SOFT_SHADOWS = true;
+    static final int RECURSIONS = 4;
+    static final int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
+    static final boolean USE_SOFT_SHADOWS = false;
 
     /** LIGHT **/
+    static final short LIGHT_DENSITY = 20;
+    static final short LIGHT_SAMPLES = 40;
 
-    static boolean USE_GI = true;
-    static int GI_LEVEL = 2;
-    static int GI_SAMPLES = 10;
+    static final RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
 
-    static short LIGHT_DENSITY = 20;
-    static short LIGHT_SAMPLES = 40;
-    static RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
-    static RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.1f, 0.1f, 0.1f);
+    static final Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.1f, BOX_DIMENSION - 1f );
+    static final short AREA_LIGHT_SIZE = 2;
 
-    static RgbColor BACKGROUND_COLOR = RgbColor.BLACK;
+    /** GI **/
+    static final boolean USE_GI = false;
+    static final int GI_LEVEL = 2;
+    static final int GI_SAMPLES = 10;
 
-    static Vec3 LIGHT_POSITION = new Vec3( 0f, BOX_DIMENSION/1.2f - 0.1f, BOX_DIMENSION - 1f );
-    static short AREA_LIGHT_SIZE = 2;
+    static final RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
+    static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.1f, 0.1f, 0.1f);
+
+    static final boolean USE_AO = true;
+    static final int NUMBER_OF_AO_SAMPLES = 10;
+    static final float AO_MAX_DISTANCE = 2f;
 
     /** KAMERA **/
 
-    static Vec3 CAM_POS = new Vec3(0, 0, 17);
-    static Vec3 LOOK_AT = new Vec3(0, 0, 0);
-    static Vec3 UP_VECTOR = new Vec3(0, 1, 0);
+    static final Vec3 CAM_POS = new Vec3(0, 0, 17);
+    static final Vec3 LOOK_AT = new Vec3(0, 0, 0);
+    static final Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static float VIEW_ANGLE = 35;
+    static final float VIEW_ANGLE = 35;
 
     /** DEBUG **/
 
-    static boolean SHOW_AREA_LIGHT_SAMPLES = false;
-    static boolean SHOW_PRIMARY_RAYS = false;
-    static boolean SHOW_SECONDARY_RAYS = false;
-    static boolean SHOW_PARAM_LABEL = true;
+    static final boolean SHOW_AREA_LIGHT_SAMPLES = false;
+    static final boolean SHOW_PRIMARY_RAYS = false;
+    static final boolean SHOW_SECONDARY_RAYS = false;
+    static final boolean SHOW_PARAM_LABEL = true;
 
-    static int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
-    static int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
+    static final int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
+    static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
 
     // Initial method. This is where the show begins.
     public static void main(String[] args){
@@ -235,6 +240,9 @@ public class Main {
                 USE_GI,
                 GI_LEVEL,
                 GI_SAMPLES,
+                USE_AO,
+                NUMBER_OF_AO_SAMPLES,
+                AO_MAX_DISTANCE,
                 BACKGROUND_COLOR,
                 AMBIENT_LIGHT,
                 ANTI_ALIASING,

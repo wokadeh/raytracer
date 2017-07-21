@@ -83,23 +83,24 @@ public class Intersection {
         // multiply our normal with transformation T
 
         // This way is a lot faster
-//        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
-//        float randZ = (rand1.nextInt(2000) - 1000) / 2000f;
-//        float randY = rand1.nextInt(1000) / 1000f;
-//
-//        return new Vec3(randX, randY, randZ).normalize();
+        Random rand1 = new Random();
+        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randZ = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randY = rand1.nextInt(1000) / 1000f;
+
+        return new Vec3(randX, randY, randZ).normalize();
 
         // NEW IDEA
-        Vec3 randomValues;
-
-        if(useGaussian){
-            randomValues = calculateGaussianValues();
-        }
-        else{
-            randomValues = calculateRandomValues();
-        }
-
-        return randomValues;
+//        Vec3 randomValues;
+//
+//        if(useGaussian){
+//            randomValues = calculateGaussianValues();
+//        }
+//        else{
+//            randomValues = calculateRandomValues();
+//        }
+//
+//        return randomValues;
 
 //        double sinTheta = Math.sqrt(1 - randomValues.x * randomValues.x);
 //
@@ -117,7 +118,7 @@ public class Intersection {
         // calculate random -1 or 1
         // calculate random rotation between 0-180
 
-        Vec3 randomEndDirection = calculateRandomDirection(useGaussian);
+        Vec3 randomEndDirection = this.calculateRandomDirection(useGaussian);
 
         Vec3 transformedRandomEndDirection = new Vec3(
                 randomEndDirection.x * vecB.x + randomEndDirection.y * vecA.x + randomEndDirection.z * vecC.x,
@@ -130,8 +131,11 @@ public class Intersection {
 
 
     public Ray calculateRandomRay(){
+        return calculateRandomRay(false);
+    }
 
-        Vec3 transformedRandomEndDirection = calculateTransformedRandomEndDirection(mNormal, mNormalB, mNormalT, false);
+    public Ray calculateRandomRay(boolean useGaussian){
+        Vec3 transformedRandomEndDirection = calculateTransformedRandomEndDirection(mNormal, mNormalB, mNormalT, useGaussian);
 
         return new Ray(this.getIntersectionPoint(), transformedRandomEndDirection, Float.MAX_VALUE);
     }
