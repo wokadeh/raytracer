@@ -66,7 +66,7 @@ public class Main {
 
     /** LIGHT **/
 
-    static boolean USE_GI = false;
+    static boolean USE_GI = true;
     static int GI_LEVEL = 2;
     static int GI_SAMPLES = 10;
 
