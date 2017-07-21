@@ -78,11 +78,11 @@ public class Main {
     static final int GI_LEVEL = 2;
     static final int GI_SAMPLES = 10;
 
-    static final RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
+    static final RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.DARK_GRAY;
     static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.1f, 0.1f, 0.1f);
 
     static final boolean USE_AO = true;
-    static final int NUMBER_OF_AO_SAMPLES = 10;
+    static final int NUMBER_OF_AO_SAMPLES = 40;
     static final float AO_MAX_DISTANCE = 2f;
 
     /** KAMERA **/

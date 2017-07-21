@@ -98,4 +98,12 @@ public class Vec3 {
     public String toString(){
         return "( " + this.x + ", " + this.y + ", " + this.z + " )";
     }
+
+	public Vec3 invert() {
+        return new Vec3(
+                1f / this.x,
+                1f / this.y,
+                1f / this.z
+        );
+	}
 }

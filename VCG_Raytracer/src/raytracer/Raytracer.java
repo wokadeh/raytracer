@@ -321,7 +321,6 @@ public class Raytracer {
             }
             if ( mUseAO && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
-                // directLight = directLight.add( this.getAmbientOcclusionColor(intersection) );
                 directLight = this.getAmbientOcclusionColor(directLight, intersection);
             }
 
@@ -341,8 +340,8 @@ public class Raytracer {
         }
         aoColor = aoColor.multScalar(1f / mNumberOfAOSamples);
 
-        return new RgbColor(aoColor);
-        //return directLight.add(new RgbColor(aoColor));
+        //return new RgbColor(aoColor);
+        return directLight.add(new RgbColor(aoColor)).multScalar(1.3f);
     }
 
     private Vec3 aoTraceRay(Intersection prevIntersec){
@@ -351,7 +350,7 @@ public class Raytracer {
         Intersection intersection = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
 
         if( intersection.isHit() && intersection.isOutOfDistance(mAoMaxDistance) ){
-            return RgbColor.DARK_GRAY.colors;
+            return RgbColor.GRAY.colors;
         }
 
         return RgbColor.BLACK.colors;
