@@ -344,13 +344,13 @@ public class Raytracer {
         return directLight.multScalar(aoFactor);
     }
 
-    private int aoTraceRay(Intersection prevIntersec){
+    private float aoTraceRay(Intersection prevIntersec){
         Ray randomRay = prevIntersec.calculateRandomRay(false);
 
         Intersection somethingInTheWayIntersect = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
 
         if( somethingInTheWayIntersect.isHit() && !somethingInTheWayIntersect.isOutOfDistance(mAoMaxDistance) ){
-            return 0;
+            return 0.5f;
         }
 
         return 1;

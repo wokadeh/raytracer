@@ -53,8 +53,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static final int IMAGE_WIDTH = 1200;
-    static final int IMAGE_HEIGHT = 800;
+    static final int IMAGE_WIDTH = 600;
+    static final int IMAGE_HEIGHT = 400;
 
     static final float BOX_DIMENSION = 4f;
 
@@ -74,16 +74,16 @@ public class Main {
     static final short AREA_LIGHT_SIZE = 2;
 
     /** GI **/
-    static final boolean USE_GI = false;
+    static final boolean USE_GI = true;
     static final int GI_LEVEL = 2;
-    static final int GI_SAMPLES = 10;
+    static final int GI_SAMPLES = 40;
 
     static final RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
     static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.1f, 0.1f, 0.1f);
 
     static final boolean USE_AO = true;
     static final int NUMBER_OF_AO_SAMPLES = 80;
-    static final float AO_MAX_DISTANCE = 2f;
+    static final float AO_MAX_DISTANCE = 0.5f;
 
     /** KAMERA **/
 
