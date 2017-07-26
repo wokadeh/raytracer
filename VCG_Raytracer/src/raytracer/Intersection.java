@@ -48,13 +48,20 @@ public class Intersection {
     }
 
     private Vec3 calculateRandomValues(){
+        // --- new idea ---
+        // random x value between 0-200 => -100-100
+        // random z value between 0-200 => -100-100
+        // random y value between 0-100 => 0-100
+        // normalise vector
+        // calculate transformation T between (0,1,0) and our new vector
+        // multiply our normal with transformation T
+
         Random rand1 = new Random();
+        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randZ = (rand1.nextInt(2000) - 1000) / 2000f;
+        float randY = rand1.nextInt(1000) / 1000f;
 
-        float randNr1 = rand1.nextInt(100) / 100f;
-        float randNr2 = rand1.nextInt(100) / 100f;
-        float cosTheta = rand1.nextInt(100) / 100f;
-
-        return new Vec3(randNr1, cosTheta, randNr2);
+        return new Vec3(randX, randY, randZ).normalize();
     }
 
     private Vec3 calculateGaussianValues(){
@@ -74,33 +81,16 @@ public class Intersection {
     }
 
     private Vec3 calculateRandomDirection(boolean useGaussian){
-        // --- new idea ---
-        // random x value between 0-200 => -100-100
-        // random z value between 0-200 => -100-100
-        // random y value between 0-100 => 0-100
-        // normalise vector
-        // calculate transformation T between (0,1,0) and our new vector
-        // multiply our normal with transformation T
+        Vec3 randomValues;
 
-        // This way is a lot faster
-        Random rand1 = new Random();
-        float randX = (rand1.nextInt(2000) - 1000) / 2000f;
-        float randZ = (rand1.nextInt(2000) - 1000) / 2000f;
-        float randY = rand1.nextInt(1000) / 1000f;
+        if(useGaussian){
+            randomValues = this.calculateGaussianValues();
+        }
+        else{
+            randomValues = this.calculateRandomValues();
+        }
 
-        return new Vec3(randX, randY, randZ).normalize();
-
-        // NEW IDEA
-//        Vec3 randomValues;
-//
-//        if(useGaussian){
-//            randomValues = calculateGaussianValues();
-//        }
-//        else{
-//            randomValues = calculateRandomValues();
-//        }
-//
-//        return randomValues;
+        return randomValues;
 
 //        double sinTheta = Math.sqrt(1 - randomValues.x * randomValues.x);
 //

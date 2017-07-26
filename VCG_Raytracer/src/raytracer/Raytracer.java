@@ -333,27 +333,27 @@ public class Raytracer {
     }
 
     private RgbColor getAmbientOcclusionColor(RgbColor directLight, Intersection intersection){
-        Vec3 aoColor = RgbColor.BLACK.colors;
+        float aoFactor = 0;
 
         for(int i = 0; i < mNumberOfAOSamples; i++){
-            aoColor = aoColor.add(aoTraceRay(intersection));
+            aoFactor += aoTraceRay(intersection);
         }
-        aoColor = aoColor.multScalar(1f / mNumberOfAOSamples);
+        aoFactor = ( aoFactor / mNumberOfAOSamples);
 
         //return new RgbColor(aoColor);
-        return directLight.add(new RgbColor(aoColor)).multScalar(1.3f);
+        return directLight.multScalar(aoFactor);
     }
 
-    private Vec3 aoTraceRay(Intersection prevIntersec){
-        Ray randomRay = prevIntersec.calculateRandomRay(true);
+    private int aoTraceRay(Intersection prevIntersec){
+        Ray randomRay = prevIntersec.calculateRandomRay(false);
 
-        Intersection intersection = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
+        Intersection somethingInTheWayIntersect = RaytracerMethods.getIntersectionOnShapes(randomRay, prevIntersec, mShapeList);
 
-        if( intersection.isHit() && intersection.isOutOfDistance(mAoMaxDistance) ){
-            return RgbColor.GRAY.colors;
+        if( somethingInTheWayIntersect.isHit() && !somethingInTheWayIntersect.isOutOfDistance(mAoMaxDistance) ){
+            return 0;
         }
 
-        return RgbColor.BLACK.colors;
+        return 1;
     }
 
     private RgbColor getGIColor(int giLevelCounter, RgbColor directLight, Intersection intersection) {
