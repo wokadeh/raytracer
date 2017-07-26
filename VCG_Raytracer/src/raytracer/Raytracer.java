@@ -301,32 +301,34 @@ public class Raytracer {
                 return directLight;
             }
 
-            RgbColor shadedColor = shade( intersection );
-
-            // Calculate the color of every object, that was hit in between, depending on recursive level
-            directLight = directLight.add( shadedColor );
-
-            // Further recursions through objects, if the recursion is not finished and object is not diffuse
-            if ( intersection.getShape().isReflective() ) {
-                recursionCounter -= 1;
-                directLight = this.getReflectiveColor(recursionCounter, giLevelCounter, directLight, intersection);
-            }
-            if ( intersection.getShape().isRefractive() ) {
-                recursionCounter -= 1;
-                directLight = this.getRefractionColor(recursionCounter, giLevelCounter, directLight, intersection);
-            }
-            if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
-                // direct illumination + indirect illumination
-                directLight = this.getGIColor(giLevelCounter, directLight, intersection);
-            }
+//            RgbColor shadedColor = shade( intersection );
+//
+//            // Calculate the color of every object, that was hit in between, depending on recursive level
+//            directLight = directLight.add( shadedColor );
+//
+//            // Add ambient term
+//            RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
+//            directLight = directLight.add( ambientTerm );
+//
+//            // Further recursions through objects, if the recursion is not finished and object is not diffuse
+//            if ( intersection.getShape().isReflective() ) {
+//                recursionCounter -= 1;
+//                directLight = this.getReflectiveColor(recursionCounter, giLevelCounter, directLight, intersection);
+//            }
+//            if ( intersection.getShape().isRefractive() ) {
+//                recursionCounter -= 1;
+//                directLight = this.getRefractionColor(recursionCounter, giLevelCounter, directLight, intersection);
+//            }
+//            if ( mUseGI && intersection.getShape().getMaterial().isGiOn()){
+//                // direct illumination + indirect illumination
+//                directLight = this.getGIColor(giLevelCounter, directLight, intersection);
+//            }
             if ( mUseAO && intersection.getShape().getMaterial().isGiOn()){
                 // direct illumination + indirect illumination
                 directLight = this.getAmbientOcclusionColor(directLight, intersection);
             }
 
-            // Add ambient term
-            RgbColor ambientTerm = intersection.getShape().getMaterial().getAmbientCoeff().multRGB( this.mAmbientLight );
-            directLight = directLight.add( ambientTerm );
+
         }
 
         return directLight;
@@ -341,7 +343,7 @@ public class Raytracer {
         aoFactor = ( aoFactor / mNumberOfAOSamples);
 
         //return new RgbColor(aoColor);
-        return directLight.multScalar(aoFactor);
+        return RgbColor.WHITE.multScalar(aoFactor);
     }
 
     private float aoTraceRay(Intersection prevIntersec){

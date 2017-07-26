@@ -74,7 +74,7 @@ public class Main {
     static final short AREA_LIGHT_SIZE = 2;
 
     /** GI **/
-    static final boolean USE_GI = true;
+    static final boolean USE_GI = false;
     static final int GI_LEVEL = 2;
     static final int GI_SAMPLES = 40;
 
@@ -83,7 +83,7 @@ public class Main {
 
     static final boolean USE_AO = true;
     static final int NUMBER_OF_AO_SAMPLES = 80;
-    static final float AO_MAX_DISTANCE = 0.5f;
+    static final float AO_MAX_DISTANCE = 2f;
 
     /** KAMERA **/
 
@@ -174,7 +174,7 @@ public class Main {
 
         // Materials: AmbientMaterial Color, Diffuse Coeeff, Specular Coeff, Shininess, Material
         renderScene.createSphere(new Vec3(-BOX_DIMENSION /4f, -BOX_DIMENSION/1.2f + 1.1f, -BOX_DIMENSION /3f+4), Material.REFLECTIVE_MATERIAL, sphereRadius);
-        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, -BOX_DIMENSION/1.2f  + 1.1f, BOX_DIMENSION /3f+3), Material.REFRACTIVE_MATERIAL, sphereRadius);
+        renderScene.createSphere(new Vec3(BOX_DIMENSION/4f, 1, BOX_DIMENSION /3f+3), Material.REFRACTIVE_MATERIAL, sphereRadius);
 
 //        renderScene.createSphere(new Vec3(-BOX_DIMENSION+1f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
 //        renderScene.createSphere(new Vec3(-BOX_DIMENSION+2f, -BOX_DIMENSION + smallSphereRadius*1.75f, 6), Material.LAMBERT_MATERIAL, smallSphereRadius);
@@ -202,7 +202,7 @@ public class Main {
 //        renderScene.createSphere(new Vec3(-BOX_DIMENSION+5f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
 //        renderScene.createSphere(new Vec3(-BOX_DIMENSION+6f, -BOX_DIMENSION + smallSphereRadius*1.75f, 1), Material.LAMBERT_MATERIAL, smallSphereRadius);
 
-        //renderScene.createCube(new Vec3(1.5f,-2.5f,4), Material.LAMBERT_MATERIAL, 1f);
+        renderScene.createCube(new Vec3(1.5f,-2.5f,4), Material.LAMBERT_MATERIAL, 1f);
     }
 
     private static void setupLightShapes(Scene renderScene) {
