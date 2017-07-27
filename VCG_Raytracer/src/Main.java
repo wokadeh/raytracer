@@ -74,7 +74,7 @@ public class Main {
     static final short AREA_LIGHT_SIZE = 2;
 
     /** GI **/
-    static final boolean USE_GI = false;
+    static final boolean USE_GI = true;
     static final int GI_LEVEL = 2;
     static final int GI_SAMPLES = 40;
 
