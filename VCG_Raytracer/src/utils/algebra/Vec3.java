@@ -1,6 +1,6 @@
 package utils.algebra;
 
-public class Vec3 {
+public class Vec3 implements Comparable<Vec3>{
     public float x;
     public float y;
     public float z;
@@ -106,4 +106,21 @@ public class Vec3 {
                 1f / this.z
         );
 	}
+
+    /**
+     Get distance between two vectors
+     **/
+	public float distance(Vec3 input){
+        Vec3 tempVec = new Vec3();
+        tempVec.x = input.x - this.x;
+        tempVec.y = input.y - this.y;
+        tempVec.z = input.z - this.z;
+
+        return tempVec.length();
+    }
+
+    @Override
+    public int compareTo(Vec3 o) {
+        return (int) distance(o);
+    }
 }

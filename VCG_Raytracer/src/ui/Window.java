@@ -73,10 +73,10 @@ public class Window {
     /**
      Export the rendering to an PNG image with rendering information
      **/
-    public void exportRendering(String text, int recursions, int antiAliasing, boolean showLabel, int giRecursions, int giSamples){
+    public void exportRenderingToFile(String text, int recursions, int antiAliasing, boolean showLabel, int giRecursions, int giSamples){
 
         if(showLabel) {
-            setOutputLabel(text, recursions, antiAliasing, giRecursions, giSamples);
+            this.setOutputLabel(text, recursions, antiAliasing, giRecursions, giSamples);
         }
         DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
     }

@@ -53,8 +53,8 @@ public class Main {
 
     /** BOX_DIMENSION **/
 
-    static final int IMAGE_WIDTH = 1200;
-    static final int IMAGE_HEIGHT = 800;
+    static final int IMAGE_WIDTH = 800;
+    static final int IMAGE_HEIGHT = 600;
 
     static final float BOX_DIMENSION = 4f;
 
@@ -62,7 +62,7 @@ public class Main {
 
     static final int RECURSIONS = 4;
     static final int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
-    static final boolean USE_SOFT_SHADOWS = false;
+    static final boolean USE_SOFT_SHADOWS = true;
 
     /** LIGHT **/
     static final short LIGHT_DENSITY = 20;
@@ -82,10 +82,12 @@ public class Main {
     static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.7f, 0.7f, 0.7f);
 
     static final boolean USE_AO = true;
-    static final int NUMBER_OF_AO_SAMPLES = 80;
+    static final int NUMBER_OF_AO_SAMPLES = 60;
     static final float AO_MAX_DISTANCE = 2f;
 
-    /** KAMERA **/
+    static final boolean USE_POST_FILTERING = false;
+
+    /** CAMERA **/
 
     static final Vec3 CAM_POS = new Vec3(0, 0, 17);
     static final Vec3 LOOK_AT = new Vec3(0, 0, 0);
@@ -248,6 +250,7 @@ public class Main {
                 ANTI_ALIASING,
                 BLOCK_SIZE,
                 NUMBER_OF_THREADS,
+                USE_POST_FILTERING,
                 SHOW_PARAM_LABEL);
 
         raytracer.renderScene();

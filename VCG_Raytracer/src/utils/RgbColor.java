@@ -90,6 +90,10 @@ public class RgbColor {
         if( this.blue() < 0 ) colors.z = 0f;
     }
 
+    public float compareDistance(RgbColor color){
+        return this.colors.distance(color.colors);
+    }
+
     @Override
     public String toString(){
         return "( " + this.red() + ", " + this.green() + ", " + this.blue() + " )";
