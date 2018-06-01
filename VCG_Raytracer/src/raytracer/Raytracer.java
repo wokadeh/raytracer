@@ -57,6 +57,7 @@ public class Raytracer {
 
     private static float GI_FACTOR = (float) (1f / Math.PI);
     private BufferedImage mBufferedImage;
+    private BufferedImage mEdgeImage;
     private ArrayList<Shape> mShapeList;
     private ArrayList<Light> mLightList;
 
@@ -116,6 +117,7 @@ public class Raytracer {
         mAntiAliasingCounter = 1f / (mAntiAliasingDim);
 
         mBufferedImage = renderWindow.getBufferedImage();
+        mEdgeImage = renderWindow.getEdgeBufferedImage();
         mAliasedColorMap = new Vec3[mBufferedImage.getWidth() * mAntiAliasingDim][mBufferedImage.getHeight() * mAntiAliasingDim];
 	    mAntiAliasedColorMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
         mEdgesMap = new Vec3[mBufferedImage.getWidth()][mBufferedImage.getHeight()];
@@ -131,7 +133,7 @@ public class Raytracer {
         mBlockSize = blockSize;
         mNumberOfThreads = numberOfThreads;
 
-        this.exportRendering();
+        this.exportFinalRendering();
 
         mPDFFactor = (float) (1f / (2f* Math.PI));
     }
@@ -211,8 +213,12 @@ public class Raytracer {
 		}
     }
 
-    public void exportRendering(){
-        mRenderWindow.exportRenderingToFile(String.valueOf(stopTime(tStart)), mMaxRecursions, (int )mAntiAliasingSamples, mDebug, mGiLevel, mGiSamples);
+    public void exportRendering(String title, BufferedImage renderImage){
+        mRenderWindow.exportRenderingToFile(title, renderImage, String.valueOf(stopTime(tStart)), mMaxRecursions, (int )mAntiAliasingSamples, mDebug, mGiLevel, mGiSamples);
+    }
+
+    public void exportFinalRendering(){
+        exportRendering("raytracing", mBufferedImage);
     }
 
     private static double stopTime(long tStart){
@@ -286,11 +292,18 @@ public class Raytracer {
                         mEdgesMap[x - 1][y - 1] = RgbColor.WHITE.colors;
                         mEdgesMap[x + 1][y - 1] = RgbColor.WHITE.colors;
                         mEdgesMap[x - 1][y + 1] = RgbColor.WHITE.colors;
+
+                        mRenderWindow.setPixel(mEdgeImage, RgbColor.WHITE, new Vec2(x,y));
+                        mRenderWindow.setPixel(mEdgeImage, RgbColor.WHITE, new Vec2(x+1,y+1));
+                        mRenderWindow.setPixel(mEdgeImage, RgbColor.WHITE, new Vec2(x-1,y-1));
+                        mRenderWindow.setPixel(mEdgeImage, RgbColor.WHITE, new Vec2(x+1,y-1));
+                        mRenderWindow.setPixel(mEdgeImage, RgbColor.WHITE, new Vec2(x-1,y+1));
                     }
                     // DEBUG ONLY
                     //this.getRenderWindow().setPixel(this.getBufferedImage(), new RgbColor(mEdgesMap[x][y]), new Vec2(x, y));
                 }
             }
+            this.exportRendering("edgeMap", mEdgeImage);
             Log.print(this, "Edge Map finished!");
     }
 

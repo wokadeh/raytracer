@@ -14,6 +14,7 @@ public class Window {
     private int mHeight;
 
     private BufferedImage mBufferedImage;
+    private BufferedImage mEdgeBufferedImage;
 
     private JFrame mFrame;
 
@@ -26,12 +27,16 @@ public class Window {
 
         // we are using only one frame
         mBufferedImage = new BufferedImage(mWidth, mHeight, BufferedImage.TYPE_INT_RGB);
+        mEdgeBufferedImage = new BufferedImage(mWidth, mHeight, BufferedImage.TYPE_INT_RGB);
 
         createFrame();
     }
 
     public BufferedImage getBufferedImage(){
         return mBufferedImage;
+    }
+    public BufferedImage getEdgeBufferedImage(){
+        return mEdgeBufferedImage;
     }
 
     /**
@@ -52,8 +57,8 @@ public class Window {
     /**
      Draw debug information
      **/
-    private void setOutputLabel(String text, int recursions, int antiAliasing, int giRecursions, int giSamples){
-        Graphics graphic = mBufferedImage.getGraphics();
+    private void setOutputLabel(BufferedImage renderImage, String text, int recursions, int antiAliasing, int giRecursions, int giSamples){
+        Graphics graphic = renderImage.getGraphics();
         graphic.setColor(Color.black);
         graphic.fill3DRect(0,mHeight - 30,mWidth,mHeight,true);
         graphic.setColor(Color.green);
@@ -73,12 +78,12 @@ public class Window {
     /**
      Export the rendering to an PNG image with rendering information
      **/
-    public void exportRenderingToFile(String text, int recursions, int antiAliasing, boolean showLabel, int giRecursions, int giSamples){
+    public void exportRenderingToFile(String title, BufferedImage renderImage, String text, int recursions, int antiAliasing, boolean showLabel, int giRecursions, int giSamples){
 
         if(showLabel) {
-            this.setOutputLabel(text, recursions, antiAliasing, giRecursions, giSamples);
+            this.setOutputLabel(renderImage, text, recursions, antiAliasing, giRecursions, giSamples);
         }
-        DataExporter.exportImageToPng(mBufferedImage, "raytracing.png");
+        DataExporter.exportImageToPng(renderImage, title + ".png");
     }
 
 

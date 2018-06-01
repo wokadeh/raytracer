@@ -33,7 +33,7 @@ class RenderThread implements Runnable{
 			Log.error(this,"Thread " +  mThreadName + " interrupted: " + e);
 		}
 
-		mRaytracer.exportRendering();
+		mRaytracer.exportFinalRendering();
 		Log.warn(this, mThreadName + " ... finished!");
 
 		if(mSyncRenderBlockList.isEmpty()){
