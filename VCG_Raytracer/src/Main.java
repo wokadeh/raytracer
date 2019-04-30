@@ -62,7 +62,7 @@ public class Main {
 
     static final int RECURSIONS = 4;
     static final int ANTI_ALIASING = Raytracer.ANTI_ALIASING_MEDIUM;
-    static final boolean USE_SOFT_SHADOWS = true;
+    static final boolean USE_SOFT_SHADOWS = false;
 
     /** LIGHT **/
     static final short LIGHT_DENSITY = 20;
@@ -74,7 +74,7 @@ public class Main {
     static final short AREA_LIGHT_SIZE = 2;
 
     /** GI **/
-    static final boolean USE_GI = false;
+    static final boolean USE_GI = true;
     static final int GI_LEVEL = 2;
     static final int GI_SAMPLES = 40;
 
@@ -93,14 +93,14 @@ public class Main {
     static final Vec3 LOOK_AT = new Vec3(0, 0, 0);
     static final Vec3 UP_VECTOR = new Vec3(0, 1, 0);
 
-    static final float VIEW_ANGLE = 35;
+    static final float VIEW_ANGLE = 35; // is 70 but already divided by 2
 
     /** DEBUG **/
 
     static final boolean SHOW_AREA_LIGHT_SAMPLES = false;
     static final boolean SHOW_PRIMARY_RAYS = false;
     static final boolean SHOW_SECONDARY_RAYS = false;
-    static final boolean SHOW_PARAM_LABEL = true;
+    static final boolean SHOW_PARAM_LABEL = false;
 
     static final int BLOCK_SIZE = Raytracer.MEDIUM_BLOCK;
     static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();

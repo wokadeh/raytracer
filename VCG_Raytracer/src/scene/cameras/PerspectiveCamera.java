@@ -40,8 +40,8 @@ public class PerspectiveCamera extends SceneObject {
 
     private void calculateViewplane(float angleOfView){
         this.ratio = (float) this.screenWidth / (float) this.screenHeight;
-        this.angleRad = (float) (2f * ((( angleOfView ) * Math.PI) / 380f));
-        this.viewPlaneHeight = (float) Math.tan( this.angleRad );
+        this.angleRad = (float) ((( angleOfView ) * Math.PI) / 180f);
+        this.viewPlaneHeight = 2f* (float) Math.tan( this.angleRad / 2f );
         this.viewPlaneWidth = ( this.ratio * this.viewPlaneHeight );
 
         // Take the half for the coming adjustment to the viewplane
