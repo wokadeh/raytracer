@@ -62,8 +62,8 @@ public class Raytracer {
 
     private RgbColor sendPrimaryRay(Vec2 pixelPoint){
         Vec3 startPoint = mScene.getCamPos();
-        Vec3 destinationDir = mScene.getCamPixelDirection(pixelPoint);
-        Ray primaryRay = new Ray(startPoint, destinationDir, 1f);
+        Vec3 destinationPoint = mScene.getCamPixelDestPoint(pixelPoint);
+        Ray primaryRay = new Ray(startPoint, destinationPoint);
 
         return traceRay(mMaxRecursions, primaryRay, mBackgroundColor);
     }

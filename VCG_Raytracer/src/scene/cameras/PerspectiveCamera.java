@@ -36,7 +36,7 @@ public class PerspectiveCamera {
         this.u = s.cross(v).normalize();
 
         this.ratio = (float) screenWidth / (float) screenHeight;
-        float angle = (float) (angleOfView * Math.PI / 180f / 2f);
+        float angle = (float) Math.toRadians(angleOfView / 2f);
         this.viewPlaneHeight = (float) (focalLength * Math.tan(angle));
         this.viewPlaneWidth = this.ratio * this.viewPlaneHeight;
 
@@ -59,11 +59,14 @@ public class PerspectiveCamera {
         float x = pNormX * this.viewPlaneWidth;
         float y = pNormY * this.viewPlaneHeight;
 
-        Vec3 destPoint = new Vec3()
-                .add( this.v.multScalar( this.focalLength ) )
-                .add( this.s.multScalar( x ) )
-                .add( this.u.multScalar( y ) )
-                .normalize();
+        // Destination points are on viewplane 1 unit in front of the camera
+        Vec3 destPoint = new Vec3(x, y, position.z - 1f);
+
+//        Vec3 destPoint = new Vec3()
+//                .add( this.v.multScalar( this.focalLength ) )
+//                .add( this.s.multScalar( x ) )
+//                .add( this.u.multScalar( y ) )
+//                .normalize();
 
         return destPoint;
     }

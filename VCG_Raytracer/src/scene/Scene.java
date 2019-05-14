@@ -27,7 +27,7 @@ public class Scene {
         return mSceneCam.getLookAt();
     }
 
-    public Vec3 getCamPixelDirection(Vec2 screenVec){
+    public Vec3 getCamPixelDestPoint(Vec2 screenVec){
         return mSceneCam.calculateDestPoint(screenVec);
     }
 }
