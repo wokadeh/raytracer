@@ -74,12 +74,12 @@ public class Main {
     static final short AREA_LIGHT_SIZE = 2;
 
     /** GI **/
-    static final boolean USE_GI = true;
+    static final boolean USE_GI = false;
     static final int GI_LEVEL = 2;
     static final int GI_SAMPLES = 40;
 
     static final RgbColor LIGHT_COLOR = (USE_GI) ? RgbColor.GRAY : RgbColor.LIGHT_GRAY;
-    static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.7f, 0.7f, 0.7f);
+    static final RgbColor AMBIENT_LIGHT = (USE_GI) ? new RgbColor(0.01f, 0.01f, 0.01f) : new RgbColor(0.2f, 0.2f, 0.2f);
 
     static final boolean USE_AO = false;
     static final int NUMBER_OF_AO_SAMPLES = 60;

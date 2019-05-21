@@ -1,8 +1,5 @@
 package utils.io;
 
-import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
-import javafx.scene.shape.MeshView;
-
 import java.io.File;
 
 public class DataImporter {
@@ -11,10 +8,6 @@ public class DataImporter {
 
 	public static void loadOBJ(String path) {
 		File file = loadFile(path);
-
-		ObjModelImporter importer = new ObjModelImporter();
-//		importer.read(file);
-		MeshView[] meshes = importer.getImport();
 
 		Log.print(DataImporter.class, "... done!");
 	}
